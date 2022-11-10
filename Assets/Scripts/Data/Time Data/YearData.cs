@@ -27,11 +27,13 @@ public class YearData : MonoBehaviour
         changed_years = new Dictionary<int, bool>();
 
         // Initialize dictionary with all years set to unchanged
-        for (int i = 0; i < GetYearRange(); i++)
+        for (int i = 0; i <= GetYearRange(); i++)
         {
             int year = i + earliest_year;
             changed_years.Add(year, false);
         }
+
+        Debug.Log("Initialised YearData");
     }
 
     // [Year][Changed]
