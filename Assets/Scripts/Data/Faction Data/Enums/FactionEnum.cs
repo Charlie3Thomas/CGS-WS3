@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FactionEnum
 {
-    public enum Faction
+    public enum type
     {
         WORKER      = 0,    // Workers
         FARMER      = 1,    // Farmers
