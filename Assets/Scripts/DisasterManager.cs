@@ -36,6 +36,13 @@ public class DisasterManager : MonoBehaviour
             dis.year = UnityEngine.Random.Range(YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
             dis.intensity = UnityEngine.Random.Range(1f, 10f);
             disasterList.Add(dis);
+            var dis1 = dis;
+            disasterList.Sort(SortByYear);
         }
+    }
+
+    private static int SortByYear(Disaster dis1, Disaster dis2)
+    {
+        return dis1.year.CompareTo(dis2.year);
     }
 }
