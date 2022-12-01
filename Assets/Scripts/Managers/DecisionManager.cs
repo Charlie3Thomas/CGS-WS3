@@ -9,7 +9,6 @@ public class DecisionManager : MonoBehaviour
     [System.Serializable]
     public class Decision
     {
-        public string[] choices = { "Cut all trees", "Build a dam", "Increase taxes", "Kill john lennon", "Commit mass genocide", "Throw a party!" };
         public List<string> availableChoices = new List<string>();
         public string finalChoice;
         public int year;
@@ -20,6 +19,7 @@ public class DecisionManager : MonoBehaviour
     }
 
     private int numOfChoices = 3;
+    public string[] choices = { "Cut all trees", "Build a dam", "Increase taxes", "Kill john lennon", "Commit mass genocide", "Throw a party!" };
     public List<Decision> decisionList = new List<Decision>();
 
     private void Start()
@@ -33,7 +33,13 @@ public class DecisionManager : MonoBehaviour
 
         for (int i = 0; i < numOfChoices; i++)
         {
-            dec.availableChoices.Add(dec.choices[Random.Range(0, dec.choices.Length)]);
+            string currentChoice = choices[Random.Range(0, choices.Length)];
+            while (!dec.availableChoices.Contains(currentChoice))
+            {
+                dec.availableChoices.Add(currentChoice);
+                numOfChoices--;
+            }
+            numOfChoices++;
         }
 
         dec.finalChoice = dec.availableChoices[Random.Range(0, dec.availableChoices.Count)];
@@ -42,7 +48,7 @@ public class DecisionManager : MonoBehaviour
         dec.publicFavour = Random.Range(-10000, 10000);
         dec.awareness = Random.Range(-10000, 10000);
         dec.resultOfEffect = "A decision of '" + dec.finalChoice + "' has been taken " 
-            + ((dec.cost > 0) ? "which has cost you $" : "which has made you gain $ ") + Mathf.Abs(dec.cost) + ", "
+            + ((dec.cost > 0) ? "which has cost you $" : "which has made you gain $") + Mathf.Abs(dec.cost) + ", "
             + ((dec.publicFavour > 0) ? "which has also gained the public's favour " : "which has also reduced the public's favour") + " by " + Mathf.Abs(dec.publicFavour) + " points and "
             + ((dec.awareness > 0) ? "has increased your awareness" : "has reduced your awareness") + " by " + Mathf.Abs(dec.awareness) + " points.";
 

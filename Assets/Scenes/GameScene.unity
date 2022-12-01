@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2157.138, g: 2262.0386, b: 3288.861, a: 1}
+  m_IndirectSpecularColor: {r: 2156.3242, g: 2259.638, b: 3280.1724, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -398,6 +398,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1299717939}
+  - component: {fileID: 1299717940}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -413,7 +414,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1299717938}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.1838713, y: 7.94046, z: 0.6399565}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -423,6 +424,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1299717940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1299717938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 329d0a7d99590fb45b37ead60871164c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forceDefaultSeed: 0
 --- !u!1 &1427080599
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,7 +446,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1427080600}
-  - component: {fileID: 1427080602}
   - component: {fileID: 1427080601}
   m_Layer: 0
   m_Name: DisasterManager
@@ -470,19 +483,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numOfDisasters: 10
   disasterList: []
---- !u!114 &1427080602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1427080599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 329d0a7d99590fb45b37ead60871164c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  forceDefaultSeed: 0
 --- !u!1 &1823688464
 GameObject:
   m_ObjectHideFlags: 0
@@ -821,7 +821,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2080843305}
-  - component: {fileID: 2080843307}
   - component: {fileID: 2080843306}
   m_Layer: 0
   m_Name: DecisionManager
@@ -857,20 +856,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95cca7a5e2cf11b49ad7e65dffafc201, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  choices:
+  - Cut all trees
+  - Build a dam
+  - Increase taxes
+  - Kill john lennon
+  - Commit mass genocide
+  - Throw a party!
   decisionList: []
---- !u!114 &2080843307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2080843304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 329d0a7d99590fb45b37ead60871164c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  forceDefaultSeed: 0
 --- !u!1 &2098364945
 GameObject:
   m_ObjectHideFlags: 0
