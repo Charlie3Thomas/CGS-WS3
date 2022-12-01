@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class DisasterManager : MonoBehaviour
 {
@@ -12,10 +11,11 @@ public class DisasterManager : MonoBehaviour
         FLOOD,
         EARTHQUAKE,
         VOLCANO,
-        TORNADO
+        TORNADO,
+        WILDFIRE
     }
 
-    [Serializable]
+    [System.Serializable]
     public class Disaster
     {
         public disasterType type;
@@ -24,17 +24,16 @@ public class DisasterManager : MonoBehaviour
     }
 
     public int numOfDisasters = 10;
-    public List<Disaster> disasterList;
+    public List<Disaster> disasterList = new List<Disaster>();
 
     void Start()
     {
-        disasterList = new List<Disaster>();
         for (int i = 0; i < numOfDisasters; i++)
         {
             Disaster dis = new Disaster();
-            dis.type = (disasterType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(disasterType)).Length);
-            dis.year = UnityEngine.Random.Range(YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
-            dis.intensity = UnityEngine.Random.Range(1f, 10f);
+            dis.type = (disasterType)Random.Range(0, System.Enum.GetValues(typeof(disasterType)).Length);
+            dis.year = Random.Range(YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
+            dis.intensity = Random.Range(1f, 10f);
             disasterList.Add(dis);
             var dis1 = dis;
             disasterList.Sort(SortByYear);
