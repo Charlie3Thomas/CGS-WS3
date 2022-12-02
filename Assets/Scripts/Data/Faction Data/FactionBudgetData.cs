@@ -10,7 +10,6 @@ using UnityEngine;
 public class FactionBudgetData : MonoBehaviour
 {
     public static FactionBudgetData _INSTANCE;
-    //private FactionEnum faction_type;
 
     // [Year][Faction][Budget]
     // FactionBudgetData._INSTANCE.budget_data[1997][Workers] = Budget

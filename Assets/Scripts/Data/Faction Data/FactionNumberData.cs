@@ -10,7 +10,6 @@ using UnityEngine;
 public class FactionNumberData : MonoBehaviour
 {
     public static FactionNumberData _INSTANCE;
-    private FactionEnum faction_type;
 
     // [Year][Faction][Quantity]
     // FactionNumberData._INSTANCE.number_data[1997][Workers] = Quantity
@@ -39,7 +38,7 @@ public class FactionNumberData : MonoBehaviour
             number_data[year].Add(FactionEnum.type.SCIENTIST, 0);
             number_data[year].Add(FactionEnum.type.ES_WORKER, 0);
         }
-        Debug.Log("Initialised FactionNumberData");
+        Debug.Log("Initialized FactionNumberData");
     }
 
 }
