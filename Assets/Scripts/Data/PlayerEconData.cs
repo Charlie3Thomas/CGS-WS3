@@ -63,7 +63,7 @@ public class PlayerEconData : MonoBehaviour
 
     private void Start()
     {
-        int test_year = 1997;
-        Debug.Log("City funds for the year " + test_year + " = " + PlayerEconData._INSTANCE.GetFundsForYear(test_year));
+        //int test_year = 1997;
+        //Debug.Log("City funds for the year " + test_year + " = " + PlayerEconData._INSTANCE.GetFundsForYear(test_year));
     }
 }

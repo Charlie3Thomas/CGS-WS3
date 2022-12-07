@@ -12,9 +12,9 @@ public class DataManager : MonoBehaviour
 
     private void GameStartDataLoader()
     {
-        Debug.Log("1997 pre-change = " + YearData._INSTANCE.changed_years[1997]);
-        YearData._INSTANCE.changed_years[1997] = true;
-        Debug.Log("1997 post-change = " + YearData._INSTANCE.changed_years[1997]);
+        //Debug.Log("1997 pre-change = " + YearData._INSTANCE.changed_years[1997]);
+        //YearData._INSTANCE.changed_years[1997] = true;
+        //Debug.Log("1997 post-change = " + YearData._INSTANCE.changed_years[1997]);
 
         // Perform all calcualtions to populate Data Containers with information
         // Faction number data using FactionNumberData._INSTANCE
@@ -25,10 +25,10 @@ public class DataManager : MonoBehaviour
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying) { return; }
+
         // Year Data
         Handles.Label(transform.position + new Vector3(0, 0, -1), "Year:");
         Handles.Label(transform.position + new Vector3(0, 1, -1), "Changed:");
-
         int i = 0;
         foreach (KeyValuePair<int, bool> entry in YearData._INSTANCE.changed_years)
         {
@@ -36,6 +36,18 @@ public class DataManager : MonoBehaviour
             Handles.Label(transform.position + new Vector3(0, 0, i), (entry.Key).ToString());
             Handles.Label(transform.position + new Vector3(0, 1, i), (entry.Value).ToString());
             i++;
+        }
+
+        // Economy Data
+        Handles.Label(transform.position + new Vector3(0, 2, -1), "Year:");
+        Handles.Label(transform.position + new Vector3(0, 3, -1), "Funds:");
+        int j = 0;
+        foreach (KeyValuePair<int, int> entry in PlayerEconData._INSTANCE.economy)
+        {
+            //Debug.Log((entry.Value) + " " + (entry.Key));
+            Handles.Label(transform.position + new Vector3(0, 2, j), (entry.Key).ToString());
+            Handles.Label(transform.position + new Vector3(0, 3, j), (entry.Value).ToString());
+            j++;
         }
 
     }

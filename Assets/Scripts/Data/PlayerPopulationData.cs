@@ -63,7 +63,7 @@ public class PlayerPopulationData : MonoBehaviour
 
     private void Start()
     {
-        int test_year = 1997;
-        Debug.Log("City population for the year " + test_year + " = " + PlayerPopulationData._INSTANCE.GetPopulationForYear(test_year));
+        //int test_year = 1997;
+        //Debug.Log("City population for the year " + test_year + " = " + PlayerPopulationData._INSTANCE.GetPopulationForYear(test_year));
     }
 }

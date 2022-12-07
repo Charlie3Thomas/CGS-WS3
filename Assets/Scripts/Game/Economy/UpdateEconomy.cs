@@ -19,12 +19,19 @@ public class UpdateEconomy : MonoBehaviour
         // Update Economy future from changed value
         for (int i = _year + 1; i <= PlayerEconData._INSTANCE.latest_year; i++)
         {
-            PlayerEconData._INSTANCE.economy[i] = (int)(_value * PlayerEconData._INSTANCE.econ_growth_rate);
+            int funds_last_year = PlayerEconData._INSTANCE.economy[i - 1]; // Year [i - 1] funds
+            int growth_funds = (int)(funds_last_year * PlayerEconData._INSTANCE.econ_growth_rate); // Multiply year [i - 1] funds by growth rate
+            PlayerEconData._INSTANCE.economy[i] = growth_funds; // Set year i funds to growth funds
         }
     }
 
-    private void Start()
+    private void Update()
     {
-        TestFunction(1997, 2.0f);
+        //// Debug
+        //if (Input.GetKeyDown("k"))
+        //{
+        //    Debug.Log("PRESSED K");
+        //    TestFunction(1997, 2.0f);
+        //}
     }
 }
