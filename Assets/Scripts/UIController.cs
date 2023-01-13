@@ -20,7 +20,7 @@ public class UIController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -37,6 +37,17 @@ public class UIController : MonoBehaviour
             if(Input.GetMouseButtonDown(1) && hit.transform.name == "Screen")
             {
                 onScreen = true;
+            }
+
+            if(Input.GetMouseButtonDown(0) && hit.transform.name == "Screen")
+            {
+                var localPoint = hit.textureCoord;
+                Ray camRay = Camera.main.ScreenPointToRay(new Vector2(localPoint.x * Camera.main.pixelWidth, localPoint.y * Camera.main.pixelHeight));
+                RaycastHit camHit;
+                if (Physics.Raycast(camRay, out camHit))
+                {
+                    Debug.Log(camHit.collider.gameObject.name);
+                }
             }
         }
 
