@@ -36,43 +36,43 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (target)
+        if (!target)
+            return;
+
+        if (UIController.Instance.onScreen)
         {
-            if (UIController.Instance.onScreen)
+            dragging = true;
+            x += Input.GetAxis("Mouse X") * xSpeed * 0.02f;
+            y -= Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
+            y = ClampAngle(y, yMinLimit, yMaxLimit);
+        }
+        else
+        {
+            if (dragging)
             {
-                dragging = true;
-                x += Input.GetAxis("Mouse X") * xSpeed * 0.02f;
-                y -= Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
-                y = ClampAngle(y, yMinLimit, yMaxLimit);
+                xVelocity = Input.GetAxis("Mouse X") * xSpeed * 0.02f;
+                yVelocity = -Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
             }
             else
             {
-                if (dragging)
-                {
-                    xVelocity = Input.GetAxis("Mouse X") * xSpeed * 0.02f;
-                    yVelocity = -Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
-                }
-                else
-                {
-                    xVelocity = Mathf.Lerp(xVelocity, 0, dragCoefficient);
-                    yVelocity = Mathf.Lerp(yVelocity, 0, dragCoefficient);
-                }
-                x += xVelocity;
-                y += yVelocity;
-                y = ClampAngle(y, yMinLimit, yMaxLimit);
-                dragging = false;
+                xVelocity = Mathf.Lerp(xVelocity, 0, dragCoefficient);
+                yVelocity = Mathf.Lerp(yVelocity, 0, dragCoefficient);
             }
-
-            //zoom in and out
-            zoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
-            zoom = Mathf.Clamp(zoom, zoomMin, zoomMax);
-
-            Quaternion rotation = Quaternion.Euler(y, x, 0);
-            Vector3 position = rotation * new Vector3(0.0f, 0.0f, -distance) + target.position;
-            transform.rotation = rotation;
-            transform.position = position;
-            cam.fieldOfView = Mathf.SmoothDamp(cam.fieldOfView, zoom, ref zoomVelocity, 0.3f);
+            x += xVelocity;
+            y += yVelocity;
+            y = ClampAngle(y, yMinLimit, yMaxLimit);
+            dragging = false;
         }
+
+        //zoom in and out
+        zoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+        zoom = Mathf.Clamp(zoom, zoomMin, zoomMax);
+
+        Quaternion rotation = Quaternion.Euler(y, x, 0);
+        Vector3 position = rotation * new Vector3(0.0f, 0.0f, -distance) + target.position;
+        transform.rotation = rotation;
+        transform.position = position;
+        cam.fieldOfView = Mathf.SmoothDamp(cam.fieldOfView, zoom, ref zoomVelocity, 0.3f);
     }
 
     float ClampAngle(float angle, float min, float max)
