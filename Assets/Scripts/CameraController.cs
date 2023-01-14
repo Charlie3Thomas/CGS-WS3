@@ -39,7 +39,10 @@ public class CameraController : MonoBehaviour
         if (!target)
             return;
 
-        if (UIController.Instance.onScreen)
+        if (UIController.Instance == null)
+            return;
+
+        if (UIController.Instance.touchingScreen)
         {
             dragging = true;
             x += Input.GetAxis("Mouse X") * xSpeed * 0.02f;
@@ -65,7 +68,9 @@ public class CameraController : MonoBehaviour
         }
 
         //zoom in and out
-        zoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+        if(UIController.Instance.onScreen)
+            zoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+
         zoom = Mathf.Clamp(zoom, zoomMin, zoomMax);
 
         Quaternion rotation = Quaternion.Euler(y, x, 0);

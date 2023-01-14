@@ -1,27 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UIController : MonoBehaviour
 {
     public static UIController Instance;
+
+    [Header("Anims")]
     [SerializeField]
     private Animator notepadAnim;
     [SerializeField]
-    private Animator pCard1Anim;
+    private Animator buttonAnim;
     [SerializeField]
-    private Animator pCard2Anim;
+    private Animator techButtonAnim;
     [SerializeField]
-    private Animator pCard3Anim;
+    private Animator[] pCardAnim = new Animator[7];
     [SerializeField]
-    private Animator pCard4Anim;
+    private Animator yearKnobBAnim;
     [SerializeField]
-    private Animator pCard5Anim;
+    private Animator yearKnobFAnim;
+
+    [Header("Texts")]
     [SerializeField]
-    private Animator pCard6Anim;
+    private TMP_Text notepadText;
     [SerializeField]
-    private Animator pCard7Anim;
+    private TMP_Text yearText;
+    [SerializeField]
+    private TMP_Text[] pCardText = new TMP_Text[7];
+
     private Camera cam;
+
+    [HideInInspector]
+    public bool touchingScreen = false;
 
     public bool onScreen = false;
 
@@ -36,7 +47,6 @@ public class UIController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        //DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -53,57 +63,62 @@ public class UIController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            if(Input.GetMouseButtonDown(1) && hit.transform.name == "Screen")
-                onScreen = true;
+            onScreen = hit.transform.name == "Screen";
 
-            // Points to objects on the render texture screen
-            if (Input.GetMouseButtonDown(0) && hit.transform.name == "Screen")
+            if (Input.GetMouseButtonDown(1) && onScreen)
+                touchingScreen = true;
+
+            if (Input.GetMouseButtonUp(1))
+                touchingScreen = false;
+
+            if (Input.GetMouseButtonDown(0) && hit.transform.name == "Year_selection_backwards")
             {
-                var localPoint = hit.textureCoord;
-                Ray camRay = Camera.main.ScreenPointToRay(new Vector2(localPoint.x * Camera.main.pixelWidth, localPoint.y * Camera.main.pixelHeight));
-                RaycastHit camHit;
-                if (Physics.Raycast(camRay, out camHit))
-                {
-                    Debug.Log(camHit.collider.gameObject.name);
-                }
+                if (yearKnobBAnim != null)
+                    yearKnobBAnim.SetBool("YearDownHold", true);
+            }
+
+            if (Input.GetMouseButtonDown(0) && hit.transform.name == "Year_selection_forwards")
+            {
+                if (yearKnobFAnim != null)
+                    yearKnobFAnim.SetBool("YearUpHold", true);
+            }
+
+            if (Input.GetMouseButtonDown(0) && hit.transform.name == "Tech_tree_button")
+            {
+                if (techButtonAnim != null)
+                    techButtonAnim.SetTrigger("Press");
+            }
+
+            if (Input.GetMouseButtonDown(0) && hit.transform.name == "Button")
+            {
+                if (buttonAnim != null)
+                    buttonAnim.SetTrigger("Press");
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (yearKnobBAnim != null)
+                    yearKnobBAnim.SetBool("YearDownHold", false);
+
+                if (yearKnobFAnim != null)
+                    yearKnobFAnim.SetBool("YearUpHold", false);
             }
 
             // Notepad hover
-            if(notepadAnim != null)
+            if (notepadAnim != null)
                 notepadAnim.SetBool("IsOver", hit.transform.name == "Notepad");
 
-            // Policy Card 2 hover
-            if (pCard1Anim != null)
-                pCard1Anim.SetBool("IsOver", hit.transform.name == "Policy_Card_1");
+            HandlePolicyCardHover(hit);
 
-            // Policy Card 2 hover
-            if (pCard2Anim != null)
-                pCard2Anim.SetBool("IsOver", hit.transform.name == "Policy_Card_2");
-
-            // Policy Card 3 hover
-            if (pCard3Anim != null)
-                pCard3Anim.SetBool("IsOver", hit.transform.name == "Policy_Card_3");
-
-            // Policy Card 4 hover
-            if (pCard4Anim != null)
-                pCard4Anim.SetBool("IsOver", hit.transform.name == "Policy_Card_4");
-
-            // Policy Card 5 hover
-            if (pCard5Anim != null)
-                pCard5Anim.SetBool("IsOver", hit.transform.name == "Policy_Card_5");
-
-            // Policy Card 6 hover
-            if (pCard6Anim != null)
-                pCard6Anim.SetBool("IsOver", hit.transform.name == "Policy_Card_6");
-
-            // Policy Card 7 hover
-            if (pCard7Anim != null)
-                pCard7Anim.SetBool("IsOver", hit.transform.name == "Policy_Card_7");
         }
+    }
 
-        if (Input.GetMouseButtonUp(1))
+    private void HandlePolicyCardHover(RaycastHit hit)
+    {
+        for (int i = 1; i <= 7; i++)
         {
-            onScreen = false;
+            if (pCardAnim[i - 1] != null)
+                pCardAnim[i - 1].SetBool("IsOver", hit.transform.name == "Policy_Card_" + i);
         }
     }
 }
