@@ -1,11 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UIController : MonoBehaviour
 {
     public static UIController Instance;
+
+    [Header("Anims")]
+    [SerializeField]
+    private Animator notepadAnim;
+    [SerializeField]
+    private Animator buttonAnim;
+    [SerializeField]
+    private Animator techButtonAnim;
+    [SerializeField]
+    private Animator[] pCardAnim = new Animator[7];
+    [SerializeField]
+    private Animator yearKnobBAnim;
+    [SerializeField]
+    private Animator yearKnobFAnim;
+
+    [Header("Texts")]
+    [SerializeField]
+    private TMP_Text notepadText;
+    [SerializeField]
+    private TMP_Text yearText;
+    [SerializeField]
+    private TMP_Text[] pCardText = new TMP_Text[7];
+
     private Camera cam;
+
+    [HideInInspector]
+    public bool touchingScreen = false;
 
     public bool onScreen = false;
 
@@ -20,7 +47,6 @@ public class UIController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        //DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -30,30 +56,69 @@ public class UIController : MonoBehaviour
 
     void Update()
     {
+        if (!cam)
+            return;
+
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            if(Input.GetMouseButtonDown(1) && hit.transform.name == "Screen")
+            onScreen = hit.transform.name == "Screen";
+
+            if (Input.GetMouseButtonDown(1) && onScreen)
+                touchingScreen = true;
+
+            if (Input.GetMouseButtonUp(1))
+                touchingScreen = false;
+
+            if (Input.GetMouseButtonDown(0) && hit.transform.name == "Year_selection_backwards")
             {
-                onScreen = true;
+                if (yearKnobBAnim != null)
+                    yearKnobBAnim.SetBool("YearDownHold", true);
             }
 
-            if(Input.GetMouseButtonDown(0) && hit.transform.name == "Screen")
+            if (Input.GetMouseButtonDown(0) && hit.transform.name == "Year_selection_forwards")
             {
-                var localPoint = hit.textureCoord;
-                Ray camRay = Camera.main.ScreenPointToRay(new Vector2(localPoint.x * Camera.main.pixelWidth, localPoint.y * Camera.main.pixelHeight));
-                RaycastHit camHit;
-                if (Physics.Raycast(camRay, out camHit))
-                {
-                    Debug.Log(camHit.collider.gameObject.name);
-                }
+                if (yearKnobFAnim != null)
+                    yearKnobFAnim.SetBool("YearUpHold", true);
             }
+
+            if (Input.GetMouseButtonDown(0) && hit.transform.name == "Tech_tree_button")
+            {
+                if (techButtonAnim != null)
+                    techButtonAnim.SetTrigger("Press");
+            }
+
+            if (Input.GetMouseButtonDown(0) && hit.transform.name == "Button")
+            {
+                if (buttonAnim != null)
+                    buttonAnim.SetTrigger("Press");
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (yearKnobBAnim != null)
+                    yearKnobBAnim.SetBool("YearDownHold", false);
+
+                if (yearKnobFAnim != null)
+                    yearKnobFAnim.SetBool("YearUpHold", false);
+            }
+
+            // Notepad hover
+            if (notepadAnim != null)
+                notepadAnim.SetBool("IsOver", hit.transform.name == "Notepad");
+
+            HandlePolicyCardHover(hit);
+
         }
+    }
 
-        if (Input.GetMouseButtonUp(1))
+    private void HandlePolicyCardHover(RaycastHit hit)
+    {
+        for (int i = 1; i <= 7; i++)
         {
-            onScreen = false;
+            if (pCardAnim[i - 1] != null)
+                pCardAnim[i - 1].SetBool("IsOver", hit.transform.name == "Policy_Card_" + i);
         }
     }
 }
