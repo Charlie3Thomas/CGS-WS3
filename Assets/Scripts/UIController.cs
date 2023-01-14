@@ -66,10 +66,18 @@ public class UIController : MonoBehaviour
             onScreen = hit.transform.name == "Screen";
 
             if (Input.GetMouseButtonDown(1) && onScreen)
+            {
                 touchingScreen = true;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
 
             if (Input.GetMouseButtonUp(1))
+            {
                 touchingScreen = false;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
 
             if (Input.GetMouseButtonDown(0) && hit.transform.name == "Year_selection_backwards")
             {
@@ -110,6 +118,11 @@ public class UIController : MonoBehaviour
 
             HandlePolicyCardHover(hit);
 
+        }
+        else
+        {
+            onScreen = false;
+            touchingScreen = false;
         }
     }
 
