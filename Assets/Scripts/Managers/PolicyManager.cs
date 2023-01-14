@@ -19,15 +19,19 @@ public class PolicyManager : MonoBehaviour
     }
 
     private int numOfChoices = 3;
-    public string[] choices = { "Cut all trees", "Build a dam", "Increase taxes", "Kill john lennon", "Commit mass genocide", "Throw a party!" };
+    public string[] choices = { "Cut all trees", "Build a dam", "Increase taxes", "Kill john lennon", "Commit mass genocide", "Throw a party!",
+    "Lower taxes", "Throw waste into the ocean", "Build more roads", "Build more factories", "Build more houses" };
     public List<Policy> policyList = new List<Policy>();
 
     private void Start()
     {
-        NewRandomPolicy();
+        for (int i = 0; i < UIController.Instance.pCardText.Length; i++)
+        {
+            //NewRandomPolicy(i);
+        }
     }
 
-    void NewRandomPolicy()
+    void NewRandomPolicy(int cardNumber)
     {
         Policy pol = new Policy();
 
@@ -47,12 +51,17 @@ public class PolicyManager : MonoBehaviour
         pol.cost = Random.Range(-10000, 10000);
         pol.publicFavour = Random.Range(-10000, 10000);
         pol.awareness = Random.Range(-10000, 10000);
+
+        UIController.Instance.pCardText[cardNumber].text = pol.finalChoice + "\nCost: " + pol.cost +
+            "\nPublic Favour: " + pol.publicFavour + "\nAwareness: " + pol.awareness;
+        /*
         pol.resultOfEffect = "A policy of '" + pol.finalChoice + "' has been taken " 
             + ((pol.cost > 0) ? "which has cost you $" : "which has made you gain $") + Mathf.Abs(pol.cost) + ", "
             + ((pol.publicFavour > 0) ? "which has also gained the public's favour " : "which has also reduced the public's favour") + " by " + Mathf.Abs(pol.publicFavour) + " points and "
             + ((pol.awareness > 0) ? "has increased your awareness" : "has reduced your awareness") + " by " + Mathf.Abs(pol.awareness) + " points.";
 
         Debug.Log(pol.resultOfEffect);
+        */
         policyList.Add(pol);
         var pol1 = pol;
         policyList.Sort(SortByYear);
