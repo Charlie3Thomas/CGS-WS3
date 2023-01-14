@@ -22,12 +22,9 @@ public class UIController : MonoBehaviour
     private Animator yearKnobFAnim;
 
     [Header("Texts")]
-    [SerializeField]
-    private TMP_Text notepadText;
-    [SerializeField]
-    private TMP_Text yearText;
-    [SerializeField]
-    private TMP_Text[] pCardText = new TMP_Text[7];
+    public TMP_Text notepadText;
+    public TMP_Text yearText;
+    public TMP_Text[] pCardText = new TMP_Text[7];
 
     private Camera cam;
 
@@ -58,6 +55,8 @@ public class UIController : MonoBehaviour
     {
         if (!cam)
             return;
+
+        yearText.text = YearData._INSTANCE.current_year.ToString();
 
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;

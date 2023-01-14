@@ -38,6 +38,17 @@ public class DisasterManager : MonoBehaviour
             var dis1 = dis;
             disasterList.Sort(SortByYear);
         }
+
+        WriteDisastersInJournal();
+    }
+
+    void WriteDisastersInJournal()
+    {
+        UIController.Instance.notepadText.text = "Disasters:\n";
+        foreach (Disaster dis in disasterList)
+        {
+            UIController.Instance.notepadText.text += dis.type.ToString() + " - Year: " + dis.year + " - Intensity: " + dis.intensity.ToString("F1") + "\n";
+        }
     }
 
     private static int SortByYear(Disaster dis1, Disaster dis2)
