@@ -29,13 +29,23 @@ public class AudioManager : MonoBehaviour
     EventInstance ambienceInstance;
     EventInstance musicInstance;
     EventInstance chargeInstance;
-    [Header("Events Selector")]
+
+    private EventInstance oceanAmbienceInstance;
+
+
+   [Header("Event References Selector")]
     [Space(20)]
+
+    public UIFmodReferences uiEvents;
+    public AmbienceFmodReferences ambienceEvents;
+
+
+    /*
     public EventReference ambienceEvent;
     public EventReference musicEvent;
     private static string sfxDir = "event:/SFX/";
     public List<sfxLib> sfxObjectsList;
-
+    */
     void Awake()
     {
         if (Instance == null)
@@ -82,6 +92,19 @@ public class AudioManager : MonoBehaviour
         this.masterVolume = newMasterVolume;
     }
 
+    public void StartOceanAmbience(Transform transform)
+    {
+        oceanAmbienceInstance = RuntimeManager.CreateInstance(ambienceEvents.oceanAmbienceEvent);
+        RuntimeManager.AttachInstanceToGameObject(oceanAmbienceInstance, transform);
+        oceanAmbienceInstance.start();
+    }
+
+    public void StopOceanAmbience()
+    {
+        oceanAmbienceInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        oceanAmbienceInstance.release();
+    }
+    /*
     public void PlayOneShotWithParameters(string fmodEvent, Transform t, params (string name, float value)[] parameters)
     {
         EventInstance instance = RuntimeManager.CreateInstance(sfxDir + fmodEvent);
@@ -98,7 +121,8 @@ public class AudioManager : MonoBehaviour
         instance.start();
         instance.release();
     }
-
+    */
+    /*
     public void StartAmbience()
     {
         ambienceInstance = RuntimeManager.CreateInstance(ambienceEvent);
@@ -122,7 +146,7 @@ public class AudioManager : MonoBehaviour
     {
         musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }
-
+    */
     public void Resume()
     {
         masterBus.setPaused(false);
@@ -135,7 +159,8 @@ public class AudioManager : MonoBehaviour
 
     public void OnDestroy()
     {
-        ReleaseAmbience();
-        ReleaseMusic();
+        StopOceanAmbience();
+       // ReleaseAmbience();
+       // ReleaseMusic();
     }
 }
