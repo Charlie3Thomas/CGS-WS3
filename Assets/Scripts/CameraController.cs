@@ -24,6 +24,8 @@ public class CameraController : MonoBehaviour
     private float xVelocity;
     private float yVelocity;
     private bool dragging;
+    private float smoothDampSpeed = 0.5f;
+    private Vector3 velocity;
 
     void Start()
     {
@@ -74,6 +76,7 @@ public class CameraController : MonoBehaviour
         zoom = Mathf.Clamp(zoom, zoomMin, zoomMax);
 
         Quaternion rotation = Quaternion.Euler(y, x, 0);
+        target.position = Vector3.SmoothDamp(target.position, UIController.Instance.newPos, ref velocity, smoothDampSpeed);
         Vector3 position = rotation * new Vector3(0.0f, 0.0f, -distance) + target.position;
         transform.rotation = rotation;
         transform.position = position;
