@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PolicyManager : MonoBehaviour
 {
-    public static PolicyManager _INSTANCE;
-
+    public static PolicyManager instance;
     [System.Serializable]
     public class Policy
     {
@@ -23,12 +22,20 @@ public class PolicyManager : MonoBehaviour
     HashSet<string> finalChoices;
     private int numOfPolicies = 7;
 
-    private void Start()
+    void Awake()
     {
-        NewPolicySet();
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
     }
 
-    void NewPolicySet()
+    public void NewPolicySet()
     {
         int policyCount = 0;
         HashSet<string> finalChoices = new HashSet<string>();
