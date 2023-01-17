@@ -160,17 +160,6 @@ public class UIController : MonoBehaviour
         if (notepadAnim != null)
         {
             notepadAnim.SetBool("IsOver", hit.transform.name == "Notepad");
-
-            if (notepadAnim.GetCurrentAnimatorStateInfo(0).IsName("HoverUp"))
-            {
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.disasterUIShowEvent, null);
-            }
-
-            else if (notepadAnim.GetCurrentAnimatorStateInfo(0).IsName("HoverDown"))
-            {
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.disasterUIHideEvent, null);
-            }
-           
         } 
         // Policy cards hover
         for (int i = 1; i <= 7; i++)

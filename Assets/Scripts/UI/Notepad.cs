@@ -6,11 +6,11 @@ public class Notepad : MonoBehaviour
 {
     public void PlayShowSound()
     {
-        Debug.Log("Play Show Sound Effect");
+        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.disasterUIShowEvent, null);
     }
 
     public void PlayHideSound()
     {
-        Debug.Log("Play Hide Sound Effect");
+        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.disasterUIHideEvent, null);
     }
 }
