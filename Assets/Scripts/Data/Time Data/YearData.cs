@@ -48,6 +48,18 @@ public class YearData : MonoBehaviour
         else { _INSTANCE = this; }
     }
 
+    public void YearUp()
+    {
+        if(current_year < latest_year)
+            current_year++;
+    }
+
+    public void YearDown()
+    {
+        if(current_year > earliest_year)
+            current_year--;
+    }
+
     public int GetYearRange()
     {
         return latest_year - earliest_year;
