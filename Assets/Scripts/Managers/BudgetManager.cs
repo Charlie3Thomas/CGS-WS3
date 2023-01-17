@@ -10,50 +10,52 @@ public enum AllocType
     RESEARCH_POINT
 }
 
-public class Value
+public class Resource
 {
     public AllocType allocType;
-    public float value;
+    public float amount;
 }
 
 public class Person
 {
     public float allocation;
     public int population;
-    public List<Value> upkeep;
-    public List<Value> produce;
+    public List<Resource> upkeep;
+    public List<Resource> produce;
 }
 
 [System.Serializable]
 public class Worker : Person
 {
-    public new List<Value> upkeep = new List<Value> { new Value { allocType = AllocType.FOOD, value = 2f } };
-    public new List<Value> produce = new List<Value> { new Value { allocType = AllocType.MONEY, value = 2f }, new Value { allocType = AllocType.ELEMENT, value = 0.5f } };
+    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 2f } };
+    public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.MONEY, amount = 2f }, new Resource { allocType = AllocType.ELEMENT, amount = 0.5f } };
 }
 
 [System.Serializable]
 public class Scientist : Person
 {
-    public new List<Value> upkeep = new List<Value> { new Value { allocType = AllocType.FOOD, value = 2f }, new Value { allocType = AllocType.ELEMENT, value = 2f } };
-    public new List<Value> produce = new List<Value> { new Value { allocType = AllocType.RESEARCH_POINT, value = 3f } };
+    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 2f }, new Resource { allocType = AllocType.ELEMENT, amount = 2f } };
+    public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.RESEARCH_POINT, amount = 3f } };
 }
 
 [System.Serializable]
 public class Planner : Person
 {
-    public new List<Value> upkeep = new List<Value> { new Value { allocType = AllocType.FOOD, value = 2f }, new Value { allocType = AllocType.RESEARCH_POINT, value = 2f } };
-    public new List<Value> produce = new List<Value> { new Value { allocType = AllocType.ELEMENT, value = 2f } };
+    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 2f }, new Resource { allocType = AllocType.RESEARCH_POINT, amount = 2f } };
+    public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.ELEMENT, amount = 2f } };
 }
 
 [System.Serializable]
 public class Farmer : Person
 {
-    public new List<Value> upkeep = new List<Value> { new Value { allocType = AllocType.FOOD, value = 1f }, new Value { allocType = AllocType.ELEMENT, value = 1f } };
-    public new List<Value> produce = new List<Value> { new Value { allocType = AllocType.FOOD, value = 3f } };
+    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 1f }, new Resource { allocType = AllocType.ELEMENT, amount = 1f } };
+    public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 3f } };
 }
 
 public class BudgetManager : MonoBehaviour
 {
+    public static BudgetManager instance;
+
     [System.Serializable]
     public class Budget
     {
@@ -66,6 +68,19 @@ public class BudgetManager : MonoBehaviour
     }
 
     public List<Budget> budgetList = new List<Budget>();
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
 
     void Start()
     {
@@ -93,7 +108,6 @@ public class BudgetManager : MonoBehaviour
 
         AllocateBudget(bud, 24f, 26f, 13f, 37f);
         budgetList.Add(bud);
-        var bud1 = bud;
         budgetList.Sort(SortByYear);
     }
 
@@ -105,14 +119,14 @@ public class BudgetManager : MonoBehaviour
 
             foreach(var uk in bud.worker.upkeep)
             {
-                uk.value = uk.value * (bud.worker.population);
-                Debug.Log("Workers upkeep " + uk.allocType.ToString() + " = " + uk.value.ToString());
+                uk.amount = uk.amount * (bud.worker.population);
+                Debug.Log("Workers upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
             foreach (var p in bud.worker.produce)
             {
-                p.value = p.value * ((workerAlloc / 100) * bud.current_budget * bud.worker.population);
-                Debug.Log("Workers produce " + p.allocType.ToString() + " = " + p.value.ToString());
+                p.amount = p.amount * ((workerAlloc / 100) * bud.current_budget * bud.worker.population);
+                Debug.Log("Workers produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
         //Scientist
@@ -121,14 +135,14 @@ public class BudgetManager : MonoBehaviour
 
             foreach (var uk in bud.scientist.upkeep)
             {
-                uk.value = uk.value * (bud.scientist.population);
-                Debug.Log("Scientists upkeep " + uk.allocType.ToString() + " = " + uk.value.ToString());
+                uk.amount = uk.amount * (bud.scientist.population);
+                Debug.Log("Scientists upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
             foreach (var p in bud.scientist.produce)
             {
-                p.value = p.value * ((scientistAlloc / 100) * bud.current_budget * bud.scientist.population);
-                Debug.Log("Scientists produce " + p.allocType.ToString() + " = " + p.value.ToString());
+                p.amount = p.amount * ((scientistAlloc / 100) * bud.current_budget * bud.scientist.population);
+                Debug.Log("Scientists produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
         //Planner
@@ -137,14 +151,14 @@ public class BudgetManager : MonoBehaviour
 
             foreach (var uk in bud.planner.upkeep)
             {
-                uk.value = uk.value * (bud.planner.population);
-                Debug.Log("Planners upkeep " + uk.allocType.ToString() + " = " + uk.value.ToString());
+                uk.amount = uk.amount * (bud.planner.population);
+                Debug.Log("Planners upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
             foreach (var p in bud.planner.produce)
             {
-                p.value = p.value * ((plannerAlloc / 100) * bud.current_budget * bud.planner.population);
-                Debug.Log("Planners produce " + p.allocType.ToString() + " = " + p.value.ToString());
+                p.amount = p.amount * ((plannerAlloc / 100) * bud.current_budget * bud.planner.population);
+                Debug.Log("Planners produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
         //Farmer
@@ -153,14 +167,14 @@ public class BudgetManager : MonoBehaviour
 
             foreach (var uk in bud.farmer.upkeep)
             {
-                uk.value = uk.value * (bud.farmer.population);
-                Debug.Log("Farmers upkeep " + uk.allocType.ToString() + " = " + uk.value.ToString());
+                uk.amount = uk.amount * (bud.farmer.population);
+                Debug.Log("Farmers upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
             foreach (var p in bud.farmer.produce)
             {
-                p.value = p.value * ((farmerAlloc / 100) * bud.current_budget * bud.farmer.population);
-                Debug.Log("Farmers produce " + p.allocType.ToString() + " = " + p.value.ToString());
+                p.amount = p.amount * ((farmerAlloc / 100) * bud.current_budget * bud.farmer.population);
+                Debug.Log("Farmers produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
     }

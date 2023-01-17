@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DisasterManager : MonoBehaviour
 {
-    public static DisasterManager _INSTANCE;
+    public static DisasterManager instance;
 
     public enum disasterType
     {
@@ -26,7 +26,35 @@ public class DisasterManager : MonoBehaviour
     public int numOfDisasters = 10;
     public List<Disaster> disasterList = new List<Disaster>();
 
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
     void Start()
+    {
+        CreateDisasterList();
+        WriteDisastersInJournal();
+    }
+
+    void WriteDisastersInJournal()
+    {
+        UIController.Instance.notepadText.text = "Disasters:\n";
+        foreach (Disaster dis in disasterList)
+        {
+            UIController.Instance.notepadText.text += dis.type.ToString() + " - Year: " + dis.year + " - Intensity: " + dis.intensity.ToString("F1") + "\n";
+        }
+    }
+
+    void CreateDisasterList()
     {
         for (int i = 0; i < numOfDisasters; i++)
         {
@@ -37,17 +65,6 @@ public class DisasterManager : MonoBehaviour
             disasterList.Add(dis);
             var dis1 = dis;
             disasterList.Sort(SortByYear);
-        }
-
-        WriteDisastersInJournal();
-    }
-
-    void WriteDisastersInJournal()
-    {
-        UIController.Instance.notepadText.text = "Disasters:\n";
-        foreach (Disaster dis in disasterList)
-        {
-            UIController.Instance.notepadText.text += dis.type.ToString() + " - Year: " + dis.year + " - Intensity: " + dis.intensity.ToString("F1") + "\n";
         }
     }
 
