@@ -60,7 +60,7 @@ public class DisasterManager : MonoBehaviour
         {
             Disaster dis = new Disaster();
             dis.type = (disasterType)Random.Range(0, System.Enum.GetValues(typeof(disasterType)).Length);
-            dis.year = Random.Range(YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
+            dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
             dis.intensity = Random.Range(1f, 10f);
             disasterList.Add(dis);
             var dis1 = dis;
