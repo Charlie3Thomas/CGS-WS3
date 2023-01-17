@@ -31,9 +31,10 @@ public class AudioManager : MonoBehaviour
     EventInstance chargeInstance;
 
     private EventInstance oceanAmbienceInstance;
+    private EventInstance volcanoAmbienceInstance;
 
 
-   [Header("Event References Selector")]
+    [Header("Event References Selector")]
     [Space(20)]
 
     public UIFmodReferences uiEvents;
@@ -101,8 +102,23 @@ public class AudioManager : MonoBehaviour
 
     public void StopOceanAmbience()
     {
+        //Note for instances that only end when game over, or quit. Have one function for releasing, and stop the bus ambience bus instead. Once set up. 
         oceanAmbienceInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         oceanAmbienceInstance.release();
+    }
+
+    public void StartVolcanoAmbience(Transform transform)
+    {
+        volcanoAmbienceInstance = RuntimeManager.CreateInstance(ambienceEvents.volcanoAmbienceEvent);
+        RuntimeManager.AttachInstanceToGameObject(volcanoAmbienceInstance, transform);
+        volcanoAmbienceInstance.start();
+    }
+
+    public void StopVolcanoAmbience()
+    {
+        //Note for instances that only end when game over, or quit. Have one function for releasing, and stop the bus ambience bus instead. Once set up. 
+        volcanoAmbienceInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        volcanoAmbienceInstance.release();
     }
     /*
     public void PlayOneShotWithParameters(string fmodEvent, Transform t, params (string name, float value)[] parameters)
@@ -160,6 +176,7 @@ public class AudioManager : MonoBehaviour
     public void OnDestroy()
     {
         StopOceanAmbience();
+        StopVolcanoAmbience();
        // ReleaseAmbience();
        // ReleaseMusic();
     }

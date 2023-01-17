@@ -5,4 +5,5 @@ using UnityEngine;
 public class AmbienceFmodReferences : MonoBehaviour
 {
     public FMODUnity.EventReference oceanAmbienceEvent;
+    public FMODUnity.EventReference volcanoAmbienceEvent;
 }
