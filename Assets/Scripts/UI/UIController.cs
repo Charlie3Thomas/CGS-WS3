@@ -21,6 +21,10 @@ public class UIController : MonoBehaviour
     [SerializeField]
     private Animator yearKnobFAnim;
 
+    
+    
+
+
     [Header("Texts")]
     public TMP_Text notepadText;
     public TMP_Text yearText;
@@ -125,27 +129,49 @@ public class UIController : MonoBehaviour
         {
             if (techButtonAnim != null)
                 techButtonAnim.SetTrigger("Press");
+                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressEvent, null);
         }
 
         if (Input.GetMouseButtonDown(0) && hit.transform.name == "Button")
         {
             if (buttonAnim != null)
                 buttonAnim.SetTrigger("Press");
+                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressEvent, null);
+             
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            if (yearKnobBAnim != null)
+            //Sam edit: added braces to if statements as it was causing dial event to trigger on button press when statements had no braces
+            if (yearKnobBAnim != null && hit.transform.name == "Year_selection_backwards")
+            {
                 yearKnobBAnim.SetBool("YearDownHold", false);
+                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.dialLeftEvent, null);
+            }
 
-            if (yearKnobFAnim != null)
+            if (yearKnobFAnim != null && hit.transform.name == "Year_selection_forwards")
+            {
                 yearKnobFAnim.SetBool("YearUpHold", false);
+                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.dialRightEvent, null);
+            }
         }
 
         // Notepad hover
         if (notepadAnim != null)
+        {
             notepadAnim.SetBool("IsOver", hit.transform.name == "Notepad");
 
+            if (notepadAnim.GetCurrentAnimatorStateInfo(0).IsName("HoverUp"))
+            {
+                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.disasterUIShowEvent, null);
+            }
+
+            else if (notepadAnim.GetCurrentAnimatorStateInfo(0).IsName("HoverDown"))
+            {
+                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.disasterUIHideEvent, null);
+            }
+           
+        } 
         // Policy cards hover
         for (int i = 1; i <= 7; i++)
         {
