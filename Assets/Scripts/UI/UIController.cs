@@ -20,9 +20,11 @@ public class UIController : MonoBehaviour
     private Animator yearKnobBAnim;
     [SerializeField]
     private Animator yearKnobFAnim;
+    [SerializeField]
+    private Animator pointsSelectorAnim;
 
-    
-    
+
+
 
 
     [Header("Texts")]
@@ -113,6 +115,7 @@ public class UIController : MonoBehaviour
 
     private void HandleAnims(RaycastHit hit)
     {
+        // TODO: Add tags instead of searching through names
         if (Input.GetMouseButtonDown(0) && hit.transform.name == "Year_selection_backwards")
         {
             if (yearKnobBAnim != null)
@@ -137,22 +140,37 @@ public class UIController : MonoBehaviour
             if (buttonAnim != null)
                 buttonAnim.SetTrigger("Press");
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressEvent, null);
-             
+        }
+
+        if(Input.GetMouseButtonDown(0) && (hit.transform.name == "Point_selector_planning" || hit.transform.name == "Point_selector_Science" || hit.transform.name == "Point_selector_Food" ||
+            hit.transform.name == "Point_selector_workers"))
+        {
+            pointsSelectorAnim = hit.transform.GetComponent<Animator>();
+
+            if (pointsSelectorAnim != null)
+                pointsSelectorAnim.SetTrigger("PointsUp");
+        }
+
+        if (Input.GetMouseButtonDown(1) && (hit.transform.name == "Point_selector_planning" || hit.transform.name == "Point_selector_Science" || hit.transform.name == "Point_selector_Food" ||
+            hit.transform.name == "Point_selector_workers"))
+        {
+            pointsSelectorAnim = hit.transform.GetComponent<Animator>();
+
+            if (pointsSelectorAnim != null)
+                pointsSelectorAnim.SetTrigger("PointsDown");
         }
 
         if (Input.GetMouseButtonUp(0))
         {
             //Sam edit: added braces to if statements as it was causing dial event to trigger on button press when statements had no braces
-            if (yearKnobBAnim != null && hit.transform.name == "Year_selection_backwards")
+            if (yearKnobBAnim != null)
             {
                 yearKnobBAnim.SetBool("YearDownHold", false);
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.dialLeftEvent, null);
             }
 
-            if (yearKnobFAnim != null && hit.transform.name == "Year_selection_forwards")
+            if (yearKnobFAnim != null)
             {
                 yearKnobFAnim.SetBool("YearUpHold", false);
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.dialRightEvent, null);
             }
         }
 
