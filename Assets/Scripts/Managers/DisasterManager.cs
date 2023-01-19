@@ -47,10 +47,10 @@ public class DisasterManager : MonoBehaviour
 
     void WriteDisastersInJournal()
     {
-        UIController.Instance.notepadText.text = "Disasters:\n";
+        ComputerController.Instance.notepadText.text = "Disasters:\n";
         foreach (Disaster dis in disasterList)
         {
-            UIController.Instance.notepadText.text += dis.type.ToString() + " - Year: " + dis.year + " - Intensity: " + dis.intensity.ToString("F1") + "\n";
+            ComputerController.Instance.notepadText.text += dis.type.ToString() + " - Year: " + dis.year + " - Intensity: " + dis.intensity.ToString("F1") + "\n";
         }
     }
 

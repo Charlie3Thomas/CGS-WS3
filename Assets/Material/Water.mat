@@ -100,10 +100,10 @@ Material:
     - Vector1_B75CD54C: 0.68
     - Vector1_F8BF2348: 1
     - _AlphaClip: 0
-    - _Amplitude1: 0.8765625
-    - _Amplitude2: 0.6290625
-    - _Amplitude3: 1.340625
-    - _Amplitude4: 0.7682812
+    - _Amplitude1: 0.7889063
+    - _Amplitude2: 0.56615627
+    - _Amplitude3: 1.2065625
+    - _Amplitude4: 0.6914531
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1

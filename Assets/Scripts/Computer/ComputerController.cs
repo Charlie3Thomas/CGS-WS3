@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class UIController : MonoBehaviour
+public class ComputerController : MonoBehaviour
 {
-    public static UIController Instance;
+    public static ComputerController Instance;
+
+    public Camera screenCam;
 
     [Header("Anims")]
     [SerializeField]
@@ -56,6 +58,7 @@ public class UIController : MonoBehaviour
 
     void Start()
     {
+        screenCam = GameObject.FindGameObjectWithTag("ScreenCamera").GetComponent<Camera>();
         cam = GetComponent<Camera>();
         newPos = Vector3.zero;
     }
@@ -104,7 +107,7 @@ public class UIController : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && onScreen)
         {
             var localPoint = hit.textureCoord;
-            Ray camRay = Camera.main.ScreenPointToRay(new Vector2(localPoint.x * Camera.main.pixelWidth, localPoint.y * Camera.main.pixelHeight));
+            Ray camRay = screenCam.ScreenPointToRay(new Vector2(localPoint.x * screenCam.pixelWidth, localPoint.y * screenCam.pixelHeight));
             RaycastHit camHit;
             if (Physics.Raycast(camRay, out camHit))
             {
@@ -128,14 +131,14 @@ public class UIController : MonoBehaviour
                 yearKnobFAnim.SetBool("YearUpHold", true);
         }
 
-        if (Input.GetMouseButtonDown(0) && hit.transform.name == "Tech_tree_button")
+        if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("Button"))
         {
             if (techButtonAnim != null)
                 techButtonAnim.SetTrigger("Press");
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressEvent, null);
         }
 
-        if (Input.GetMouseButtonDown(0) && hit.transform.name == "Button")
+        if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("Button"))
         {
             if (buttonAnim != null)
                 buttonAnim.SetTrigger("Press");

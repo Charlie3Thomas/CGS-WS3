@@ -56,7 +56,7 @@ public class PolicyManager : MonoBehaviour
                 pol.awareness = Random.Range(-10000, 10000);
                 policyList.Add(pol);
                 policyList.Sort(SortByYear);
-                UIController.Instance.pCardText[policyCount].text = pol.finalChoice + "\nCost: " + pol.cost +
+                ComputerController.Instance.pCardText[policyCount].text = pol.finalChoice + "\nCost: " + pol.cost +
                 "\nPublic Favour: " + pol.publicFavour + "\nAwareness: " + pol.awareness;
                 policyCount++;
             }
