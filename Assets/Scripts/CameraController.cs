@@ -23,6 +23,9 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
+        if (vcam == null)
+            return;
+
         if (!target)
             return;
 

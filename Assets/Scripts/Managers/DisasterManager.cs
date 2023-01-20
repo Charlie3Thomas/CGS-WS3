@@ -2,26 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum disasterType
+{
+    FLOOD,
+    EARTHQUAKE,
+    VOLCANO,
+    TORNADO,
+    WILDFIRE
+}
+
+[System.Serializable]
+public class Disaster
+{
+    public disasterType type;
+    public int year;
+    public float intensity;
+}
+
 public class DisasterManager : MonoBehaviour
 {
     public static DisasterManager instance;
-
-    public enum disasterType
-    {
-        FLOOD,
-        EARTHQUAKE,
-        VOLCANO,
-        TORNADO,
-        WILDFIRE
-    }
-
-    [System.Serializable]
-    public class Disaster
-    {
-        public disasterType type;
-        public int year;
-        public float intensity;
-    }
 
     public int numOfDisasters = 10;
     public List<Disaster> disasterList = new List<Disaster>();

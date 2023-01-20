@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PolicyCard : MonoBehaviour
 {
+    [HideInInspector]
+    public Policy policy;
+
     public void PlayShowSound()
     {
         Debug.Log("Play show sound");

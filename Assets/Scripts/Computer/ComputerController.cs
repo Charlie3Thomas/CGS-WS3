@@ -3,44 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+// NOTE: ALL AUDIO WAS MOVED TO THEIR RESPECTIVE ANIM EVENT SCRIPTS
 public class ComputerController : MonoBehaviour
 {
     public static ComputerController Instance;
 
-    public Camera screenCam;
+    private Camera screenCam;
 
-    [Header("Anims")]
-    [SerializeField]
+    [HideInInspector]
+    public GameObject[] policyCards = new GameObject[7];
+
+    private Animator[] pCardAnims = new Animator[7];
     private Animator notepadAnim;
-    [SerializeField]
+    private Animator yearKnobAnim;
     private Animator buttonAnim;
-    [SerializeField]
-    private Animator techButtonAnim;
-    [SerializeField]
-    private Animator[] pCardAnim = new Animator[7];
-    [SerializeField]
-    private Animator yearKnobBAnim;
-    [SerializeField]
-    private Animator yearKnobFAnim;
-    [SerializeField]
     private Animator pointsSelectorAnim;
 
-
-
-
-
-    [Header("Texts")]
+    [HideInInspector]
     public TMP_Text notepadText;
+    [HideInInspector]
     public TMP_Text yearText;
-    public TMP_Text[] pCardText = new TMP_Text[7];
+    [HideInInspector]
+    public TMP_Text[] pCardTexts = new TMP_Text[7];
 
     private Camera cam;
+
     [HideInInspector]
     public Vector3 newPos;
 
     [HideInInspector]
     public bool touchingScreen = false;
-
+    [HideInInspector]
     public bool onScreen = false;
 
     void Awake()
@@ -58,9 +51,7 @@ public class ComputerController : MonoBehaviour
 
     void Start()
     {
-        screenCam = GameObject.FindGameObjectWithTag("ScreenCamera").GetComponent<Camera>();
-        cam = GetComponent<Camera>();
-        newPos = Vector3.zero;
+        Setup();
     }
 
     void Update()
@@ -116,37 +107,35 @@ public class ComputerController : MonoBehaviour
         }
     }
 
+    void Setup()
+    {
+        screenCam = GameObject.FindGameObjectWithTag("ScreenCamera").GetComponent<Camera>();
+        cam = GetComponent<Camera>();
+        newPos = Vector3.zero;
+        notepadAnim = GameObject.FindGameObjectWithTag("Notepad").GetComponent<Animator>();
+        yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
+        yearText = GameObject.FindGameObjectWithTag("YearCounter").GetComponent<TMP_Text>();
+        notepadText = GameObject.FindGameObjectWithTag("Notepad").transform.GetChild(0).GetComponent<TMP_Text>();
+
+        policyCards = GameObject.FindGameObjectsWithTag("PolicyCard");
+        for (int i = 0; i < policyCards.Length; i++)
+        {
+            pCardTexts[i] = policyCards[i].transform.GetChild(0).GetComponent<TMP_Text>();
+            pCardAnims[i] = policyCards[i].GetComponent<Animator>();
+        }
+    }
+
     private void HandleAnims(RaycastHit hit)
     {
-        // TODO: Add tags instead of searching through names
-        if (Input.GetMouseButtonDown(0) && hit.transform.name == "Year_selection_backwards")
-        {
-            if (yearKnobBAnim != null)
-                yearKnobBAnim.SetBool("YearDownHold", true);
-        }
-
-        if (Input.GetMouseButtonDown(0) && hit.transform.name == "Year_selection_forwards")
-        {
-            if (yearKnobFAnim != null)
-                yearKnobFAnim.SetBool("YearUpHold", true);
-        }
-
         if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("Button"))
         {
-            if (techButtonAnim != null)
-                techButtonAnim.SetTrigger("Press");
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressEvent, null);
-        }
+            buttonAnim = hit.transform.GetComponent<Animator>();
 
-        if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("Button"))
-        {
             if (buttonAnim != null)
                 buttonAnim.SetTrigger("Press");
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressEvent, null);
         }
 
-        if(Input.GetMouseButtonDown(0) && (hit.transform.name == "Point_selector_planning" || hit.transform.name == "Point_selector_Science" || hit.transform.name == "Point_selector_Food" ||
-            hit.transform.name == "Point_selector_workers"))
+        if(Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PointsSelector"))
         {
             pointsSelectorAnim = hit.transform.GetComponent<Animator>();
 
@@ -154,8 +143,7 @@ public class ComputerController : MonoBehaviour
                 pointsSelectorAnim.SetTrigger("PointsUp");
         }
 
-        if (Input.GetMouseButtonDown(1) && (hit.transform.name == "Point_selector_planning" || hit.transform.name == "Point_selector_Science" || hit.transform.name == "Point_selector_Food" ||
-            hit.transform.name == "Point_selector_workers"))
+        if (Input.GetMouseButtonDown(1) && hit.transform.CompareTag("PointsSelector"))
         {
             pointsSelectorAnim = hit.transform.GetComponent<Animator>();
 
@@ -163,30 +151,25 @@ public class ComputerController : MonoBehaviour
                 pointsSelectorAnim.SetTrigger("PointsDown");
         }
 
-        if (Input.GetMouseButtonUp(0))
+        // Year knob up/down
+        if (yearKnobAnim != null)
         {
-            //Sam edit: added braces to if statements as it was causing dial event to trigger on button press when statements had no braces
-            if (yearKnobBAnim != null)
-            {
-                yearKnobBAnim.SetBool("YearDownHold", false);
-            }
-
-            if (yearKnobFAnim != null)
-            {
-                yearKnobFAnim.SetBool("YearUpHold", false);
-            }
+            yearKnobAnim.SetBool("YearDownHold", Input.GetMouseButton(1) && hit.transform.CompareTag("YearKnob"));
+            yearKnobAnim.SetBool("YearUpHold", Input.GetMouseButton(0) && hit.transform.CompareTag("YearKnob"));
         }
 
         // Notepad hover
         if (notepadAnim != null)
-        {
-            notepadAnim.SetBool("IsOver", hit.transform.name == "Notepad");
-        } 
+            notepadAnim.SetBool("IsOver", hit.transform.CompareTag("Notepad"));
+
         // Policy cards hover
-        for (int i = 1; i <= 7; i++)
+        if(hit.transform.CompareTag("PolicyCard"))
         {
-            if (pCardAnim[i - 1] != null)
-                pCardAnim[i - 1].SetBool("IsOver", hit.transform.name == "Policy_Card_" + i);
+            for (int i = 0; i < 7; i++)
+            {
+                if (pCardAnims[i] != null)
+                    pCardAnims[i].SetBool("IsOver", hit.transform.name == policyCards[i].name);
+            }
         }
     }
 }
