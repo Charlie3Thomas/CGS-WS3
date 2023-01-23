@@ -18,7 +18,6 @@ public class Resource
 
 public class Person
 {
-    public float allocation;
     public int population;
     public List<Resource> upkeep;
     public List<Resource> produce;
@@ -52,22 +51,25 @@ public class Farmer : Person
     public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 3f } };
 }
 
-public class BudgetManager : MonoBehaviour
+public class ResourceManager : MonoBehaviour
 {
-    public static BudgetManager instance;
+    public static ResourceManager instance;
 
     [System.Serializable]
-    public class Budget
+    public class Turn
     {
-        public int current_budget;
         public int year;
+        public int currency;
+        public int researchPoints;
+        public int food;
+        public int elements;
         public Worker worker;
         public Scientist scientist;
         public Planner planner;
         public Farmer farmer;
     }
 
-    public List<Budget> budgetList = new List<Budget>();
+    public List<Turn> turnList = new List<Turn>();
 
     void Awake()
     {
@@ -85,101 +87,101 @@ public class BudgetManager : MonoBehaviour
     void Start()
     {
         //Test
-        NewBudget();
+        NewTurn();
     }
 
-    public void NewBudget()
+    public void NewTurn()
     {
-        Budget bud = new Budget();
-        bud.worker = new Worker();
-        bud.scientist = new Scientist();
-        bud.planner = new Planner();
-        bud.farmer = new Farmer();
+        Turn turn = new Turn();
+        turn.worker = new Worker();
+        turn.scientist = new Scientist();
+        turn.planner = new Planner();
+        turn.farmer = new Farmer();
 
-        //Use actual total money from economy manager possibly
-        bud.current_budget = Random.Range(1000, 10000);
-        bud.year = YearData._INSTANCE.current_year;
+        turn.year = YearData._INSTANCE.current_year;
 
         //Testing values
-        bud.worker.population = Random.Range(0, 100);
-        bud.scientist.population = Random.Range(0, 100);
-        bud.planner.population = Random.Range(0, 100);
-        bud.farmer.population = Random.Range(0, 100);
+        turn.currency = Random.Range(1000, 10000);
+        turn.researchPoints = Random.Range(1000, 10000);
+        turn.food = Random.Range(1000, 10000);
+        turn.elements = Random.Range(1000, 10000);
 
-        AllocateBudget(bud, 24f, 26f, 13f, 37f);
-        budgetList.Add(bud);
-        budgetList.Sort(SortByYear);
+        //Testing values until prompt
+        AllocatePopulation(turn, Random.Range(0, 5), Random.Range(0, 5), Random.Range(0, 5), Random.Range(0, 5));
+
+        turnList.Add(turn);
+        turnList.Sort(SortByYear);
     }
 
-    public void AllocateBudget(Budget bud, float workerAlloc, float scientistAlloc, float plannerAlloc, float farmerAlloc)
+    public void AllocatePopulation(Turn turn, int workerPopulation, int scientistPopulation, int plannerPopulation, int farmerPopulation)
     {
         //Worker
         {
-            bud.worker.allocation = workerAlloc;
+            turn.worker.population = workerPopulation;
 
-            foreach(var uk in bud.worker.upkeep)
+            foreach (var uk in turn.worker.upkeep)
             {
-                uk.amount = uk.amount * (bud.worker.population);
+                uk.amount = uk.amount * (workerPopulation);
                 Debug.Log("Workers upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
-            foreach (var p in bud.worker.produce)
+            foreach (var p in turn.worker.produce)
             {
-                p.amount = p.amount * ((workerAlloc / 100) * bud.current_budget * bud.worker.population);
+                p.amount = p.amount * (workerPopulation * turn.currency);
                 Debug.Log("Workers produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
         //Scientist
         {
-            bud.scientist.allocation = scientistAlloc;
+            turn.scientist.population = scientistPopulation;
 
-            foreach (var uk in bud.scientist.upkeep)
+            foreach (var uk in turn.scientist.upkeep)
             {
-                uk.amount = uk.amount * (bud.scientist.population);
+                uk.amount = uk.amount * (scientistPopulation);
                 Debug.Log("Scientists upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
-            foreach (var p in bud.scientist.produce)
+            foreach (var p in turn.scientist.produce)
             {
-                p.amount = p.amount * ((scientistAlloc / 100) * bud.current_budget * bud.scientist.population);
+                p.amount = p.amount * (scientistPopulation * turn.currency);
                 Debug.Log("Scientists produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
         //Planner
         {
-            bud.planner.allocation = plannerAlloc;
+            turn.planner.population = plannerPopulation;
 
-            foreach (var uk in bud.planner.upkeep)
+            foreach (var uk in turn.planner.upkeep)
             {
-                uk.amount = uk.amount * (bud.planner.population);
+                uk.amount = uk.amount * (plannerPopulation);
                 Debug.Log("Planners upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
-            foreach (var p in bud.planner.produce)
+            foreach (var p in turn.planner.produce)
             {
-                p.amount = p.amount * ((plannerAlloc / 100) * bud.current_budget * bud.planner.population);
+                p.amount = p.amount * (plannerPopulation * turn.currency);
                 Debug.Log("Planners produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
         //Farmer
         {
-            bud.farmer.allocation = farmerAlloc;
+            turn.farmer.population = farmerPopulation;
 
-            foreach (var uk in bud.farmer.upkeep)
+            foreach (var uk in turn.farmer.upkeep)
             {
-                uk.amount = uk.amount * (bud.farmer.population);
+                uk.amount = uk.amount * (farmerPopulation);
                 Debug.Log("Farmers upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
-            foreach (var p in bud.farmer.produce)
+            foreach (var p in turn.farmer.produce)
             {
-                p.amount = p.amount * ((farmerAlloc / 100) * bud.current_budget * bud.farmer.population);
+                p.amount = p.amount * (farmerPopulation * turn.currency);
                 Debug.Log("Farmers produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
     }
 
-    private static int SortByYear(Budget bud1, Budget bud2)
+    private static int SortByYear(Turn bud1, Turn bud2)
     {
         return bud1.year.CompareTo(bud2.year);
     }
