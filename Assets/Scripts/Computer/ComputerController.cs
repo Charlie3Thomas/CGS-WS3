@@ -12,13 +12,16 @@ public class ComputerController : MonoBehaviour
 
     [HideInInspector]
     public GameObject[] policyCards = new GameObject[7];
+    private List<PointSelector> pointSelectors;
 
+    // Anims
     private Animator[] pCardAnims = new Animator[7];
     private Animator notepadAnim;
     private Animator yearKnobAnim;
     private Animator buttonAnim;
     private Animator pointsSelectorAnim;
 
+    // Texts
     [HideInInspector]
     public TMP_Text notepadText;
     [HideInInspector]
@@ -116,6 +119,7 @@ public class ComputerController : MonoBehaviour
         yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
         yearText = GameObject.FindGameObjectWithTag("YearCounter").GetComponent<TMP_Text>();
         notepadText = GameObject.FindGameObjectWithTag("Notepad").transform.GetChild(0).GetComponent<TMP_Text>();
+        pointSelectors = new List<PointSelector>(FindObjectsOfType<PointSelector>());
 
         policyCards = GameObject.FindGameObjectsWithTag("PolicyCard");
         for (int i = 0; i < policyCards.Length; i++)
@@ -163,13 +167,37 @@ public class ComputerController : MonoBehaviour
             notepadAnim.SetBool("IsOver", hit.transform.CompareTag("Notepad"));
 
         // Policy cards hover
-        if(hit.transform.CompareTag("PolicyCard"))
+        for (int i = 0; i < 7; i++)
         {
-            for (int i = 0; i < 7; i++)
+            if (pCardAnims[i] != null)
+                pCardAnims[i].SetBool("IsOver", hit.transform.name == policyCards[i].name);
+        }
+    }
+
+    public void CheckPoints(PointSelector excluded)
+    {
+        float totalPoints = 0;
+        foreach (var pointSelector in pointSelectors)
+        {
+            totalPoints += pointSelector.pointValue;
+        }
+        if (totalPoints > 5)
+        {
+            PointSelector highestPointSelector = FindHighestPointSelector(excluded);
+            highestPointSelector.RemovePoints(1);
+        }
+    }
+
+    private PointSelector FindHighestPointSelector(PointSelector excluded)
+    {
+        PointSelector highestPointSelector = pointSelectors[0];
+        for (int i = 0; i < pointSelectors.Count; i++)
+        {
+            if ((pointSelectors[i].pointValue > highestPointSelector.pointValue) && pointSelectors[i] != excluded)
             {
-                if (pCardAnims[i] != null)
-                    pCardAnims[i].SetBool("IsOver", hit.transform.name == policyCards[i].name);
+                highestPointSelector = pointSelectors[i];
             }
         }
+        return highestPointSelector;
     }
 }
