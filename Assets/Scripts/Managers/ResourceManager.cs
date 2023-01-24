@@ -51,23 +51,30 @@ public class Farmer : Person
     public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 3f } };
 }
 
+[System.Serializable]
+public class Turn
+{
+    public int year;
+    public int total_population;
+    public int currency;
+    public int researchPoints;
+    public int food;
+    public int elements;
+    public Worker worker;
+    public Scientist scientist;
+    public Planner planner;
+    public Farmer farmer;
+}
+
 public class ResourceManager : MonoBehaviour
 {
     public static ResourceManager instance;
 
-    [System.Serializable]
-    public class Turn
-    {
-        public int year;
-        public int currency;
-        public int researchPoints;
-        public int food;
-        public int elements;
-        public Worker worker;
-        public Scientist scientist;
-        public Planner planner;
-        public Farmer farmer;
-    }
+    public int current_total_population;
+    public int current_currency;
+    public int current_researchPoints;
+    public int current_food;
+    public int current_elements;
 
     public List<Turn> turnList = new List<Turn>();
 
@@ -86,6 +93,13 @@ public class ResourceManager : MonoBehaviour
 
     void Start()
     {
+        //Testing values
+        current_total_population = Random.Range(1000, 10000);
+        current_currency = Random.Range(1000, 10000);
+        current_researchPoints = Random.Range(1000, 10000);
+        current_food = Random.Range(1000, 10000);
+        current_elements = Random.Range(1000, 10000);
+
         //Test
         NewTurn();
     }
@@ -99,25 +113,24 @@ public class ResourceManager : MonoBehaviour
         turn.farmer = new Farmer();
 
         turn.year = YearData._INSTANCE.current_year;
-
-        //Testing values
-        turn.currency = Random.Range(1000, 10000);
-        turn.researchPoints = Random.Range(1000, 10000);
-        turn.food = Random.Range(1000, 10000);
-        turn.elements = Random.Range(1000, 10000);
+        turn.total_population = current_total_population;
+        turn.currency = current_currency;
+        turn.researchPoints = current_researchPoints;
+        turn.food = current_food;
+        turn.elements = current_elements;
 
         //Testing values until prompt
-        AllocatePopulation(turn, Random.Range(0, 5), Random.Range(0, 5), Random.Range(0, 5), Random.Range(0, 5));
+        AllocatePopulation(turn, Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
 
         turnList.Add(turn);
         turnList.Sort(SortByYear);
     }
 
-    public void AllocatePopulation(Turn turn, int workerPopulation, int scientistPopulation, int plannerPopulation, int farmerPopulation)
+    public void AllocatePopulation(Turn turn, float workerPopulation, float scientistPopulation, float plannerPopulation, float farmerPopulation)
     {
         //Worker
         {
-            turn.worker.population = workerPopulation;
+            turn.worker.population = (int)(workerPopulation * turn.total_population);
 
             foreach (var uk in turn.worker.upkeep)
             {
@@ -133,7 +146,7 @@ public class ResourceManager : MonoBehaviour
         }
         //Scientist
         {
-            turn.scientist.population = scientistPopulation;
+            turn.scientist.population = (int)(scientistPopulation * turn.total_population);
 
             foreach (var uk in turn.scientist.upkeep)
             {
@@ -149,7 +162,7 @@ public class ResourceManager : MonoBehaviour
         }
         //Planner
         {
-            turn.planner.population = plannerPopulation;
+            turn.planner.population = (int)(plannerPopulation * turn.total_population);
 
             foreach (var uk in turn.planner.upkeep)
             {
@@ -165,7 +178,7 @@ public class ResourceManager : MonoBehaviour
         }
         //Farmer
         {
-            turn.farmer.population = farmerPopulation;
+            turn.farmer.population = (int)(farmerPopulation * turn.total_population);
 
             foreach (var uk in turn.farmer.upkeep)
             {

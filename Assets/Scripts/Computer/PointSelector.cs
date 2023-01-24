@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum SelectorType
@@ -17,29 +15,32 @@ public class PointSelector : MonoBehaviour
     public GameObject pip;
     private Material pipMat;
 
-    private int points = 0;
+    public float pointValue;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         pipMat = pip.GetComponent<Renderer>().material;
     }
 
-    public void IncreasePoint()
+    public void AddPoints(float points)
     {
-        if (points < 5)
-            points++;
+        if(pointValue < 5)
+            pointValue += points;
 
         if (pipMat != null)
-            pipMat.SetFloat("_FillAmount", points);
+            pipMat.SetFloat("_FillAmount", pointValue);
+
+        ComputerController.Instance.CheckPoints(this);
     }
 
-    public void DecreasePoint()
+    public void RemovePoints(float points)
     {
-        if (points > 0)
-            points--;
+        if(pointValue > 0)
+            pointValue -= points;
 
-        if(pipMat != null)
-            pipMat.SetFloat("_FillAmount", points);
+        if (pipMat != null)
+            pipMat.SetFloat("_FillAmount", pointValue);
+
+        ComputerController.Instance.CheckPoints(this);
     }
 }
