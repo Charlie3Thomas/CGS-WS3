@@ -7,11 +7,13 @@ public class Button : MonoBehaviour
     [SerializeField]
     private bool reset = true;
     [SerializeField]
-    private bool techTree = false;
+    private bool panUp = false;
     [SerializeField]
-    private bool journal = false;
+    private bool panDown = false;
     [SerializeField]
     private bool confirmYear = false;
+    [SerializeField]
+    private bool journalNotepad = false;
 
     public void Press()
     {
@@ -22,15 +24,15 @@ public class Button : MonoBehaviour
             Debug.Log("Reset");
         }
 
-        if (journal)
+        if (panDown)
         {
-            // Tech tree
+            // Pan down to journal
             Debug.Log("Pan Down");
         }
 
-        if (techTree)
+        if (panUp)
         {
-            // Tech tree
+            // Pan up to tech tree screen
             Debug.Log("Pan Up");
         }
 
@@ -38,6 +40,12 @@ public class Button : MonoBehaviour
         {
             // Confirm year
             Debug.Log("Confirm year");
+        }
+
+        if (journalNotepad)
+        {
+            // Change between journal and notepad
+            Debug.Log("Change screen between notepad and journal");
         }
     }
 }
