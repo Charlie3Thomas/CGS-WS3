@@ -16,7 +16,6 @@ public class ComputerController : MonoBehaviour
 
     // Anims
     private Animator[] pCardAnims = new Animator[7];
-    private Animator notepadAnim;
     private Animator yearKnobAnim;
     private Animator buttonAnim;
     private Animator pointsSelectorAnim;
@@ -50,11 +49,13 @@ public class ComputerController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        Setup();
     }
 
     void Start()
     {
-        Setup();
+
     }
 
     void Update()
@@ -115,7 +116,6 @@ public class ComputerController : MonoBehaviour
         screenCam = GameObject.FindGameObjectWithTag("ScreenCamera").GetComponent<Camera>();
         cam = GetComponent<Camera>();
         newPos = Vector3.zero;
-        notepadAnim = GameObject.FindGameObjectWithTag("Notepad").GetComponent<Animator>();
         yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
         yearText = GameObject.FindGameObjectWithTag("YearCounter").GetComponent<TMP_Text>();
         notepadText = GameObject.FindGameObjectWithTag("Notepad").transform.GetChild(0).GetComponent<TMP_Text>();
@@ -161,10 +161,6 @@ public class ComputerController : MonoBehaviour
             yearKnobAnim.SetBool("YearDownHold", Input.GetMouseButton(1) && hit.transform.CompareTag("YearKnob"));
             yearKnobAnim.SetBool("YearUpHold", Input.GetMouseButton(0) && hit.transform.CompareTag("YearKnob"));
         }
-
-        // Notepad hover
-        if (notepadAnim != null)
-            notepadAnim.SetBool("IsOver", hit.transform.CompareTag("Notepad"));
 
         // Policy cards hover
         for (int i = 0; i < 7; i++)

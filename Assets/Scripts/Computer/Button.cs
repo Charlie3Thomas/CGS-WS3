@@ -9,6 +9,8 @@ public class Button : MonoBehaviour
     [SerializeField]
     private bool techTree = false;
     [SerializeField]
+    private bool journal = false;
+    [SerializeField]
     private bool confirmYear = false;
 
     public void Press()
@@ -20,13 +22,19 @@ public class Button : MonoBehaviour
             Debug.Log("Reset");
         }
 
-        if(techTree)
+        if (journal)
         {
             // Tech tree
-            Debug.Log("Open tech tree");
+            Debug.Log("Pan Down");
         }
 
-        if(confirmYear)
+        if (techTree)
+        {
+            // Tech tree
+            Debug.Log("Pan Up");
+        }
+
+        if (confirmYear)
         {
             // Confirm year
             Debug.Log("Confirm year");
