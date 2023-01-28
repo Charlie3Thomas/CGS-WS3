@@ -19,7 +19,7 @@ public class PointSelector : MonoBehaviour
 
     private void Start()
     {
-        pipMat = pip.GetComponent<Renderer>().material;
+        pipMat = pip.GetComponent<Renderer>().materials[1];
     }
 
     public void AddPoints(float points)
