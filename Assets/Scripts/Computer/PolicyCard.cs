@@ -9,7 +9,7 @@ public class PolicyCard : MonoBehaviour
 
     public void PlayShowSound()
     {
-        Debug.Log("Play show sound");
+        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.policyCardShowEvent, null);
     }
 
     public void PlayHideSound()

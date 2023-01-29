@@ -113,6 +113,7 @@ public class ComputerController : MonoBehaviour
                 if (YearData._INSTANCE.current_year % 5 != 0)
                 {
                     YearData._INSTANCE.current_year = YearData._INSTANCE.current_year - (YearData._INSTANCE.current_year % 5);
+                    AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
                 }
                 if (YearData._INSTANCE.current_year < YearData._INSTANCE.earliest_year)
                 {
@@ -193,6 +194,7 @@ public class ComputerController : MonoBehaviour
         if(Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PointsSelector"))
         {
             pointsSelectorAnim = hit.transform.GetComponent<Animator>();
+            AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.pipEvent, null); //Will create a different beep sound in for removing points, and have param to trigger from one event, that is why this is here atm
 
             if (pointsSelectorAnim != null)
                 pointsSelectorAnim.SetTrigger("PointsUp");
@@ -201,6 +203,7 @@ public class ComputerController : MonoBehaviour
         if (Input.GetMouseButtonDown(1) && hit.transform.CompareTag("PointsSelector"))
         {
             pointsSelectorAnim = hit.transform.GetComponent<Animator>();
+            AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.pipEvent, null); //Will create a different beep sound in for removing points, and have param to trigger from one event, that is why this is here atm
 
             if (pointsSelectorAnim != null)
                 pointsSelectorAnim.SetTrigger("PointsDown");

@@ -17,7 +17,7 @@ public class AudioManager : MonoBehaviour
     }
 
     [Header("Volume Sliders")]
-    public float masterVolume = 0.5f;
+    public float masterVolume = 0.9f;
     public float bgVolume = 0.5f;
     public float sfxVolume = 0.5f;
     public int testIndex = 2;
@@ -66,8 +66,8 @@ public class AudioManager : MonoBehaviour
         masterBus = RuntimeManager.GetBus("Bus:/");
         //backgroundBus = RuntimeManager.GetBus("Bus:/Master/Background");
         //sfxBus = RuntimeManager.GetBus("Bus:/Master/SFX");
-        //StartAmbience();
-        //StartMusic();
+         StartAmbience();
+         StartMusic();
     }
 
     private void Update()
@@ -120,49 +120,35 @@ public class AudioManager : MonoBehaviour
         volcanoAmbienceInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         volcanoAmbienceInstance.release();
     }
-    /*
-    public void PlayOneShotWithParameters(string fmodEvent, Transform t, params (string name, float value)[] parameters)
-    {
-        EventInstance instance = RuntimeManager.CreateInstance(sfxDir + fmodEvent);
-
-        foreach (var (name, value) in parameters)
-        {
-            instance.setParameterByName(name, value);
-        }
-
-        if (t.GetComponent<Rigidbody>() != null)
-            RuntimeManager.AttachInstanceToGameObject(instance, t, t.GetComponent<Rigidbody>());
-
-        instance.set3DAttributes(t.position.To3DAttributes());
-        instance.start();
-        instance.release();
-    }
-    */
-    /*
+   
+    
+    
     public void StartAmbience()
     {
-        ambienceInstance = RuntimeManager.CreateInstance(ambienceEvent);
+        ambienceInstance = RuntimeManager.CreateInstance(ambienceEvents.windAmbienceEvent);
         ambienceInstance.start();
         ambienceInstance.release();
     }
-
+    
     public void StartMusic()
     {
-        musicInstance = RuntimeManager.CreateInstance(musicEvent);
+        musicInstance = RuntimeManager.CreateInstance(ambienceEvents.musicEvent);
         musicInstance.start();
-        musicInstance.release();
+        
     }
-
+    
+    //Handle any continous 2D ambience events here
     public void ReleaseAmbience()
     {
         ambienceInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }
-
+   
     public void ReleaseMusic()
     {
         musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        musicInstance.release();
     }
-    */
+    /*
     public void Resume()
     {
         masterBus.setPaused(false);
@@ -172,12 +158,12 @@ public class AudioManager : MonoBehaviour
     {
         masterBus.setPaused(true);
     }
-
+    */
     public void OnDestroy()
     {
         StopOceanAmbience();
         StopVolcanoAmbience();
-       // ReleaseAmbience();
-       // ReleaseMusic();
+        ReleaseAmbience();
+        ReleaseMusic();
     }
 }

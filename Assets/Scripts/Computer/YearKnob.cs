@@ -15,6 +15,6 @@ public class YearKnob : MonoBehaviour
     {
         YearData._INSTANCE.YearDown();
         ComputerController.Instance.UpdateSlider();
-        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.dialLeftEvent, null);
+        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.dialRightEvent, null);
     }
 }
