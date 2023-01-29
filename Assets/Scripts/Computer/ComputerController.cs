@@ -110,19 +110,19 @@ public class ComputerController : MonoBehaviour
                 float remappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
                 float newRemappedValue = remappedValue + Input.GetAxis("Mouse X") * 0.5f;
                 YearData._INSTANCE.current_year = (int)Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
+
                 if (YearData._INSTANCE.current_year % 5 != 0)
                 {
                     YearData._INSTANCE.current_year = YearData._INSTANCE.current_year - (YearData._INSTANCE.current_year % 5);
                     AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
                 }
+
                 if (YearData._INSTANCE.current_year < YearData._INSTANCE.earliest_year)
-                {
                     YearData._INSTANCE.current_year = YearData._INSTANCE.earliest_year;
-                }
+
                 if (YearData._INSTANCE.current_year > YearData._INSTANCE.latest_year)
-                {
                     YearData._INSTANCE.current_year = YearData._INSTANCE.latest_year;
-                }
+
                 newRemappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
                 yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
             }
