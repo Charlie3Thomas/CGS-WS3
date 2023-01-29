@@ -127,7 +127,7 @@ public class AudioManager : MonoBehaviour
     {
         ambienceInstance = RuntimeManager.CreateInstance(ambienceEvents.windAmbienceEvent);
         ambienceInstance.start();
-        ambienceInstance.release();
+        
     }
     
     public void StartMusic()
@@ -141,6 +141,7 @@ public class AudioManager : MonoBehaviour
     public void ReleaseAmbience()
     {
         ambienceInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        ambienceInstance.release();
     }
    
     public void ReleaseMusic()
