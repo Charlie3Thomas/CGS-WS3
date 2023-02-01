@@ -21,7 +21,8 @@ public class ComputerController : MonoBehaviour
 
     [HideInInspector]
     public GameObject[] policyCards = new GameObject[7];
-    private List<PointSelector> pointSelectors;
+    [HideInInspector]
+    public List<PointSelector> pointSelectors;
 
     // Anims
     private Animator[] pCardAnims = new Animator[7];
@@ -174,6 +175,8 @@ public class ComputerController : MonoBehaviour
         lookAt.localPosition = defaultLook;
         panUpButton.gameObject.SetActive(true);
         panDownButton.gameObject.SetActive(true);
+        panBackFromUpButton.gameObject.SetActive(false);
+        panBackFromDownButton.gameObject.SetActive(false);
         cam = GetComponent<Camera>();
         newPos = Vector3.zero;
         yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
@@ -192,7 +195,7 @@ public class ComputerController : MonoBehaviour
         UpdateSlider();
     }
 
-    float Remap(float value, float from1, float to1, float from2, float to2)
+    private float Remap(float value, float from1, float to1, float from2, float to2)
     {
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }

@@ -10,7 +10,7 @@ public enum buttonType
     JOURNAL_NOTEPAD
 }
 
-public class Button : MonoBehaviour
+public class ComputerButton : MonoBehaviour
 {
     public buttonType type = buttonType.RESET;
 
@@ -25,6 +25,10 @@ public class Button : MonoBehaviour
             case buttonType.CONFIRM_ALLOCATION:
                 // Confirm allocation
                 Debug.Log("Confirm allocation");
+                // Allocates the populations/factions and registers turn in a list as well as sorts the list in resource manager
+                // Get index by name instead in future, im just super tired right now
+                ResourceManager.instance.AllocatePopulation(ComputerController.Instance.pointSelectors[3].pointValue,
+                    ComputerController.Instance.pointSelectors[0].pointValue, ComputerController.Instance.pointSelectors[1].pointValue, ComputerController.Instance.pointSelectors[2].pointValue);
                 break;
             case buttonType.CONFIRM_YEAR:
                 // Confirm year
