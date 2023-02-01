@@ -201,6 +201,7 @@ public class ResourceManager : MonoBehaviour
             }
         }
 
+        // Replace turn if it exists
         if(turnList.Contains(current_turn))
             turnList.Remove(current_turn);
 

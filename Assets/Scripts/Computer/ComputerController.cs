@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public enum ComputerState
 {
@@ -30,6 +31,11 @@ public class ComputerController : MonoBehaviour
     private Animator buttonAnim;
     private Animator pointsSelectorAnim;
 
+    [HideInInspector]
+    public GameObject notepad;
+    [HideInInspector]
+    public GameObject journal;
+
     // Texts
     [HideInInspector]
     public TMP_Text notepadText;
@@ -47,10 +53,10 @@ public class ComputerController : MonoBehaviour
     public bool onScreen = false;
 
     // UI
-    public UnityEngine.UI.Button panUpButton;
-    public UnityEngine.UI.Button panDownButton;
-    public UnityEngine.UI.Button panBackFromUpButton;
-    public UnityEngine.UI.Button panBackFromDownButton;
+    private GameObject panUpButton;
+    private GameObject panDownButton;
+    private GameObject panBackFromUpButton;
+    private GameObject panBackFromDownButton;
     private bool panning = false;
     private Vector3 defaultLook = new Vector3(0f, -0.5f, 0f);
     private Vector3 lookDown = new Vector3(0f, -12f, 0f);
@@ -89,62 +95,111 @@ public class ComputerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            onScreen = hit.transform.name == "Screen";
-
-            InteractWithScreen(hit);
-
-            if (Input.GetMouseButtonDown(1) && onScreen && !yearSliding)
+            if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("Button"))
             {
-                touchingScreen = true;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                buttonAnim = hit.transform.GetComponent<Animator>();
+
+                if (buttonAnim != null)
+                    buttonAnim.SetTrigger("Press");
             }
 
-            if (Input.GetMouseButtonUp(1) && !yearSliding)
+            switch (computerState)
             {
-                touchingScreen = false;
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                case ComputerState.MAIN_COMPUTER:
+                    if (yearSliding)
+                    {
+                        float remappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+                        float newRemappedValue = remappedValue + Input.GetAxis("Mouse X") * 0.5f;
+                        YearData._INSTANCE.current_year = (int)Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
+
+                        if (YearData._INSTANCE.current_year % 5 != 0)
+                        {
+                            YearData._INSTANCE.current_year = YearData._INSTANCE.current_year - (YearData._INSTANCE.current_year % 5);
+                            AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
+                        }
+
+                        if (YearData._INSTANCE.current_year < YearData._INSTANCE.earliest_year)
+                            YearData._INSTANCE.current_year = YearData._INSTANCE.earliest_year;
+
+                        if (YearData._INSTANCE.current_year > YearData._INSTANCE.latest_year)
+                            YearData._INSTANCE.current_year = YearData._INSTANCE.latest_year;
+
+                        newRemappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+                        yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
+                    }
+
+                    if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("YearSlider"))
+                    {
+                        Cursor.visible = false;
+                        Cursor.lockState = CursorLockMode.Locked;
+                        yearSliding = true;
+                    }
+
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        Cursor.visible = true;
+                        Cursor.lockState = CursorLockMode.None;
+                        yearSliding = false;
+                    }
+
+                    onScreen = hit.transform.name == "Screen";
+
+                    InteractWithScreen(hit);
+
+                    if (Input.GetMouseButtonDown(1) && onScreen && !yearSliding)
+                    {
+                        touchingScreen = true;
+                        Cursor.lockState = CursorLockMode.Locked;
+                        Cursor.visible = false;
+                    }
+
+                    if (Input.GetMouseButtonUp(1) && !yearSliding)
+                    {
+                        touchingScreen = false;
+                        Cursor.lockState = CursorLockMode.None;
+                        Cursor.visible = true;
+                    }
+
+                    if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PointsSelector"))
+                    {
+                        pointsSelectorAnim = hit.transform.GetComponent<Animator>();
+                        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.pipEvent, null); //Will create a different beep sound in for removing points, and have param to trigger from one event, that is why this is here atm
+
+                        if (pointsSelectorAnim != null)
+                            pointsSelectorAnim.SetTrigger("PointsUp");
+                    }
+
+                    if (Input.GetMouseButtonDown(1) && hit.transform.CompareTag("PointsSelector"))
+                    {
+                        pointsSelectorAnim = hit.transform.GetComponent<Animator>();
+                        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.pipEvent, null); //Will create a different beep sound in for removing points, and have param to trigger from one event, that is why this is here atm
+
+                        if (pointsSelectorAnim != null)
+                            pointsSelectorAnim.SetTrigger("PointsDown");
+                    }
+
+                    // Year knob up/down
+                    if (yearKnobAnim != null)
+                    {
+                        yearKnobAnim.SetBool("YearDownHold", Input.GetMouseButton(1) && hit.transform.CompareTag("YearKnob"));
+                        yearKnobAnim.SetBool("YearUpHold", Input.GetMouseButton(0) && hit.transform.CompareTag("YearKnob"));
+                    }
+
+                    // Policy cards hover
+                    for (int i = 0; i < 7; i++)
+                    {
+                        if (pCardAnims[i] != null)
+                            pCardAnims[i].SetBool("IsOver", hit.transform.name == policyCards[i].name);
+                    }
+
+                    break;
+                case ComputerState.TECH_TREE_SCREEN:
+                    // Specific tech tree stuff
+                    break;
+                case ComputerState.JOURNAL:
+                    // Specific journal stuff
+                    break;
             }
-
-            HandleAnims(hit);
-
-            if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("YearSlider"))
-            {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-                yearSliding = true;
-            }
-
-            if (Input.GetMouseButtonUp(0))
-            {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-                yearSliding = false;
-            }
-
-            if(yearSliding)
-            {
-                float remappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
-                float newRemappedValue = remappedValue + Input.GetAxis("Mouse X") * 0.5f;
-                YearData._INSTANCE.current_year = (int)Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
-
-                if (YearData._INSTANCE.current_year % 5 != 0)
-                {
-                    YearData._INSTANCE.current_year = YearData._INSTANCE.current_year - (YearData._INSTANCE.current_year % 5);
-                    AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
-                }
-
-                if (YearData._INSTANCE.current_year < YearData._INSTANCE.earliest_year)
-                    YearData._INSTANCE.current_year = YearData._INSTANCE.earliest_year;
-
-                if (YearData._INSTANCE.current_year > YearData._INSTANCE.latest_year)
-                    YearData._INSTANCE.current_year = YearData._INSTANCE.latest_year;
-
-                newRemappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
-                yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
-            }
-
         }
         else
         {
@@ -167,21 +222,31 @@ public class ComputerController : MonoBehaviour
         }
     }
 
+    // Call whenever you want to set up everything including references (could be used to reset)
     void Setup()
     {
         screenCam = GameObject.FindGameObjectWithTag("ScreenCamera").GetComponent<Camera>();
         lookAt = GameObject.FindGameObjectWithTag("LookTarget").transform;
         computerState = ComputerState.MAIN_COMPUTER;
         lookAt.localPosition = defaultLook;
-        panUpButton.gameObject.SetActive(true);
-        panDownButton.gameObject.SetActive(true);
-        panBackFromUpButton.gameObject.SetActive(false);
-        panBackFromDownButton.gameObject.SetActive(false);
+        panUpButton = GameObject.Find("PanUpButton");
+        panDownButton = GameObject.Find("PanDownButton");
+        panBackFromUpButton = GameObject.Find("PanBackButtonFromUp");
+        panBackFromDownButton = GameObject.Find("PanBackButtonFromDown");
+        Debug.Log(panBackFromUpButton.name);
+        panUpButton.SetActive(true);
+        panDownButton.SetActive(true);
+        panBackFromUpButton.SetActive(false);
+        panBackFromDownButton.SetActive(false);
         cam = GetComponent<Camera>();
         newPos = Vector3.zero;
         yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
         yearText = GameObject.FindGameObjectWithTag("YearCounter").GetComponent<TMP_Text>();
-        notepadText = GameObject.FindGameObjectWithTag("Notepad").transform.GetChild(0).GetComponent<TMP_Text>();
+        notepad = GameObject.FindGameObjectWithTag("Notepad");
+        journal = GameObject.FindGameObjectWithTag("Journal");
+        notepadText = notepad.transform.GetChild(0).GetComponent<TMP_Text>();
+        notepad.SetActive(true);
+        journal.SetActive(false);
         pointSelectors = new List<PointSelector>(FindObjectsOfType<PointSelector>());
         yearSlider = GameObject.FindGameObjectWithTag("YearSlider");
 
@@ -204,49 +269,6 @@ public class ComputerController : MonoBehaviour
     {
         float remappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
         yearSlider.transform.localPosition = new Vector3(remappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
-    }
-
-    private void HandleAnims(RaycastHit hit)
-    {
-        if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("Button"))
-        {
-            buttonAnim = hit.transform.GetComponent<Animator>();
-
-            if (buttonAnim != null)
-                buttonAnim.SetTrigger("Press");
-        }
-
-        if(Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PointsSelector"))
-        {
-            pointsSelectorAnim = hit.transform.GetComponent<Animator>();
-            AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.pipEvent, null); //Will create a different beep sound in for removing points, and have param to trigger from one event, that is why this is here atm
-
-            if (pointsSelectorAnim != null)
-                pointsSelectorAnim.SetTrigger("PointsUp");
-        }
-
-        if (Input.GetMouseButtonDown(1) && hit.transform.CompareTag("PointsSelector"))
-        {
-            pointsSelectorAnim = hit.transform.GetComponent<Animator>();
-            AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.pipEvent, null); //Will create a different beep sound in for removing points, and have param to trigger from one event, that is why this is here atm
-
-            if (pointsSelectorAnim != null)
-                pointsSelectorAnim.SetTrigger("PointsDown");
-        }
-
-        // Year knob up/down
-        if (yearKnobAnim != null)
-        {
-            yearKnobAnim.SetBool("YearDownHold", Input.GetMouseButton(1) && hit.transform.CompareTag("YearKnob"));
-            yearKnobAnim.SetBool("YearUpHold", Input.GetMouseButton(0) && hit.transform.CompareTag("YearKnob"));
-        }
-
-        // Policy cards hover
-        for (int i = 0; i < 7; i++)
-        {
-            if (pCardAnims[i] != null)
-                pCardAnims[i].SetBool("IsOver", hit.transform.name == policyCards[i].name);
-        }
     }
 
     public void CheckPoints(PointSelector excluded)
@@ -298,40 +320,40 @@ public class ComputerController : MonoBehaviour
     private IEnumerator PanUp()
     {
         panning = true;
-        panUpButton.gameObject.SetActive(false);
-        panDownButton.gameObject.SetActive(false);
+        panUpButton.SetActive(false);
+        panDownButton.SetActive(false);
         computerState = ComputerState.TECH_TREE_SCREEN;
         lookAt.localPosition = lookUp;
         yield return new WaitForSeconds(1.0f);
         panning = false;
-        panBackFromUpButton.gameObject.SetActive(true);
+        panBackFromUpButton.SetActive(true);
         yield return null;
     }
 
     private IEnumerator PanDown()
     {
         panning = true;
-        panUpButton.gameObject.SetActive(false);
-        panDownButton.gameObject.SetActive(false);
+        panUpButton.SetActive(false);
+        panDownButton.SetActive(false);
         computerState = ComputerState.JOURNAL;
         lookAt.localPosition = lookDown;
         yield return new WaitForSeconds(1.0f);
         panning = false;
-        panBackFromDownButton.gameObject.SetActive(true);
+        panBackFromDownButton.SetActive(true);
         yield return null;
     }
 
     private IEnumerator PanBack()
     {
         panning = true;
-        panBackFromDownButton.gameObject.SetActive(false);
-        panBackFromUpButton.gameObject.SetActive(false);
+        panBackFromDownButton.SetActive(false);
+        panBackFromUpButton.SetActive(false);
         computerState = ComputerState.MAIN_COMPUTER;
         lookAt.localPosition = defaultLook;
         yield return new WaitForSeconds(1.0f);
         panning = false;
-        panUpButton.gameObject.SetActive(true);
-        panDownButton.gameObject.SetActive(true);
+        panUpButton.SetActive(true);
+        panDownButton.SetActive(true);
         yield return null;
     }
 }
