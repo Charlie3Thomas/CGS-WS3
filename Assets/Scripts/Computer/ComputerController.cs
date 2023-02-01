@@ -3,16 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+public enum ComputerState
+{
+    MAIN_COMPUTER,
+    TECH_TREE_SCREEN,
+    JOURNAL
+}
+
 // NOTE: ALL AUDIO WAS MOVED TO THEIR RESPECTIVE ANIM EVENT SCRIPTS
 public class ComputerController : MonoBehaviour
 {
     public static ComputerController Instance;
 
+    private Transform lookAt;
     private Camera screenCam;
+    private ComputerState computerState = ComputerState.MAIN_COMPUTER;
 
     [HideInInspector]
     public GameObject[] policyCards = new GameObject[7];
-    private List<PointSelector> pointSelectors;
+    [HideInInspector]
+    public List<PointSelector> pointSelectors;
 
     // Anims
     private Animator[] pCardAnims = new Animator[7];
@@ -29,18 +39,26 @@ public class ComputerController : MonoBehaviour
     public TMP_Text[] pCardTexts = new TMP_Text[7];
 
     private Camera cam;
-
     [HideInInspector]
     public Vector3 newPos;
-
     [HideInInspector]
     public bool touchingScreen = false;
     [HideInInspector]
     public bool onScreen = false;
 
+    // UI
+    public UnityEngine.UI.Button panUpButton;
+    public UnityEngine.UI.Button panDownButton;
+    public UnityEngine.UI.Button panBackFromUpButton;
+    public UnityEngine.UI.Button panBackFromDownButton;
+    private bool panning = false;
+    private Vector3 defaultLook = new Vector3(0f, -0.5f, 0f);
+    private Vector3 lookDown = new Vector3(0f, -12f, 0f);
+    private Vector3 lookUp = new Vector3(0f, 12f, 0f);
+
     // Year slider
     private GameObject yearSlider;
-    public float currentX;
+    private float currentX;
     private bool yearSliding = false;
     private float minYearSlider = 0f;
     private float maxYearSlider = 1.98f;
@@ -152,6 +170,13 @@ public class ComputerController : MonoBehaviour
     void Setup()
     {
         screenCam = GameObject.FindGameObjectWithTag("ScreenCamera").GetComponent<Camera>();
+        lookAt = GameObject.FindGameObjectWithTag("LookTarget").transform;
+        computerState = ComputerState.MAIN_COMPUTER;
+        lookAt.localPosition = defaultLook;
+        panUpButton.gameObject.SetActive(true);
+        panDownButton.gameObject.SetActive(true);
+        panBackFromUpButton.gameObject.SetActive(false);
+        panBackFromDownButton.gameObject.SetActive(false);
         cam = GetComponent<Camera>();
         newPos = Vector3.zero;
         yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
@@ -170,7 +195,7 @@ public class ComputerController : MonoBehaviour
         UpdateSlider();
     }
 
-    float Remap(float value, float from1, float to1, float from2, float to2)
+    private float Remap(float value, float from1, float to1, float from2, float to2)
     {
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
@@ -249,5 +274,64 @@ public class ComputerController : MonoBehaviour
             }
         }
         return highestPointSelector;
+    }
+
+    public void Pan(int value)
+    {
+        switch((ComputerState)value)
+        {
+            case ComputerState.MAIN_COMPUTER:
+                StartCoroutine(PanBack());
+                break;
+            case ComputerState.TECH_TREE_SCREEN:
+                StartCoroutine(PanUp());
+                break;
+            case ComputerState.JOURNAL:
+                StartCoroutine(PanDown());
+                break;
+            default:
+                StartCoroutine(PanBack());
+                break;
+        }
+    }
+
+    private IEnumerator PanUp()
+    {
+        panning = true;
+        panUpButton.gameObject.SetActive(false);
+        panDownButton.gameObject.SetActive(false);
+        computerState = ComputerState.TECH_TREE_SCREEN;
+        lookAt.localPosition = lookUp;
+        yield return new WaitForSeconds(1.0f);
+        panning = false;
+        panBackFromUpButton.gameObject.SetActive(true);
+        yield return null;
+    }
+
+    private IEnumerator PanDown()
+    {
+        panning = true;
+        panUpButton.gameObject.SetActive(false);
+        panDownButton.gameObject.SetActive(false);
+        computerState = ComputerState.JOURNAL;
+        lookAt.localPosition = lookDown;
+        yield return new WaitForSeconds(1.0f);
+        panning = false;
+        panBackFromDownButton.gameObject.SetActive(true);
+        yield return null;
+    }
+
+    private IEnumerator PanBack()
+    {
+        panning = true;
+        panBackFromDownButton.gameObject.SetActive(false);
+        panBackFromUpButton.gameObject.SetActive(false);
+        computerState = ComputerState.MAIN_COMPUTER;
+        lookAt.localPosition = defaultLook;
+        yield return new WaitForSeconds(1.0f);
+        panning = false;
+        panUpButton.gameObject.SetActive(true);
+        panDownButton.gameObject.SetActive(true);
+        yield return null;
     }
 }

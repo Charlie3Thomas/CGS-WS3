@@ -70,6 +70,7 @@ public class ResourceManager : MonoBehaviour
 {
     public static ResourceManager instance;
 
+    public Turn current_turn;
     public int current_total_population;
     public int current_currency;
     public int current_researchPoints;
@@ -119,83 +120,101 @@ public class ResourceManager : MonoBehaviour
         turn.food = current_food;
         turn.elements = current_elements;
 
-        //Testing values until prompt
-        AllocatePopulation(turn, Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-
-        turnList.Add(turn);
-        turnList.Sort(SortByYear);
+        current_turn = turn;
     }
 
-    public void AllocatePopulation(Turn turn, float workerPopulation, float scientistPopulation, float plannerPopulation, float farmerPopulation)
+    public void AllocatePopulation(float workerPopulation, float scientistPopulation, float plannerPopulation, float farmerPopulation)
     {
+        if(current_turn == null)
+        {
+            Debug.Log("No turn available");
+            return;
+        }
+
+        workerPopulation = Remap(workerPopulation, 0f, 5f, 0f, 1f);
+        scientistPopulation = Remap(scientistPopulation, 0f, 5f, 0f, 1f);
+        plannerPopulation = Remap(plannerPopulation, 0f, 5f, 0f, 1f);
+        farmerPopulation = Remap(farmerPopulation, 0f, 5f, 0f, 1f);
+
         //Worker
         {
-            turn.worker.population = (int)(workerPopulation * turn.total_population);
+            current_turn.worker.population = (int)(workerPopulation * current_turn.total_population);
 
-            foreach (var uk in turn.worker.upkeep)
+            foreach (var uk in current_turn.worker.upkeep)
             {
                 uk.amount = uk.amount * (workerPopulation);
                 Debug.Log("Workers upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
-            foreach (var p in turn.worker.produce)
+            foreach (var p in current_turn.worker.produce)
             {
-                p.amount = p.amount * (workerPopulation * turn.currency);
+                p.amount = p.amount * (workerPopulation * current_turn.currency);
                 Debug.Log("Workers produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
         //Scientist
         {
-            turn.scientist.population = (int)(scientistPopulation * turn.total_population);
+            current_turn.scientist.population = (int)(scientistPopulation * current_turn.total_population);
 
-            foreach (var uk in turn.scientist.upkeep)
+            foreach (var uk in current_turn.scientist.upkeep)
             {
                 uk.amount = uk.amount * (scientistPopulation);
                 Debug.Log("Scientists upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
-            foreach (var p in turn.scientist.produce)
+            foreach (var p in current_turn.scientist.produce)
             {
-                p.amount = p.amount * (scientistPopulation * turn.currency);
+                p.amount = p.amount * (scientistPopulation * current_turn.currency);
                 Debug.Log("Scientists produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
         //Planner
         {
-            turn.planner.population = (int)(plannerPopulation * turn.total_population);
+            current_turn.planner.population = (int)(plannerPopulation * current_turn.total_population);
 
-            foreach (var uk in turn.planner.upkeep)
+            foreach (var uk in current_turn.planner.upkeep)
             {
                 uk.amount = uk.amount * (plannerPopulation);
                 Debug.Log("Planners upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
-            foreach (var p in turn.planner.produce)
+            foreach (var p in current_turn.planner.produce)
             {
-                p.amount = p.amount * (plannerPopulation * turn.currency);
+                p.amount = p.amount * (plannerPopulation * current_turn.currency);
                 Debug.Log("Planners produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
         //Farmer
         {
-            turn.farmer.population = (int)(farmerPopulation * turn.total_population);
+            current_turn.farmer.population = (int)(farmerPopulation * current_turn.total_population);
 
-            foreach (var uk in turn.farmer.upkeep)
+            foreach (var uk in current_turn.farmer.upkeep)
             {
                 uk.amount = uk.amount * (farmerPopulation);
                 Debug.Log("Farmers upkeep " + uk.allocType.ToString() + " = " + uk.amount.ToString());
             }
 
-            foreach (var p in turn.farmer.produce)
+            foreach (var p in current_turn.farmer.produce)
             {
-                p.amount = p.amount * (farmerPopulation * turn.currency);
+                p.amount = p.amount * (farmerPopulation * current_turn.currency);
                 Debug.Log("Farmers produce " + p.allocType.ToString() + " = " + p.amount.ToString());
             }
         }
+
+        if(turnList.Contains(current_turn))
+            turnList.Remove(current_turn);
+
+        turnList.Add(current_turn);
+        turnList.Sort(SortByYear);
     }
 
     private static int SortByYear(Turn bud1, Turn bud2)
     {
         return bud1.year.CompareTo(bud2.year);
+    }
+
+    public float Remap(float value, float from1, float to1, float from2, float to2)
+    {
+        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
 }
