@@ -21,6 +21,7 @@ public class ComputerButton : MonoBehaviour
         {
             case buttonType.GENERIC:
                 Debug.Log("Generic button press");
+                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.keyboardEvent, null);
                 break;
             case buttonType.RESET:
                 // Reset

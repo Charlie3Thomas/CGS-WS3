@@ -5,6 +5,7 @@ using FMODUnity;
 
 public class UIFmodReferences : MonoBehaviour
 {
+    //Computer UI fmod Event References
     public EventReference dialLeftEvent;
     public EventReference dialRightEvent;
     public EventReference buttonPressLEvent;
@@ -14,4 +15,5 @@ public class UIFmodReferences : MonoBehaviour
     public EventReference sliderEvent;
     public EventReference policyCardShowEvent;
     public EventReference pipEvent;
+    public EventReference keyboardEvent;
 }
