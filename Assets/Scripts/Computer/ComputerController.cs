@@ -61,6 +61,10 @@ public class ComputerController : MonoBehaviour
     private Vector3 defaultLook = new Vector3(0f, -0.5f, 0f);
     private Vector3 lookDown = new Vector3(0f, -12f, 0f);
     private Vector3 lookUp = new Vector3(0f, 12f, 0f);
+    [HideInInspector]
+    public int desiredYear = 1900;
+    private Color desiredEqualCurrentColour = new Color(0f, 0.74f, 0.69f, 255f) * 5.5f;
+    private Color desiredNotEqualCurrentColour = new Color(0.04f, 0.74f, 0f, 255f) * 5.5f;
 
     // Year slider
     private GameObject yearSlider;
@@ -89,7 +93,11 @@ public class ComputerController : MonoBehaviour
         if (!cam)
             return;
 
-        yearText.text = YearData._INSTANCE.current_year.ToString();
+        yearText.text = desiredYear.ToString();
+        if (desiredYear == YearData._INSTANCE.current_year)
+            yearText.color = desiredEqualCurrentColour;
+        else
+            yearText.color = desiredNotEqualCurrentColour;
 
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -108,23 +116,23 @@ public class ComputerController : MonoBehaviour
                 case ComputerState.MAIN_COMPUTER:
                     if (yearSliding)
                     {
-                        float remappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+                        float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
                         float newRemappedValue = remappedValue + Input.GetAxis("Mouse X") * 0.5f;
-                        YearData._INSTANCE.current_year = (int)Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
+                        desiredYear = (int)Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
 
-                        if (YearData._INSTANCE.current_year % 5 != 0)
+                        if (desiredYear % 5 != 0)
                         {
-                            YearData._INSTANCE.current_year = YearData._INSTANCE.current_year - (YearData._INSTANCE.current_year % 5);
+                            desiredYear = desiredYear - (desiredYear % 5);
                             AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
                         }
 
-                        if (YearData._INSTANCE.current_year < YearData._INSTANCE.earliest_year)
-                            YearData._INSTANCE.current_year = YearData._INSTANCE.earliest_year;
+                        if (desiredYear < YearData._INSTANCE.earliest_year)
+                            desiredYear = YearData._INSTANCE.earliest_year;
 
-                        if (YearData._INSTANCE.current_year > YearData._INSTANCE.latest_year)
-                            YearData._INSTANCE.current_year = YearData._INSTANCE.latest_year;
+                        if (desiredYear > YearData._INSTANCE.latest_year)
+                            desiredYear = YearData._INSTANCE.latest_year;
 
-                        newRemappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+                        newRemappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
                         yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
                     }
 
@@ -241,6 +249,7 @@ public class ComputerController : MonoBehaviour
         cam = GetComponent<Camera>();
         newPos = Vector3.zero;
         yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
+        desiredYear = YearData._INSTANCE.current_year;
         yearText = GameObject.FindGameObjectWithTag("YearCounter").GetComponent<TMP_Text>();
         notepad = GameObject.FindGameObjectWithTag("Notepad");
         journal = GameObject.FindGameObjectWithTag("Journal");
@@ -267,7 +276,7 @@ public class ComputerController : MonoBehaviour
 
     public void UpdateSlider()
     {
-        float remappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+        float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
         yearSlider.transform.localPosition = new Vector3(remappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
     }
 

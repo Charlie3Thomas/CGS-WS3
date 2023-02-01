@@ -39,7 +39,8 @@ public class ComputerButton : MonoBehaviour
                 break;
             case buttonType.CONFIRM_YEAR:
                 // Confirm year
-                Debug.Log("Confirm year");
+                YearData._INSTANCE.current_year = ComputerController.Instance.desiredYear;
+                Debug.Log("Year confirmed! The year is now: " + YearData._INSTANCE.current_year);
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
                 break;
             case buttonType.JOURNAL_NOTEPAD:
