@@ -20,7 +20,7 @@ public class ComputerButton : MonoBehaviour
         switch (type)
         {
             case buttonType.GENERIC:
-                Debug.Log("Generic button press");
+                //Debug.Log("Generic button press");
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.keyboardEvent, null);
                 break;
             case buttonType.RESET:
