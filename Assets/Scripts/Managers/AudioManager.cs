@@ -63,35 +63,12 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        masterBus = RuntimeManager.GetBus("Bus:/");
-        //backgroundBus = RuntimeManager.GetBus("Bus:/Master/Background");
-        //sfxBus = RuntimeManager.GetBus("Bus:/Master/SFX");
+         FmodRouting.SetUpBuses();
          StartAmbience();
          StartMusic();
     }
 
-    private void Update()
-    {
-        masterBus.setVolume(this.masterVolume);
-        //backgroundBus.setVolume(this.bgVolume);
-        //sfxBus.setVolume(this.sfxVolume);
-        //musicInstance.setParameterByName("Scene", SceneManager.GetActiveScene().buildIndex);
-    }
-
-    public void ChangeSFXVolume(float newSFXVolume)
-    {
-        this.sfxVolume = newSFXVolume;
-    }
-
-    public void ChangeBGVolume(float newBGVolume)
-    {
-        this.bgVolume = newBGVolume;
-    }
-
-    public void ChangeMasterVolume(float newMasterVolume)
-    {
-        this.masterVolume = newMasterVolume;
-    }
+   
 
     public void StartOceanAmbience(Transform transform)
     {
