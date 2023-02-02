@@ -24,9 +24,11 @@ public class ComputerController : MonoBehaviour
     public GameObject[] policyCards = new GameObject[7];
     [HideInInspector]
     public List<PointSelector> pointSelectors;
+    private Policy currentPolicy;
 
     // Anims
-    private Animator[] pCardAnims = new Animator[7];
+    [HideInInspector]
+    public Animator[] pCardAnims = new Animator[7];
     private Animator yearKnobAnim;
     private Animator buttonAnim;
     private Animator pointsSelectorAnim;
@@ -193,10 +195,20 @@ public class ComputerController : MonoBehaviour
                         yearKnobAnim.SetBool("YearUpHold", Input.GetMouseButton(0) && hit.transform.CompareTag("YearKnob"));
                     }
 
+                    // Select policy card
+                    if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PolicyCard") && currentPolicy == null)
+                    {
+                        currentPolicy = hit.transform.GetComponent<PolicyCard>().policy;
+                        PolicyManager.instance.finalChoices.Remove(currentPolicy.finalChoice);
+                        PolicyManager.instance.policyList.Remove(currentPolicy);
+                        Destroy(hit.transform.gameObject);
+                        PolicyManager.instance.ReplacePolicyCard();
+                    }
+
                     // Policy cards hover
                     for (int i = 0; i < 7; i++)
                     {
-                        if (pCardAnims[i] != null)
+                        if (pCardAnims[i] != null && policyCards[i] != null)
                             pCardAnims[i].SetBool("IsOver", hit.transform.name == policyCards[i].name);
                     }
 
