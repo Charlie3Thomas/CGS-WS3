@@ -30,7 +30,7 @@ public class AudioUIManager : MonoBehaviour
         //Listeners for buttons (to currently just hide pop up)
         popExitButton.onClick.AddListener(delegate {HidePopUp(); });
 
-        //Set up listeners for sliders, providing enum val and changed float value for new slider val
+        //Set up listeners for sliders, providing enum val and changed float value for new slider val through the AudioSliderChanged delegate
         masterVolumeSlider.onValueChanged.AddListener( delegate {AudioSliderChanged(AudioSliders.master, masterVolumeSlider.value); });
         musicVolumeSlider.onValueChanged.AddListener( delegate {AudioSliderChanged(AudioSliders.music, musicVolumeSlider.value); });
         sfxVolumeSlider.onValueChanged.AddListener( delegate {AudioSliderChanged(AudioSliders.sfx, sfxVolumeSlider.value); });
