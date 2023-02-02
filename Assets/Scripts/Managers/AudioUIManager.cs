@@ -8,7 +8,9 @@ public enum AudioSliders {master, music, sfx, ui}
 
 public class AudioUIManager : MonoBehaviour
 {
+    //Reference to the panel containing all the audio settings UI
     [SerializeField] private GameObject audioPanel;
+
     //Button references for showing / hiding audio settings
     [SerializeField] private Button popExitButton;
 
