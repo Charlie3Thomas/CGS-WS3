@@ -22,10 +22,6 @@ public class AudioManager : MonoBehaviour
     public float sfxVolume = 0.5f;
     public int testIndex = 2;
 
-    //FMOD Variables
-    Bus masterBus;
-    //Bus backgroundBus;
-    //Bus sfxBus;
     EventInstance ambienceInstance;
     EventInstance musicInstance;
     EventInstance chargeInstance;
