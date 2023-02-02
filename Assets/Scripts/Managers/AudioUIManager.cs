@@ -42,7 +42,7 @@ public class AudioUIManager : MonoBehaviour
     {
         audioPanel.SetActive(false);      
     }
-    // Update is called once per frame
+    
     private void AudioSliderChanged(AudioSliders sliders, float newVal)
     {
         //Switch case to determine which slider has been moved
