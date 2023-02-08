@@ -18,6 +18,7 @@ public class ComputerController : MonoBehaviour
 
     private Transform lookAt;
     private Camera screenCam;
+    private Camera techCam;
     private ComputerState computerState = ComputerState.MAIN_COMPUTER;
 
     [HideInInspector]
@@ -52,7 +53,11 @@ public class ComputerController : MonoBehaviour
     [HideInInspector]
     public bool touchingScreen = false;
     [HideInInspector]
+    public bool touchingTechScreen = false;
+    [HideInInspector]
     public bool onScreen = false;
+    [HideInInspector]
+    public bool onTech = false;
 
     // UI
     private GameObject panUpButton;
@@ -154,7 +159,7 @@ public class ComputerController : MonoBehaviour
 
                     onScreen = hit.transform.name == "Screen";
 
-                    InteractWithScreen(hit);
+                    InteractWithScreen(hit, onScreen, screenCam);
 
                     if (Input.GetMouseButtonDown(1) && onScreen && !yearSliding)
                     {
@@ -215,6 +220,23 @@ public class ComputerController : MonoBehaviour
                     break;
                 case ComputerState.TECH_TREE_SCREEN:
                     // Specific tech tree stuff
+                    onTech = hit.transform.name == "TechTreeScreen";
+
+                    InteractWithScreen(hit, onTech, techCam);
+
+                    if (Input.GetMouseButtonDown(1) && onTech && !yearSliding)
+                    {
+                        touchingTechScreen = true;
+                        Cursor.lockState = CursorLockMode.Locked;
+                        Cursor.visible = false;
+                    }
+
+                    if (Input.GetMouseButtonUp(1) && !yearSliding)
+                    {
+                        touchingTechScreen = false;
+                        Cursor.lockState = CursorLockMode.None;
+                        Cursor.visible = true;
+                    }
                     break;
                 case ComputerState.JOURNAL:
                     // Specific journal stuff
@@ -225,15 +247,17 @@ public class ComputerController : MonoBehaviour
         {
             onScreen = false;
             touchingScreen = false;
+            onTech = false;
+            touchingTechScreen = false;
         }
     }
 
-    private void InteractWithScreen(RaycastHit hit)
+    private void InteractWithScreen(RaycastHit hit, bool screen, Camera cam)
     {
         if (Input.GetMouseButtonDown(0) && onScreen)
         {
             var localPoint = hit.textureCoord;
-            Ray camRay = screenCam.ScreenPointToRay(new Vector2(localPoint.x * screenCam.pixelWidth, localPoint.y * screenCam.pixelHeight));
+            Ray camRay = cam.ScreenPointToRay(new Vector2(localPoint.x * cam.pixelWidth, localPoint.y * cam.pixelHeight));
             RaycastHit camHit;
             if (Physics.Raycast(camRay, out camHit))
             {
@@ -246,6 +270,7 @@ public class ComputerController : MonoBehaviour
     void Setup()
     {
         screenCam = GameObject.FindGameObjectWithTag("ScreenCamera").GetComponent<Camera>();
+        techCam = GameObject.FindGameObjectWithTag("TechCamera").GetComponent<Camera>();
         lookAt = GameObject.FindGameObjectWithTag("LookTarget").transform;
         computerState = ComputerState.MAIN_COMPUTER;
         lookAt.localPosition = defaultLook;
