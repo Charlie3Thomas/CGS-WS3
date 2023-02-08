@@ -19,13 +19,13 @@ public class YearData : MonoBehaviour
     public int latest_year;
     public int current_year;
 
-    private int divisibleBy = 5;
+    private int divisible_by = 5;
 
     private void OnEnable() // Must be done on enable as other faction data initialisation is reliant on this
     {
         earliest_year = 1900;
         latest_year = 2100;
-        current_year = (Random.Range((earliest_year / divisibleBy), (latest_year / divisibleBy) + 1) * divisibleBy);
+        current_year = (Random.Range((earliest_year / divisible_by), (latest_year / divisible_by) + 1) * divisible_by);
         changed_years = new Dictionary<int, bool>();
 
         // Initialize dictionary with all years set to unchanged
@@ -43,7 +43,7 @@ public class YearData : MonoBehaviour
     private void Awake()
     {
         if (_INSTANCE != null) 
-        { 
+        {
             Debug.LogError("Multiple YearData singleton instances!");
             Destroy(this.gameObject);
         }
