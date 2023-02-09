@@ -261,8 +261,14 @@ public class ComputerController : MonoBehaviour
             RaycastHit camHit;
             if (Physics.Raycast(camRay, out camHit))
             {
-                if (camHit.transform.CompareTag("TechNode"))
-                    camHit.transform.GetComponent<TechNode>().Unlock();
+                if(cam == techCam)
+                {
+                    if (camHit.transform.CompareTag("TechNode"))
+                        camHit.transform.GetComponent<TechNode>().Unlock();
+                }
+
+                if (cam == screenCam)
+                    newPos = camHit.transform.position;
             }
         }
     }
