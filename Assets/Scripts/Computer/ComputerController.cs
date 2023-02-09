@@ -254,14 +254,15 @@ public class ComputerController : MonoBehaviour
 
     private void InteractWithScreen(RaycastHit hit, bool screen, Camera cam)
     {
-        if (Input.GetMouseButtonDown(0) && onScreen)
+        if (Input.GetMouseButtonDown(0) && screen)
         {
             var localPoint = hit.textureCoord;
             Ray camRay = cam.ScreenPointToRay(new Vector2(localPoint.x * cam.pixelWidth, localPoint.y * cam.pixelHeight));
             RaycastHit camHit;
             if (Physics.Raycast(camRay, out camHit))
             {
-                newPos = camHit.transform.position;
+                if (camHit.transform.CompareTag("TechNode"))
+                    camHit.transform.GetComponent<TechNode>().Unlock();
             }
         }
     }

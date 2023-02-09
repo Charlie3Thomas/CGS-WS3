@@ -8,13 +8,16 @@ public class TechCameraController : MonoBehaviour
     public CinemachineVirtualCamera vcam;
     public Transform background;
     public Transform lookAt;
-    private float cameraSpeed = 100f;
-    private float cameraBounds = 1000f;
+    private float cameraSpeed = 25f;
+    private float cameraBoundsX = 600f;
+    private float cameraBoundsY = 150f;
     private float mouseX;
     private float mouseY;
-    public float zoomSpeed = 1f;
-    public float zoomMax = 50f;
-    public float zoomMin = 100f;
+    private float zoomSpeed = 100f;
+    private float zoomMax = 100f;
+    private float zoomMin = 50f;
+    private float targetX = 0f;
+    private float targetZ = 0f;
 
     private float zoom;
     private float zoomVelocity;
@@ -24,6 +27,8 @@ public class TechCameraController : MonoBehaviour
     void Start()
     {
         zoom = vcam.m_Lens.OrthographicSize;
+        targetX = background.localPosition.x;
+        targetZ = background.localPosition.z;
     }
 
     // Update is called once per frame
@@ -49,13 +54,13 @@ public class TechCameraController : MonoBehaviour
 
         zoom = Mathf.Clamp(zoom, zoomMin, zoomMax);
 
-        float targetX = background.localPosition.x + (mouseX * cameraSpeed);
-        float targetZ = background.localPosition.z + (mouseY * cameraSpeed);
-        targetX = Mathf.Clamp(targetX, -cameraBounds, cameraBounds);
-        targetZ = Mathf.Clamp(targetZ, -cameraBounds, cameraBounds);
+        targetX = targetX + (mouseX * cameraSpeed);
+        targetZ = targetZ + (mouseY * cameraSpeed);
+        targetX = Mathf.Clamp(targetX, -cameraBoundsX, cameraBoundsX);
+        targetZ = Mathf.Clamp(targetZ, -cameraBoundsY, cameraBoundsY);
         Vector3 target = new Vector3(targetX, 0, targetZ);
 
-        lookAt.localPosition = Vector3.SmoothDamp(lookAt.localPosition, target, ref velocity, smoothDampSpeed);
+        lookAt.localPosition = target;
         vcam.m_Lens.OrthographicSize = Mathf.SmoothDamp(vcam.m_Lens.OrthographicSize, zoom, ref zoomVelocity, 0.3f);
     }
 }
