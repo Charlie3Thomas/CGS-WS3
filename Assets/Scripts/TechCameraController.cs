@@ -48,6 +48,11 @@ public class TechCameraController : MonoBehaviour
             mouseX = Input.GetAxis("Mouse X");
             mouseY = Input.GetAxis("Mouse Y");
         }
+        else
+        {
+            mouseX = 0f;
+            mouseY = 0f;
+        }
 
         if (ComputerController.Instance.onTech)
             zoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
