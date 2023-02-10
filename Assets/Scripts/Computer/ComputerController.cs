@@ -18,15 +18,18 @@ public class ComputerController : MonoBehaviour
 
     private Transform lookAt;
     private Camera screenCam;
+    private Camera techCam;
     private ComputerState computerState = ComputerState.MAIN_COMPUTER;
 
     [HideInInspector]
     public GameObject[] policyCards = new GameObject[7];
     [HideInInspector]
     public List<PointSelector> pointSelectors;
+    private Policy currentPolicy;
 
     // Anims
-    private Animator[] pCardAnims = new Animator[7];
+    [HideInInspector]
+    public Animator[] pCardAnims = new Animator[7];
     private Animator yearKnobAnim;
     private Animator buttonAnim;
     private Animator pointsSelectorAnim;
@@ -50,7 +53,11 @@ public class ComputerController : MonoBehaviour
     [HideInInspector]
     public bool touchingScreen = false;
     [HideInInspector]
+    public bool touchingTechScreen = false;
+    [HideInInspector]
     public bool onScreen = false;
+    [HideInInspector]
+    public bool onTech = false;
 
     // UI
     private GameObject panUpButton;
@@ -61,6 +68,10 @@ public class ComputerController : MonoBehaviour
     private Vector3 defaultLook = new Vector3(0f, -0.5f, 0f);
     private Vector3 lookDown = new Vector3(0f, -12f, 0f);
     private Vector3 lookUp = new Vector3(0f, 12f, 0f);
+    [HideInInspector]
+    public int desiredYear = 1900;
+    private Color desiredEqualCurrentColour = new Color(0f, 0.74f, 0.69f, 255f) * 5.5f;
+    private Color desiredNotEqualCurrentColour = new Color(0.04f, 0.74f, 0f, 255f) * 5.5f;
 
     // Year slider
     private GameObject yearSlider;
@@ -89,7 +100,11 @@ public class ComputerController : MonoBehaviour
         if (!cam)
             return;
 
-        yearText.text = YearData._INSTANCE.current_year.ToString();
+        yearText.text = desiredYear.ToString();
+        if (desiredYear == YearData._INSTANCE.current_year)
+            yearText.color = desiredEqualCurrentColour;
+        else
+            yearText.color = desiredNotEqualCurrentColour;
 
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -108,23 +123,23 @@ public class ComputerController : MonoBehaviour
                 case ComputerState.MAIN_COMPUTER:
                     if (yearSliding)
                     {
-                        float remappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+                        float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
                         float newRemappedValue = remappedValue + Input.GetAxis("Mouse X") * 0.5f;
-                        YearData._INSTANCE.current_year = (int)Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
+                        desiredYear = (int)Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
 
-                        if (YearData._INSTANCE.current_year % 5 != 0)
+                        if (desiredYear % 5 != 0)
                         {
-                            YearData._INSTANCE.current_year = YearData._INSTANCE.current_year - (YearData._INSTANCE.current_year % 5);
+                            desiredYear = desiredYear - (desiredYear % 5);
                             AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
                         }
 
-                        if (YearData._INSTANCE.current_year < YearData._INSTANCE.earliest_year)
-                            YearData._INSTANCE.current_year = YearData._INSTANCE.earliest_year;
+                        if (desiredYear < YearData._INSTANCE.earliest_year)
+                            desiredYear = YearData._INSTANCE.earliest_year;
 
-                        if (YearData._INSTANCE.current_year > YearData._INSTANCE.latest_year)
-                            YearData._INSTANCE.current_year = YearData._INSTANCE.latest_year;
+                        if (desiredYear > YearData._INSTANCE.latest_year)
+                            desiredYear = YearData._INSTANCE.latest_year;
 
-                        newRemappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+                        newRemappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
                         yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
                     }
 
@@ -144,7 +159,7 @@ public class ComputerController : MonoBehaviour
 
                     onScreen = hit.transform.name == "Screen";
 
-                    InteractWithScreen(hit);
+                    InteractWithScreen(hit, onScreen, screenCam);
 
                     if (Input.GetMouseButtonDown(1) && onScreen && !yearSliding)
                     {
@@ -185,16 +200,43 @@ public class ComputerController : MonoBehaviour
                         yearKnobAnim.SetBool("YearUpHold", Input.GetMouseButton(0) && hit.transform.CompareTag("YearKnob"));
                     }
 
+                    // Select policy card
+                    if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PolicyCard") && currentPolicy == null)
+                    {
+                        currentPolicy = hit.transform.GetComponent<PolicyCard>().policy;
+                        PolicyManager.instance.finalChoices.Remove(currentPolicy.finalChoice);
+                        PolicyManager.instance.policyList.Remove(currentPolicy);
+                        Destroy(hit.transform.gameObject);
+                        PolicyManager.instance.ReplacePolicyCard();
+                    }
+
                     // Policy cards hover
                     for (int i = 0; i < 7; i++)
                     {
-                        if (pCardAnims[i] != null)
+                        if (pCardAnims[i] != null && policyCards[i] != null)
                             pCardAnims[i].SetBool("IsOver", hit.transform.name == policyCards[i].name);
                     }
 
                     break;
                 case ComputerState.TECH_TREE_SCREEN:
                     // Specific tech tree stuff
+                    onTech = hit.transform.name == "TechTreeScreen";
+
+                    InteractWithScreen(hit, onTech, techCam);
+
+                    if (Input.GetMouseButtonDown(1) && onTech && !yearSliding)
+                    {
+                        touchingTechScreen = true;
+                        Cursor.lockState = CursorLockMode.Locked;
+                        Cursor.visible = false;
+                    }
+
+                    if (Input.GetMouseButtonUp(1) && !yearSliding)
+                    {
+                        touchingTechScreen = false;
+                        Cursor.lockState = CursorLockMode.None;
+                        Cursor.visible = true;
+                    }
                     break;
                 case ComputerState.JOURNAL:
                     // Specific journal stuff
@@ -205,19 +247,28 @@ public class ComputerController : MonoBehaviour
         {
             onScreen = false;
             touchingScreen = false;
+            onTech = false;
+            touchingTechScreen = false;
         }
     }
 
-    private void InteractWithScreen(RaycastHit hit)
+    private void InteractWithScreen(RaycastHit hit, bool screen, Camera cam)
     {
-        if (Input.GetMouseButtonDown(0) && onScreen)
+        if (Input.GetMouseButtonDown(0) && screen)
         {
             var localPoint = hit.textureCoord;
-            Ray camRay = screenCam.ScreenPointToRay(new Vector2(localPoint.x * screenCam.pixelWidth, localPoint.y * screenCam.pixelHeight));
+            Ray camRay = cam.ScreenPointToRay(new Vector2(localPoint.x * cam.pixelWidth, localPoint.y * cam.pixelHeight));
             RaycastHit camHit;
             if (Physics.Raycast(camRay, out camHit))
             {
-                newPos = camHit.transform.position;
+                if(cam == techCam)
+                {
+                    if (camHit.transform.CompareTag("TechNode"))
+                        camHit.transform.GetComponent<TechNode>().Unlock();
+                }
+
+                if (cam == screenCam)
+                    newPos = camHit.transform.position;
             }
         }
     }
@@ -226,6 +277,7 @@ public class ComputerController : MonoBehaviour
     void Setup()
     {
         screenCam = GameObject.FindGameObjectWithTag("ScreenCamera").GetComponent<Camera>();
+        techCam = GameObject.FindGameObjectWithTag("TechCamera").GetComponent<Camera>();
         lookAt = GameObject.FindGameObjectWithTag("LookTarget").transform;
         computerState = ComputerState.MAIN_COMPUTER;
         lookAt.localPosition = defaultLook;
@@ -241,6 +293,7 @@ public class ComputerController : MonoBehaviour
         cam = GetComponent<Camera>();
         newPos = Vector3.zero;
         yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
+        desiredYear = YearData._INSTANCE.current_year;
         yearText = GameObject.FindGameObjectWithTag("YearCounter").GetComponent<TMP_Text>();
         notepad = GameObject.FindGameObjectWithTag("Notepad");
         journal = GameObject.FindGameObjectWithTag("Journal");
@@ -267,7 +320,7 @@ public class ComputerController : MonoBehaviour
 
     public void UpdateSlider()
     {
-        float remappedValue = Remap(YearData._INSTANCE.current_year, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+        float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
         yearSlider.transform.localPosition = new Vector3(remappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
     }
 

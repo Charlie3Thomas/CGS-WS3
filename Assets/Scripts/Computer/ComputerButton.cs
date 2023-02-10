@@ -20,7 +20,7 @@ public class ComputerButton : MonoBehaviour
         switch (type)
         {
             case buttonType.GENERIC:
-                Debug.Log("Generic button press");
+                //Debug.Log("Generic button press");
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.keyboardEvent, null);
                 break;
             case buttonType.RESET:
@@ -39,7 +39,8 @@ public class ComputerButton : MonoBehaviour
                 break;
             case buttonType.CONFIRM_YEAR:
                 // Confirm year
-                Debug.Log("Confirm year");
+                YearData._INSTANCE.current_year = ComputerController.Instance.desiredYear;
+                Debug.Log("Year confirmed! The year is now: " + YearData._INSTANCE.current_year);
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
                 break;
             case buttonType.JOURNAL_NOTEPAD:
