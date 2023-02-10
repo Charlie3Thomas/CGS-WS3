@@ -6,17 +6,6 @@ TagManager:
   tags:
   - ScreenCamera
   - ComputerCamera
-  - Button
-  - Notepad
-  - YearCounter
-  - LookTarget
-  - Journal
-  - Keyboard
-  - PointsSelector
-  - PolicyCard
-  - YearKnob
-  - YearSlider
-  - TechCamera
   layers:
   - Default
   - TransparentFX
@@ -25,7 +14,7 @@ TagManager:
   - Water
   - UI
   - Computer
-  - TechTree
+  - 
   - 
   - 
   - 
