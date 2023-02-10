@@ -178,18 +178,20 @@ public class ComputerController : MonoBehaviour
                     if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PointsSelector"))
                     {
                         pointsSelectorAnim = hit.transform.GetComponent<Animator>();
-                        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.pipEvent, null); //Will create a different beep sound in for removing points, and have param to trigger from one event, that is why this is here atm
+                       
 
                         if (pointsSelectorAnim != null)
+                            AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.pipEvent, null, ("PipDirection", "Up"));
                             pointsSelectorAnim.SetTrigger("PointsUp");
                     }
 
                     if (Input.GetMouseButtonDown(1) && hit.transform.CompareTag("PointsSelector"))
                     {
                         pointsSelectorAnim = hit.transform.GetComponent<Animator>();
-                        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.pipEvent, null); //Will create a different beep sound in for removing points, and have param to trigger from one event, that is why this is here atm
+                        
 
                         if (pointsSelectorAnim != null)
+                            AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.pipEvent, null, ("PipDirection", "Down"));
                             pointsSelectorAnim.SetTrigger("PointsDown");
                     }
 
