@@ -13,6 +13,7 @@ public class AudioUIManager : MonoBehaviour
 
     //Button references for showing / hiding audio settings
     [SerializeField] private Button popExitButton;
+    [SerializeField] private Button popUpShowButton;
 
     //References to sliders
     [SerializeField] private Slider masterVolumeSlider;
@@ -31,6 +32,7 @@ public class AudioUIManager : MonoBehaviour
     {
         //Listeners for buttons (to currently just hide pop up)
         popExitButton.onClick.AddListener(delegate {HidePopUp(); });
+        popUpShowButton.onClick.AddListener(delegate {ShowPopUp(); });
 
         //Set up listeners for sliders, providing enum val and changed float value for new slider val through the AudioSliderChanged delegate
         masterVolumeSlider.onValueChanged.AddListener( delegate {AudioSliderChanged(AudioSliders.master, masterVolumeSlider.value); });
@@ -40,6 +42,11 @@ public class AudioUIManager : MonoBehaviour
          
     }
     
+    private void ShowPopUp()
+    {
+        audioPanel.SetActive(true);
+    }
+
     private void HidePopUp()
     {
         audioPanel.SetActive(false);      
