@@ -6,8 +6,8 @@ public enum AllocType
 {
     MONEY,
     FOOD,
-    ELEMENT,
-    RESEARCH_POINT
+    SCIENCE,
+    SAFETY
 }
 
 public class Resource
@@ -27,27 +27,27 @@ public class Person
 public class Worker : Person
 {
     public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 2f } };
-    public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.MONEY, amount = 2f }, new Resource { allocType = AllocType.ELEMENT, amount = 0.5f } };
+    public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.MONEY, amount = 2f } };
 }
 
 [System.Serializable]
 public class Scientist : Person
 {
-    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 2f }, new Resource { allocType = AllocType.ELEMENT, amount = 2f } };
-    public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.RESEARCH_POINT, amount = 3f } };
+    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 2f } };
+    public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.SCIENCE, amount = 3f } };
 }
 
 [System.Serializable]
 public class Planner : Person
 {
-    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 2f }, new Resource { allocType = AllocType.RESEARCH_POINT, amount = 2f } };
-    public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.ELEMENT, amount = 2f } };
+    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 2f }, new Resource { allocType = AllocType.SCIENCE, amount = 2f } };
+    public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.SAFETY, amount = 2f } };
 }
 
 [System.Serializable]
 public class Farmer : Person
 {
-    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 1f }, new Resource { allocType = AllocType.ELEMENT, amount = 1f } };
+    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 1f } };
     public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 3f } };
 }
 
@@ -59,7 +59,7 @@ public class Turn
     public int currency;
     public int researchPoints;
     public int food;
-    public int elements;
+    public int safety;
     public Worker worker;
     public Scientist scientist;
     public Planner planner;
@@ -75,7 +75,7 @@ public class ResourceManager : MonoBehaviour
     public int current_currency;
     public int current_researchPoints;
     public int current_food;
-    public int current_elements;
+    public int current_safety;
 
     public List<Turn> turnList = new List<Turn>();
 
@@ -99,7 +99,7 @@ public class ResourceManager : MonoBehaviour
         current_currency = Random.Range(1000, 10000);
         current_researchPoints = Random.Range(1000, 10000);
         current_food = Random.Range(1000, 10000);
-        current_elements = Random.Range(1000, 10000);
+        current_safety = Random.Range(1000, 10000);
 
         //Test
         NewTurn();
@@ -118,7 +118,7 @@ public class ResourceManager : MonoBehaviour
         turn.currency = current_currency;
         turn.researchPoints = current_researchPoints;
         turn.food = current_food;
-        turn.elements = current_elements;
+        turn.safety = current_safety;
 
         current_turn = turn;
     }
