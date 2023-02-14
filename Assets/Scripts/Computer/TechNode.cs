@@ -11,10 +11,12 @@ public class TechNode : MonoBehaviour
     private List<LineRenderer> lineRenderers;
     public Material mat;
     private float lineWidth = 5f;
+    public AllocType effectType;
+    public float effect;
 
     private void Start()
     {
-        tree = transform.parent.GetComponent<TechTree>();
+        tree = GameObject.FindGameObjectWithTag("TechTree").GetComponent<TechTree>();
         lineRenderers = new List<LineRenderer>();
 
         if (requiredNodes.Length <= 0)
