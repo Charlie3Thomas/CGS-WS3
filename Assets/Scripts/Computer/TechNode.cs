@@ -61,6 +61,7 @@ public class TechNode : MonoBehaviour
             {
                 allRequiredNodesUnlocked = false;
                 Debug.Log("Can't unlock as the required nodes are not unlocked yet");
+                AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
                 break;
             }
         }
@@ -71,10 +72,12 @@ public class TechNode : MonoBehaviour
             {
                 unlocked = true;
                 tree.sciencePoints -= pointsRequired;
+                AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "Unlocked"));
             }
             else
             {
                 Debug.Log("Not enough points");
+                AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
             }
         }
     }
