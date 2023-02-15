@@ -11,8 +11,7 @@ public class TechNode : MonoBehaviour
     private List<LineRenderer> lineRenderers;
     public Material lineMat;
     private float lineWidth = 1.5f;
-    public AllocType effectType;
-    public float effect;
+    public List<BuffsNerfs> buffs = new List<BuffsNerfs>();
 
     private Material mat;
     private Color faded = new Color(0.5f, 0.5f, 0.5f) * 1;
@@ -91,11 +90,13 @@ public class TechNode : MonoBehaviour
                 unlocked = true;
                 mat.SetVector("_Color", Lit * 8);
                 tree.sciencePoints -= pointsRequired;
+                tree.UpdateBuffs(buffs);
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "Unlocked"));
             }
             else
             {
                 Debug.Log("Not enough points");
+
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
             }
         }

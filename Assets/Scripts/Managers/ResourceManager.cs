@@ -26,21 +26,21 @@ public class Person
 [System.Serializable]
 public class Worker : Person
 {
-    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 2f } };
+    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 1f } };
     public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.MONEY, amount = 2f } };
 }
 
 [System.Serializable]
 public class Scientist : Person
 {
-    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 2f } };
+    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 1f } };
     public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.SCIENCE, amount = 3f } };
 }
 
 [System.Serializable]
 public class Planner : Person
 {
-    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 2f }, new Resource { allocType = AllocType.SCIENCE, amount = 2f } };
+    public new List<Resource> upkeep = new List<Resource> { new Resource { allocType = AllocType.FOOD, amount = 1f } };
     public new List<Resource> produce = new List<Resource> { new Resource { allocType = AllocType.SAFETY, amount = 2f } };
 }
 

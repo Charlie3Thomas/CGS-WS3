@@ -8,14 +8,11 @@ public class Policy
 {
     public string finalChoice;
     public int year;
-    public float effect;
-    public AllocType effectType;
+    public List<BuffsNerfs> buffs_nerfs = new List<BuffsNerfs>();
     public int Requirement;
     public FactionEnum.type requiredFaction;
     public int cost;
     public AllocType resourceCost;
-    //public int publicFavour;
-    //public int awareness;
 }
 
 public class PolicyManager : MonoBehaviour
@@ -57,19 +54,26 @@ public class PolicyManager : MonoBehaviour
             {
                 finalChoices.Add(pol.finalChoice);
                 pol.year = YearData._INSTANCE.current_year;
-                pol.effect = Mathf.Round(Random.Range(0f, 1f) * 100f) / 100f;
-                pol.effectType = (AllocType)Random.Range(0, 3);
+
+                for (int i = 0; i < Random.Range(1, 3); i++)
+                {
+                    pol.buffs_nerfs.Add(new BuffsNerfs((BuffsNerfsType)Random.Range(0, System.Enum.GetValues(typeof(BuffsNerfsType)).Length),
+                        Mathf.Round(Random.Range(-1f, 1f) * 100f) / 100f));
+                }
+
                 pol.requiredFaction = (FactionEnum.type)Random.Range(0, 4);
                 pol.Requirement = Random.Range(0, 10000);
                 pol.resourceCost = (AllocType)Random.Range(0, 3);
                 pol.cost = Random.Range(0, 10000);
-                //pol.publicFavour = Random.Range(-10000, 10000);
-                //pol.awareness = Random.Range(-10000, 10000);
                 policyList.Add(pol);
                 policyList.Sort(SortByYear);
                 ComputerController.Instance.policyCards[policyCount].GetComponent<PolicyCard>().policy = pol;
-                ComputerController.Instance.pCardTexts[policyCount].text = pol.finalChoice + "\nIncrease in " + pol.effectType.ToString().ToLower() +
-                    " gain by " + pol.effect * 100 + "%" + "\nRequirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
+                string effect = "";
+                foreach (BuffsNerfs bns in pol.buffs_nerfs)
+                {
+                    effect += ((bns.amount > 0) ? "Increase in " : "Decrease in ") + bns.type.ToString().ToLower() + " by " + (Mathf.Abs(bns.amount) * 100) + "%\n";
+                }
+                ComputerController.Instance.pCardTexts[policyCount].text = pol.finalChoice + "\n" + effect + "Requirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
                         "\nCost: " + pol.cost + " " + pol.resourceCost.ToString().ToLower() + "s";
                 policyCount++;
             }
@@ -114,22 +118,31 @@ public class PolicyManager : MonoBehaviour
 
         finalChoices.Add(pol.finalChoice);
         pol.year = YearData._INSTANCE.current_year;
-        pol.effect = Mathf.Round(Random.Range(0f, 1f) * 100f) / 100f;
-        pol.effectType = (AllocType)Random.Range(0, 3);
+
+        for (int i = 0; i < Random.Range(1, 3); i++)
+        {
+            pol.buffs_nerfs.Add(new BuffsNerfs((BuffsNerfsType)Random.Range(0, System.Enum.GetValues(typeof(BuffsNerfsType)).Length),
+                Mathf.Round(Random.Range(-1f, 1f) * 100f) / 100f));
+        }
+
         pol.requiredFaction = (FactionEnum.type)Random.Range(0, 4);
         pol.Requirement = Random.Range(0, 10000);
         pol.resourceCost = (AllocType)Random.Range(0, 3);
         pol.cost = Random.Range(0, 10000);
-        //pol.publicFavour = Random.Range(-10000, 10000);
-        //pol.awareness = Random.Range(-10000, 10000);
         policyList.Add(pol);
         policyList.Sort(SortByYear);
         ComputerController.Instance.policyCards[missingPolicyCard - 1] = pc;
         pc.GetComponent<PolicyCard>().policy = pol;
         ComputerController.Instance.pCardAnims[missingPolicyCard - 1] = pc.GetComponent<Animator>();
         ComputerController.Instance.pCardTexts[missingPolicyCard - 1] = pc.transform.GetChild(0).GetComponent<TMP_Text>();
-        ComputerController.Instance.pCardTexts[missingPolicyCard - 1].text = pol.finalChoice + "\nIncrease in " + pol.effectType.ToString().ToLower() +
-            " gain by " + pol.effect * 100 + "%" + "\nRequirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
+
+        string effect = "";
+        foreach (BuffsNerfs bns in pol.buffs_nerfs)
+        {
+            effect += ((bns.amount > 0) ? "Increase in " : "Decrease in ")  + bns.type.ToString().ToLower() + " by " + (Mathf.Abs(bns.amount) * 100) + "%\n";
+        }
+
+        ComputerController.Instance.pCardTexts[missingPolicyCard - 1].text = pol.finalChoice + "\n" + effect + "Requirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
                 "\nCost: " + pol.cost + " " + pol.resourceCost.ToString().ToLower() + "s";
 
         yield return null;
