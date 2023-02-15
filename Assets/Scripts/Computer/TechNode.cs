@@ -51,7 +51,11 @@ public class TechNode : MonoBehaviour
         }
 
         if (unlocked)
+        {
+            AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "AlreadyUnlocked"));
+            
             return;
+        }
 
         bool allRequiredNodesUnlocked = true;
 
