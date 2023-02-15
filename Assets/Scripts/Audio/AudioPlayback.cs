@@ -8,14 +8,14 @@ using UnityEngine;
 public static class AudioPlayback
 {
     //Use to play basic one shot with no param values, can make 3D by passing gameobj as argument, or leave argument as null if 2D
-    public static void PlayOneShot(FMODUnity.EventReference fmodEvent, GameObject objToAttachTo)
+    public static void PlayOneShot(FMODUnity.EventReference fmodEvent, Transform transformToAttachTo)
     {
         FMOD.Studio.EventInstance instance = FMODUnity.RuntimeManager.CreateInstance(fmodEvent);
 
         //Check if position has been given to attach event to that position and make 3D
-        if (objToAttachTo != null)
+        if (transformToAttachTo != null)
         {
-            FMODUnity.RuntimeManager.AttachInstanceToGameObject(instance, objToAttachTo.transform);
+            FMODUnity.RuntimeManager.AttachInstanceToGameObject(instance, transformToAttachTo);
         }
 
         instance.start();
@@ -25,7 +25,7 @@ public static class AudioPlayback
 
     //This is a genric function that has a generic param type 'value', when calling this function you will need to cast 'value' to the desired type
     // and replace <T> with desired type
-    public static void PlayOneShotWithParameters<T>(FMODUnity.EventReference fmodEvent, GameObject objToAttachTo, params (string name, T value)[] parameters)
+    public static void PlayOneShotWithParameters<T>(FMODUnity.EventReference fmodEvent, Transform transformToAttachTo, params (string name, T value)[] parameters)
     {
         FMOD.Studio.EventInstance instance = FMODUnity.RuntimeManager.CreateInstance(fmodEvent);
 
@@ -48,9 +48,9 @@ public static class AudioPlayback
         }
 
         //Check if position has been given to attach event to that position and make 3D
-        if (objToAttachTo != null)
+        if (transformToAttachTo != null)
         {
-            FMODUnity.RuntimeManager.AttachInstanceToGameObject(instance, objToAttachTo.transform); 
+            FMODUnity.RuntimeManager.AttachInstanceToGameObject(instance, transformToAttachTo); 
         }
 
         instance.start();
