@@ -7,7 +7,10 @@ public class TechTree : MonoBehaviour
     public List<TechNode> nodes;
     private List<BuffsNerfs> buffs = new List<BuffsNerfs>();
     public List<BuffsNerfs> uniqueBuffs = new List<BuffsNerfs>();
-    public int sciencePoints = 0;
+    [SerializeReference]
+    public Resource sciencePoints = new Resource { allocType = AllocType.SCIENCE };
+    [SerializeReference]
+    public Resource money = new Resource { allocType = AllocType.MONEY };
 
     public void UpdateBuffs(List<BuffsNerfs> newBuffs)
     {
