@@ -11,8 +11,8 @@ public class Policy
     public List<BuffsNerfs> buffs_nerfs = new List<BuffsNerfs>();
     public int Requirement;
     public FactionEnum.type requiredFaction;
-    public int cost;
-    public AllocType resourceCost;
+    [SerializeReference]
+    public Resource cost = new Resource();
 }
 
 public class PolicyManager : MonoBehaviour
@@ -63,8 +63,8 @@ public class PolicyManager : MonoBehaviour
 
                 pol.requiredFaction = (FactionEnum.type)Random.Range(0, 4);
                 pol.Requirement = Random.Range(0, 10000);
-                pol.resourceCost = (AllocType)Random.Range(0, 3);
-                pol.cost = Random.Range(0, 10000);
+                pol.cost.allocType = (AllocType)Random.Range(0, 3);
+                pol.cost.amount = Random.Range(0, 10000);
                 policyList.Add(pol);
                 policyList.Sort(SortByYear);
                 ComputerController.Instance.policyCards[policyCount].GetComponent<PolicyCard>().policy = pol;
@@ -74,7 +74,7 @@ public class PolicyManager : MonoBehaviour
                     effect += ((bns.amount > 0) ? "Increase in " : "Decrease in ") + bns.type.ToString().ToLower() + " by " + (Mathf.Abs(bns.amount) * 100) + "%\n";
                 }
                 ComputerController.Instance.pCardTexts[policyCount].text = pol.finalChoice + "\n" + effect + "Requirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
-                        "\nCost: " + pol.cost + " " + pol.resourceCost.ToString().ToLower() + "s";
+                        "\nCost: " + pol.cost.amount + " " + pol.cost.allocType.ToString().ToLower() + "s";
                 policyCount++;
             }
         }
@@ -127,8 +127,8 @@ public class PolicyManager : MonoBehaviour
 
         pol.requiredFaction = (FactionEnum.type)Random.Range(0, 4);
         pol.Requirement = Random.Range(0, 10000);
-        pol.resourceCost = (AllocType)Random.Range(0, 3);
-        pol.cost = Random.Range(0, 10000);
+        pol.cost.allocType = (AllocType)Random.Range(0, 3);
+        pol.cost.amount = Random.Range(0, 10000);
         policyList.Add(pol);
         policyList.Sort(SortByYear);
         ComputerController.Instance.policyCards[missingPolicyCard - 1] = pc;
@@ -143,7 +143,7 @@ public class PolicyManager : MonoBehaviour
         }
 
         ComputerController.Instance.pCardTexts[missingPolicyCard - 1].text = pol.finalChoice + "\n" + effect + "Requirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
-                "\nCost: " + pol.cost + " " + pol.resourceCost.ToString().ToLower() + "s";
+                "\nCost: " + pol.cost.amount + " " + pol.cost.allocType.ToString().ToLower() + "s";
 
         yield return null;
     }

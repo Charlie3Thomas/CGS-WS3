@@ -14,7 +14,10 @@ public enum BuffsNerfsType
     SCIENCE_UPKEEP,
     FOOD_RESERVES,
     SAFETY_FACTOR,
-    AWARENESS_FACTOR
+    AWARENESS_FACTOR,
+    MONEY_BOOST,
+    SCIENCE_BOOST,
+    MAGNITUDE_FACTOR
 }
 
 [System.Serializable]

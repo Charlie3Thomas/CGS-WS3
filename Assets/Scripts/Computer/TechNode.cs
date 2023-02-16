@@ -2,10 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Nodes 23, 24, 46, 47, 48, 62 are unique and need their own implementations
 public class TechNode : MonoBehaviour
 {
     private TechTree tree;
-    public int pointsRequired = 0;
+    public string name = "";
+    [SerializeReference]
+    public Resource requiredMoney = new Resource { allocType = AllocType.MONEY };
+    [SerializeReference]
+    public Resource requiredScience = new Resource { allocType = AllocType.SCIENCE };
     public bool unlocked;
     public TechNode[] requiredNodes;
     private List<LineRenderer> lineRenderers;
@@ -85,11 +90,12 @@ public class TechNode : MonoBehaviour
 
         if (allRequiredNodesUnlocked)
         {
-            if (tree.sciencePoints >= pointsRequired)
+            if (tree.sciencePoints.amount >= requiredScience.amount && tree.money.amount >= requiredMoney.amount)
             {
                 unlocked = true;
                 mat.SetVector("_Color", Lit * 8);
-                tree.sciencePoints -= pointsRequired;
+                tree.sciencePoints.amount -= requiredScience.amount;
+                tree.money.amount -= requiredMoney.amount;
                 tree.UpdateBuffs(buffs);
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "Unlocked"));
             }
