@@ -25,7 +25,6 @@ public class ComputerController : MonoBehaviour
     public GameObject[] policyCards = new GameObject[7];
     [HideInInspector]
     public List<PointSelector> pointSelectors;
-    private Policy currentPolicy;
 
     // Anims
     [HideInInspector]
@@ -203,11 +202,11 @@ public class ComputerController : MonoBehaviour
                     }
 
                     // Select policy card
-                    if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PolicyCard") && currentPolicy == null)
+                    if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PolicyCard"))
                     {
-                        currentPolicy = hit.transform.GetComponent<PolicyCard>().policy;
-                        PolicyManager.instance.finalChoices.Remove(currentPolicy.finalChoice);
-                        PolicyManager.instance.policyList.Remove(currentPolicy);
+                        PolicyManager.instance.currentPolicy = hit.transform.GetComponent<PolicyCard>().policy;
+                        PolicyManager.instance.finalChoices.Remove(PolicyManager.instance.currentPolicy.finalChoice);
+                        PolicyManager.instance.policyList.Remove(PolicyManager.instance.currentPolicy);
                         Destroy(hit.transform.gameObject);
                         PolicyManager.instance.ReplacePolicyCard();
                     }

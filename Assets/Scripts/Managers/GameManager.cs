@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        Invoke("StartGame", 1.0f);
+        Invoke("StartGame", 0.1f);
     }
 
     void Update()

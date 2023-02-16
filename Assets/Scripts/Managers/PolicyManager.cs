@@ -19,8 +19,9 @@ public class PolicyManager : MonoBehaviour
 {
     public static PolicyManager instance;
 
-    private string[] choices = { "Cut all trees", "Build a dam", "Increase taxes", "Kill john lennon", "Commit mass genocide", "Throw a party!",
-    "Lower taxes", "Throw waste into the ocean", "Build more roads", "Build more factories", "Build more houses" };
+    private string[] choices = { "Landmass Zoning", "Will-to-Drill", "Supreme Aid", "Basic Education", "Specialized Education", "Sign Language",
+    "Lower taxes", "Throw waste into the ocean", "Build more roads", "Build more factories", "Kill john lennon" };
+    public Policy currentPolicy;
     public List<Policy> policyList = new List<Policy>();
     private int numOfPolicies = 7;
     public GameObject policyCardPrefab;
@@ -41,6 +42,8 @@ public class PolicyManager : MonoBehaviour
 
     public void NewPolicySet()
     {
+        finalChoices.Clear();
+        policyList.Clear();
         int policyCount = 0;
         while (policyCount < numOfPolicies)
         {
