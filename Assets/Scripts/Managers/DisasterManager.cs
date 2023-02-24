@@ -6,9 +6,8 @@ public enum disasterType
 {
     FLOOD,
     EARTHQUAKE,
-    VOLCANO,
-    TORNADO,
-    WILDFIRE
+    DROUGHT,
+    TORNADO
 }
 
 [System.Serializable]
@@ -25,6 +24,9 @@ public class DisasterManager : MonoBehaviour
 
     public int numOfDisasters = 10;
     public List<Disaster> disasterList = new List<Disaster>();
+    public bool showMagnitude = false;
+    public bool showDeathToll = false;
+    public bool showSafety = false;
 
     void Awake()
     {
@@ -45,12 +47,29 @@ public class DisasterManager : MonoBehaviour
         WriteDisastersInJournal();
     }
 
-    void WriteDisastersInJournal()
+    // Call this to update the list visually whenever something new happens
+    public void WriteDisastersInJournal()
     {
-        ComputerController.Instance.notepadText.text = "Disasters:\n";
+        ComputerController.Instance.disasterNameText.text = "";
+        ComputerController.Instance.disasterYearText.text = "";
+        ComputerController.Instance.disasterMagnitudeText.text = "";
+        ComputerController.Instance.disasterDeathTollText.text = "";
+
         foreach (Disaster dis in disasterList)
         {
-            ComputerController.Instance.notepadText.text += dis.type.ToString() + " - Year: " + dis.year + " - Intensity: " + dis.intensity.ToString("F1") + "\n";
+            ComputerController.Instance.disasterNameText.text += dis.type.ToString() + "\n";
+            ComputerController.Instance.disasterYearText.text += dis.year + "\n";
+
+            if (showMagnitude)
+                ComputerController.Instance.disasterMagnitudeText.text += dis.intensity.ToString("F1") + "\n";
+            else
+                ComputerController.Instance.disasterMagnitudeText.text += "???\n";
+
+            // Random for now, change later when everything gets hooked up
+            if (showDeathToll)
+                ComputerController.Instance.disasterDeathTollText.text += Random.Range(0, 1000) + "\n";
+            else
+                ComputerController.Instance.disasterDeathTollText.text += "???\n";
         }
     }
 
