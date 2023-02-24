@@ -6,6 +6,7 @@ using UnityEngine;
 public class TechNode : MonoBehaviour
 {
     private TechTree tree;
+    public int id = 0;
     public string name = "";
     [SerializeReference]
     public Resource requiredMoney = new Resource { allocType = AllocType.MONEY };
@@ -25,6 +26,7 @@ public class TechNode : MonoBehaviour
     private void Start()
     {
         tree = GameObject.FindGameObjectWithTag("TechTree").GetComponent<TechTree>();
+        id = transform.GetSiblingIndex() + 1;
         lineRenderers = new List<LineRenderer>();
         mat = GetComponent<Renderer>().material;
         mat.SetVector("_Color", faded);
@@ -97,6 +99,7 @@ public class TechNode : MonoBehaviour
                 tree.sciencePoints.amount -= requiredScience.amount;
                 tree.money.amount -= requiredMoney.amount;
                 tree.UpdateBuffs(buffs);
+                SpecialCase();
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "Unlocked"));
             }
             else
@@ -105,6 +108,49 @@ public class TechNode : MonoBehaviour
 
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
             }
+        }
+    }
+
+    void SpecialCase()
+    {
+        switch(id)
+        {
+            case 23:
+                {
+                    DisasterManager.instance.showMagnitude = true;
+                    DisasterManager.instance.WriteDisastersInJournal();
+                }
+                break;
+            case 24:
+                {
+                    DisasterManager.instance.showDeathToll = true;
+                    DisasterManager.instance.WriteDisastersInJournal();
+                }
+                break;
+            case 46:
+                {
+                    float temp_money = tree.money.amount;
+                    float temp_science = tree.sciencePoints.amount;
+                    tree.money.amount = temp_science / 5;
+                    tree.sciencePoints.amount = temp_money;
+                }
+                break;
+            case 47:
+                {
+                    float temp_money = tree.money.amount;
+                    float temp_science = tree.sciencePoints.amount;
+                    tree.money.amount = temp_science * 2;
+                    tree.sciencePoints.amount = temp_money;
+                }
+                break;
+            case 48:
+                {
+                    DisasterManager.instance.showSafety = true;
+                }
+                break;
+            case 62:
+                // Reset awareness
+                break;
         }
     }
 }

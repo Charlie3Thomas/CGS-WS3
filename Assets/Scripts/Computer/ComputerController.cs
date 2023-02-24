@@ -25,7 +25,6 @@ public class ComputerController : MonoBehaviour
     public GameObject[] policyCards = new GameObject[7];
     [HideInInspector]
     public List<PointSelector> pointSelectors;
-    private Policy currentPolicy;
 
     // Anims
     [HideInInspector]
@@ -41,7 +40,15 @@ public class ComputerController : MonoBehaviour
 
     // Texts
     [HideInInspector]
-    public TMP_Text notepadText;
+    public TMP_Text disasterNameText;
+    [HideInInspector]
+    public TMP_Text disasterYearText;
+    [HideInInspector]
+    public TMP_Text disasterMagnitudeText;
+    [HideInInspector]
+    public TMP_Text disasterDeathTollText;
+    [HideInInspector]
+    public TMP_Text safetyText;
     [HideInInspector]
     public TMP_Text yearText;
     [HideInInspector]
@@ -203,11 +210,15 @@ public class ComputerController : MonoBehaviour
                     }
 
                     // Select policy card
-                    if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PolicyCard") && currentPolicy == null)
+                    if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PolicyCard"))
                     {
-                        currentPolicy = hit.transform.GetComponent<PolicyCard>().policy;
-                        PolicyManager.instance.finalChoices.Remove(currentPolicy.finalChoice);
-                        PolicyManager.instance.policyList.Remove(currentPolicy);
+                        if(PolicyManager.instance.currentPolicies.Count > 2)
+                            PolicyManager.instance.currentPolicies.Remove(PolicyManager.instance.currentSelectedPolicy);
+
+                        PolicyManager.instance.currentPolicies.Add(hit.transform.GetComponent<PolicyCard>().policy);
+                        PolicyManager.instance.currentSelectedPolicy = hit.transform.GetComponent<PolicyCard>().policy;
+                        PolicyManager.instance.finalChoices.Remove(hit.transform.GetComponent<PolicyCard>().policy.finalTitle);
+                        PolicyManager.instance.policyList.Remove(hit.transform.GetComponent<PolicyCard>().policy);
                         Destroy(hit.transform.gameObject);
                         PolicyManager.instance.ReplacePolicyCard();
                     }
@@ -299,7 +310,11 @@ public class ComputerController : MonoBehaviour
         yearText = GameObject.FindGameObjectWithTag("YearCounter").GetComponent<TMP_Text>();
         notepad = GameObject.FindGameObjectWithTag("Notepad");
         journal = GameObject.FindGameObjectWithTag("Journal");
-        notepadText = notepad.transform.GetChild(0).GetComponent<TMP_Text>();
+        disasterNameText = notepad.transform.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
+        disasterYearText = notepad.transform.GetChild(1).GetChild(1).GetComponent<TMP_Text>();
+        disasterMagnitudeText = notepad.transform.GetChild(1).GetChild(2).GetComponent<TMP_Text>();
+        disasterDeathTollText = notepad.transform.GetChild(1).GetChild(3).GetComponent<TMP_Text>();
+        safetyText = notepad.transform.GetChild(1).GetChild(4).GetComponent<TMP_Text>();
         notepad.SetActive(true);
         journal.SetActive(false);
         pointSelectors = new List<PointSelector>(FindObjectsOfType<PointSelector>());

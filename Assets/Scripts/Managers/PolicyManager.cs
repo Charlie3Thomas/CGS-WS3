@@ -6,7 +6,7 @@ using TMPro;
 [System.Serializable]
 public class Policy
 {
-    public string finalChoice;
+    public string finalTitle;
     public int year;
     public List<BuffsNerfs> buffs_nerfs = new List<BuffsNerfs>();
     public int Requirement;
@@ -19,8 +19,11 @@ public class PolicyManager : MonoBehaviour
 {
     public static PolicyManager instance;
 
-    private string[] choices = { "Cut all trees", "Build a dam", "Increase taxes", "Kill john lennon", "Commit mass genocide", "Throw a party!",
-    "Lower taxes", "Throw waste into the ocean", "Build more roads", "Build more factories", "Build more houses" };
+    private string[] titles = { "Landmass Zoning", "Will-to-Drill", "Supreme Aid", "Basic Education", "Specialized Education", "Sign Language",
+    "Lower taxes", "Throw waste into the ocean", "Build more roads", "Build more factories", "Kill john lennon" };
+    public List<Policy> currentPolicies = new List<Policy>();
+    public Policy currentSelectedPolicy;
+    private int policyCardIndex = 0;
     public List<Policy> policyList = new List<Policy>();
     private int numOfPolicies = 7;
     public GameObject policyCardPrefab;
@@ -39,20 +42,42 @@ public class PolicyManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (currentPolicies.Count > 0)
+        {
+            if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+            {
+                policyCardIndex = (policyCardIndex + 1) % currentPolicies.Count;
+                currentSelectedPolicy = currentPolicies[policyCardIndex];
+            }
+            else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+            {
+                policyCardIndex--;
+                if (policyCardIndex < 0)
+                    policyCardIndex = currentPolicies.Count - 1;
+
+                currentSelectedPolicy = currentPolicies[policyCardIndex];
+            }
+        }
+    }
+
     public void NewPolicySet()
     {
+        finalChoices.Clear();
+        policyList.Clear();
         int policyCount = 0;
         while (policyCount < numOfPolicies)
         {
             Policy pol = new Policy();
-            pol.finalChoice = choices[Random.Range(0, choices.Length)];
-            if (finalChoices.Contains(pol.finalChoice))
+            pol.finalTitle = titles[Random.Range(0, titles.Length)];
+            if (finalChoices.Contains(pol.finalTitle))
             {
                 continue;
             }
             else
             {
-                finalChoices.Add(pol.finalChoice);
+                finalChoices.Add(pol.finalTitle);
                 pol.year = YearData._INSTANCE.current_year;
 
                 for (int i = 0; i < Random.Range(1, 3); i++)
@@ -73,7 +98,7 @@ public class PolicyManager : MonoBehaviour
                 {
                     effect += ((bns.amount > 0) ? "Increase in " : "Decrease in ") + bns.type.ToString().ToLower() + " by " + (Mathf.Abs(bns.amount) * 100) + "%\n";
                 }
-                ComputerController.Instance.pCardTexts[policyCount].text = pol.finalChoice + "\n" + effect + "Requirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
+                ComputerController.Instance.pCardTexts[policyCount].text = pol.finalTitle + "\n" + effect + "Requirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
                         "\nCost: " + pol.cost.amount + " " + pol.cost.allocType.ToString().ToLower() + "s";
                 policyCount++;
             }
@@ -109,14 +134,14 @@ public class PolicyManager : MonoBehaviour
 
         while (true)
         {
-            pol.finalChoice = choices[Random.Range(0, choices.Length)];
-            if (!finalChoices.Contains(pol.finalChoice))
+            pol.finalTitle = titles[Random.Range(0, titles.Length)];
+            if (!finalChoices.Contains(pol.finalTitle))
             {
                 break;
             }
         }
 
-        finalChoices.Add(pol.finalChoice);
+        finalChoices.Add(pol.finalTitle);
         pol.year = YearData._INSTANCE.current_year;
 
         for (int i = 0; i < Random.Range(1, 3); i++)
@@ -142,7 +167,7 @@ public class PolicyManager : MonoBehaviour
             effect += ((bns.amount > 0) ? "Increase in " : "Decrease in ")  + bns.type.ToString().ToLower() + " by " + (Mathf.Abs(bns.amount) * 100) + "%\n";
         }
 
-        ComputerController.Instance.pCardTexts[missingPolicyCard - 1].text = pol.finalChoice + "\n" + effect + "Requirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
+        ComputerController.Instance.pCardTexts[missingPolicyCard - 1].text = pol.finalTitle + "\n" + effect + "Requirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
                 "\nCost: " + pol.cost.amount + " " + pol.cost.allocType.ToString().ToLower() + "s";
 
         yield return null;
