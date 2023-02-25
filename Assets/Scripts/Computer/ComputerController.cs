@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public enum ComputerState
 {
@@ -87,6 +88,18 @@ public class ComputerController : MonoBehaviour
     private float minYearSlider = 0f;
     private float maxYearSlider = 1.98f;
 
+    // inputs
+    private Vector2 mousePos;
+    private Vector2 mouseDelta;
+    private Vector2 scroll;
+    private bool isInteractingHeld;
+    private bool isInteractingPressed;
+    private bool isInteractingReleased;
+    private bool isSelectingHeld;
+    private bool isSelectingPressed;
+    private bool isSelectingReleased;
+    private bool isPausing;
+
     void Awake()
     {
         if (Instance == null)
@@ -113,11 +126,11 @@ public class ComputerController : MonoBehaviour
         else
             yearText.color = desiredNotEqualCurrentColour;
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(mousePos);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("Button"))
+            if (isInteractingPressed && hit.transform.CompareTag("Button"))
             {
                 buttonAnim = hit.transform.GetComponent<Animator>();
 
@@ -131,7 +144,7 @@ public class ComputerController : MonoBehaviour
                     if (yearSliding)
                     {
                         float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
-                        float newRemappedValue = remappedValue + Input.GetAxis("Mouse X") * 0.5f;
+                        float newRemappedValue = remappedValue + mousePos.x * 0.5f;
                         desiredYear = (int)Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
 
                         if (desiredYear % 5 != 0)
@@ -150,14 +163,14 @@ public class ComputerController : MonoBehaviour
                         yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
                     }
 
-                    if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("YearSlider"))
+                    if (isInteractingPressed && hit.transform.CompareTag("YearSlider"))
                     {
                         Cursor.visible = false;
                         Cursor.lockState = CursorLockMode.Locked;
                         yearSliding = true;
                     }
 
-                    if (Input.GetMouseButtonUp(0))
+                    if (isInteractingReleased)
                     {
                         Cursor.visible = true;
                         Cursor.lockState = CursorLockMode.None;
@@ -168,21 +181,21 @@ public class ComputerController : MonoBehaviour
 
                     InteractWithScreen(hit, onScreen, screenCam);
 
-                    if (Input.GetMouseButtonDown(1) && onScreen && !yearSliding)
+                    if (isSelectingPressed && onScreen && !yearSliding)
                     {
                         touchingScreen = true;
                         Cursor.lockState = CursorLockMode.Locked;
                         Cursor.visible = false;
                     }
 
-                    if (Input.GetMouseButtonUp(1) && !yearSliding)
+                    if (isSelectingReleased && !yearSliding)
                     {
                         touchingScreen = false;
                         Cursor.lockState = CursorLockMode.None;
                         Cursor.visible = true;
                     }
 
-                    if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PointsSelector"))
+                    if (isInteractingPressed && hit.transform.CompareTag("PointsSelector"))
                     {
                         pointsSelectorAnim = hit.transform.GetComponent<Animator>();
                        
@@ -192,7 +205,7 @@ public class ComputerController : MonoBehaviour
                             pointsSelectorAnim.SetTrigger("PointsUp");
                     }
 
-                    if (Input.GetMouseButtonDown(1) && hit.transform.CompareTag("PointsSelector"))
+                    if (isSelectingPressed && hit.transform.CompareTag("PointsSelector"))
                     {
                         pointsSelectorAnim = hit.transform.GetComponent<Animator>();
                         
@@ -205,12 +218,12 @@ public class ComputerController : MonoBehaviour
                     // Year knob up/down
                     if (yearKnobAnim != null)
                     {
-                        yearKnobAnim.SetBool("YearDownHold", Input.GetMouseButton(1) && hit.transform.CompareTag("YearKnob"));
-                        yearKnobAnim.SetBool("YearUpHold", Input.GetMouseButton(0) && hit.transform.CompareTag("YearKnob"));
+                        yearKnobAnim.SetBool("YearDownHold", isSelectingHeld && hit.transform.CompareTag("YearKnob"));
+                        yearKnobAnim.SetBool("YearUpHold", isInteractingHeld && hit.transform.CompareTag("YearKnob"));
                     }
 
                     // Select policy card
-                    if (Input.GetMouseButtonDown(0) && hit.transform.CompareTag("PolicyCard"))
+                    if (isInteractingPressed && hit.transform.CompareTag("PolicyCard"))
                     {
                         if(PolicyManager.instance.currentPolicies.Count > 2)
                             PolicyManager.instance.currentPolicies.Remove(PolicyManager.instance.currentSelectedPolicy);
@@ -237,14 +250,14 @@ public class ComputerController : MonoBehaviour
 
                     InteractWithScreen(hit, onTech, techCam);
 
-                    if (Input.GetMouseButtonDown(1) && onTech && !yearSliding)
+                    if (isSelectingPressed && onTech && !yearSliding)
                     {
                         touchingTechScreen = true;
                         Cursor.lockState = CursorLockMode.Locked;
                         Cursor.visible = false;
                     }
 
-                    if (Input.GetMouseButtonUp(1) && !yearSliding)
+                    if (isSelectingReleased && !yearSliding)
                     {
                         touchingTechScreen = false;
                         Cursor.lockState = CursorLockMode.None;
@@ -263,11 +276,16 @@ public class ComputerController : MonoBehaviour
             onTech = false;
             touchingTechScreen = false;
         }
+
+        isInteractingPressed = false;
+        isInteractingReleased = false;
+        isSelectingPressed = false;
+        isSelectingReleased = false;
     }
 
     private void InteractWithScreen(RaycastHit hit, bool screen, Camera cam)
     {
-        if (Input.GetMouseButtonDown(0) && screen)
+        if (isInteractingPressed && screen)
         {
             var localPoint = hit.textureCoord;
             Ray camRay = cam.ScreenPointToRay(new Vector2(localPoint.x * cam.pixelWidth, localPoint.y * cam.pixelHeight));
@@ -425,5 +443,91 @@ public class ComputerController : MonoBehaviour
         panUpButton.SetActive(true);
         panDownButton.SetActive(true);
         yield return null;
+    }
+
+    private void CursorPosInput(InputAction.CallbackContext context)
+    {
+        mousePos = context.ReadValue<Vector2>();
+    }
+
+    private void AimInput(InputAction.CallbackContext context)
+    {
+        mouseDelta = context.ReadValue<Vector2>();
+    }
+
+    private void ScrollInput(InputAction.CallbackContext context)
+    {
+        scroll = context.ReadValue<Vector2>();
+    }
+
+    private void InteractInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            isInteractingPressed = true;
+            isInteractingHeld = true;
+        }
+        else if (context.canceled)
+        {
+            isInteractingReleased = true;
+            isInteractingHeld = false;
+        }
+    }
+
+    private void SelectInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            isSelectingPressed = true;
+            isSelectingHeld = true;
+        }
+        else if (context.canceled)
+        {
+            isSelectingReleased = true;
+            isSelectingHeld = false;
+        }
+    }
+
+    private void PauseInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            isPausing = true;
+        else if (context.canceled)
+            isPausing = false;
+    }
+
+    private void SubscribeInputs()
+    {
+        InputManager.onCursorPos += CursorPosInput;
+        InputManager.onAim += AimInput;
+        InputManager.onScroll += ScrollInput;
+        InputManager.onInteract += InteractInput;
+        InputManager.onSelect += SelectInput;
+        InputManager.onPause += PauseInput;
+    }
+
+    private void UnsubscribeInputs()
+    {
+        InputManager.onCursorPos -= CursorPosInput;
+        InputManager.onAim -= AimInput;
+        InputManager.onScroll -= ScrollInput;
+        InputManager.onInteract -= InteractInput;
+        InputManager.onSelect -= SelectInput;
+        InputManager.onPause -= PauseInput;
+    }
+
+    private void OnEnable()
+    {
+        SubscribeInputs();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeInputs();
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeInputs();
     }
 }

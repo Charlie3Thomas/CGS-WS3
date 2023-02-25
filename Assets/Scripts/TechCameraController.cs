@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.InputSystem;
 
 public class TechCameraController : MonoBehaviour
 {
     public CinemachineVirtualCamera vcam;
     public Transform background;
     public Transform lookAt;
-    private float cameraSpeed = 25f;
+    private float cameraSpeed = 5f;
     private float cameraBoundsX = 600f;
     private float cameraBoundsY = 150f;
     private float mouseX;
@@ -23,6 +24,12 @@ public class TechCameraController : MonoBehaviour
     private float zoomVelocity;
     private float smoothDampSpeed = 0.5f;
     private Vector3 velocity;
+
+    // inputs
+    private Vector2 mouseDelta;
+    private Vector2 scroll;
+    private bool isInteracting;
+    private bool isSelecting;
 
     void Start()
     {
@@ -45,8 +52,8 @@ public class TechCameraController : MonoBehaviour
 
         if (ComputerController.Instance.touchingTechScreen)
         {
-            mouseX = Input.GetAxis("Mouse X");
-            mouseY = Input.GetAxis("Mouse Y");
+            mouseX = mouseDelta.x;
+            mouseY = mouseDelta.y;
         }
         else
         {
@@ -55,7 +62,7 @@ public class TechCameraController : MonoBehaviour
         }
 
         if (ComputerController.Instance.onTech)
-            zoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+            zoom -= scroll.y * zoomSpeed;
 
         zoom = Mathf.Clamp(zoom, zoomMin, zoomMax);
 
@@ -67,5 +74,62 @@ public class TechCameraController : MonoBehaviour
 
         lookAt.localPosition = target;
         vcam.m_Lens.OrthographicSize = Mathf.SmoothDamp(vcam.m_Lens.OrthographicSize, zoom, ref zoomVelocity, 0.3f);
+    }
+
+    private void AimInput(InputAction.CallbackContext context)
+    {
+        mouseDelta = context.ReadValue<Vector2>();
+    }
+
+    private void ScrollInput(InputAction.CallbackContext context)
+    {
+        scroll = context.ReadValue<Vector2>();
+    }
+
+    private void InteractInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            isInteracting = true;
+        else if (context.canceled)
+            isInteracting = false;
+    }
+
+    private void SelectInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            isSelecting = true;
+        else if (context.canceled)
+            isSelecting = false;
+    }
+
+    private void SubscribeInputs()
+    {
+        InputManager.onAim += AimInput;
+        InputManager.onScroll += ScrollInput;
+        InputManager.onInteract += InteractInput;
+        InputManager.onSelect += SelectInput;
+    }
+
+    private void UnsubscribeInputs()
+    {
+        InputManager.onAim -= AimInput;
+        InputManager.onScroll -= ScrollInput;
+        InputManager.onInteract -= InteractInput;
+        InputManager.onSelect -= SelectInput;
+    }
+
+    private void OnEnable()
+    {
+        SubscribeInputs();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeInputs();
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeInputs();
     }
 }
