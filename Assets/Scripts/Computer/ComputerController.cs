@@ -144,7 +144,7 @@ public class ComputerController : MonoBehaviour
                     if (yearSliding)
                     {
                         float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
-                        float newRemappedValue = remappedValue + mousePos.x * 0.5f;
+                        float newRemappedValue = remappedValue + mouseDelta.x * 0.025f;
                         desiredYear = (int)Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
 
                         if (desiredYear % 5 != 0)
