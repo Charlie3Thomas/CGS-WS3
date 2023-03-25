@@ -15,7 +15,7 @@ public class Disaster
 {
     public disasterType type;
     public int year;
-    public float intensity;
+    public float magnitude;
 }
 
 public class DisasterManager : MonoBehaviour
@@ -73,7 +73,7 @@ public class DisasterManager : MonoBehaviour
             ComputerController.Instance.disasterYearText.text += dis.year + "\n";
 
             if (showMagnitude)
-                ComputerController.Instance.disasterMagnitudeText.text += dis.intensity.ToString("F1") + "\n";
+                ComputerController.Instance.disasterMagnitudeText.text += dis.magnitude.ToString("F1") + "\n";
             else
                 ComputerController.Instance.disasterMagnitudeText.text += "???\n";
 
@@ -97,7 +97,7 @@ public class DisasterManager : MonoBehaviour
             {
                 dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
             }
-            dis.intensity = Random.Range(1f, 10f);
+            dis.magnitude = Random.Range(1f, 10f);
             disasterList.Add(dis);
         }
         disasterList.Sort(SortByYear);
