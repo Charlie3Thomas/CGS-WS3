@@ -76,6 +76,7 @@ public class ComputerController : MonoBehaviour
     private Vector3 defaultLook = new Vector3(0f, -0.5f, 0f);
     private Vector3 lookDown = new Vector3(0f, -12f, 0f);
     private Vector3 lookUp = new Vector3(0f, 12f, 0f);
+    private float totalPointsLimit = 10f;
     [HideInInspector]
     public int desiredYear = 1900;
     private Color desiredEqualCurrentColour = new Color(0f, 0.74f, 0.69f, 255f) * 5.5f;
@@ -366,7 +367,7 @@ public class ComputerController : MonoBehaviour
         {
             totalPoints += pointSelector.pointValue;
         }
-        if (totalPoints > 5)
+        if (totalPoints > totalPointsLimit)
         {
             PointSelector highestPointSelector = FindHighestPointSelector(excluded);
             highestPointSelector.RemovePoints(1);
