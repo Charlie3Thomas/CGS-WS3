@@ -17,6 +17,12 @@ TagManager:
   - YearKnob
   - YearSlider
   - TechCamera
+  - TechNode
+  - TechTree
+  - FoodCounter
+  - CurrencyCounter
+  - RPCounter
+  - PopCounter
   layers:
   - Default
   - TransparentFX

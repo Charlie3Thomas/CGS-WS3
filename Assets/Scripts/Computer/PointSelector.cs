@@ -15,7 +15,9 @@ public class PointSelector : MonoBehaviour
     public GameObject pip;
     private Material pipMat;
 
+    [HideInInspector]
     public float pointValue;
+    private float pointLimit = 10f;
 
     private void Start()
     {
@@ -24,7 +26,7 @@ public class PointSelector : MonoBehaviour
 
     public void AddPoints(float points)
     {
-        if(pointValue < 5)
+        if(pointValue < pointLimit)
             pointValue += points;
 
         if (pipMat != null)
