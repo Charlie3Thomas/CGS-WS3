@@ -4,9 +4,9 @@ using UnityEngine;
 
 public enum disasterType
 {
-    FLOOD,
     EARTHQUAKE,
-    DROUGHT,
+    TSUNAMI,
+    VOLCANO,
     TORNADO
 }
 
@@ -46,7 +46,19 @@ public class DisasterManager : MonoBehaviour
         CreateDisasterList();
         WriteDisastersInJournal();
     }
+    private void Update()
+    {
+        //WriteSafetyInJournal();  // To implement - Display safety value in journal when show_safetyunlocked
+    }
 
+    //public void WriteSafetyInJournal()
+    //{
+
+    //    if (showSafety)
+    //    {
+            
+    //    }
+    //}
     // Call this to update the list visually whenever something new happens
     public void WriteDisastersInJournal()
     {
@@ -80,7 +92,7 @@ public class DisasterManager : MonoBehaviour
         {
             Disaster dis = new Disaster();
             dis.type = (disasterType)Random.Range(0, System.Enum.GetValues(typeof(disasterType)).Length);
-            dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
+            dis.year = (Random.Range(YearData._INSTANCE.earliest_year / 5, (YearData._INSTANCE.latest_year / 5) + 1) * 5);
             while (!uniqueYears.Add(dis.year))
             {
                 dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
