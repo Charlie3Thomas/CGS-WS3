@@ -53,6 +53,14 @@ public class ComputerController : MonoBehaviour
     [HideInInspector]
     public TMP_Text yearText;
     [HideInInspector]
+    public TMP_Text foodText;
+    [HideInInspector]
+    public TMP_Text rpText;
+    [HideInInspector]
+    public TMP_Text currencyText;
+    [HideInInspector]
+    public TMP_Text populationText;
+    [HideInInspector]
     public TMP_Text[] pCardTexts = new TMP_Text[7];
 
     private Camera cam;
@@ -120,12 +128,6 @@ public class ComputerController : MonoBehaviour
     {
         if (!cam)
             return;
-
-        yearText.text = desiredYear.ToString();
-        if (desiredYear == YearData._INSTANCE.current_year)
-            yearText.color = desiredEqualCurrentColour;
-        else
-            yearText.color = desiredNotEqualCurrentColour;
 
         Ray ray = cam.ScreenPointToRay(mousePos);
         RaycastHit hit;
@@ -327,6 +329,10 @@ public class ComputerController : MonoBehaviour
         yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
         desiredYear = YearData._INSTANCE.current_year;
         yearText = GameObject.FindGameObjectWithTag("YearCounter").GetComponent<TMP_Text>();
+        foodText = GameObject.FindGameObjectWithTag("FoodCounter").GetComponent<TMP_Text>();
+        rpText = GameObject.FindGameObjectWithTag("RPCounter").GetComponent<TMP_Text>();
+        currencyText = GameObject.FindGameObjectWithTag("CurrencyCounter").GetComponent<TMP_Text>();
+        populationText = GameObject.FindGameObjectWithTag("PopCounter").GetComponent<TMP_Text>();
         notepad = GameObject.FindGameObjectWithTag("Notepad");
         journal = GameObject.FindGameObjectWithTag("Journal");
         disasterNameText = notepad.transform.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
@@ -358,6 +364,12 @@ public class ComputerController : MonoBehaviour
     {
         float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
         yearSlider.transform.localPosition = new Vector3(remappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
+
+        yearText.text = desiredYear.ToString();
+        if (desiredYear == YearData._INSTANCE.current_year)
+            yearText.color = desiredEqualCurrentColour;
+        else
+            yearText.color = desiredNotEqualCurrentColour;
     }
 
     public void CheckPoints(PointSelector excluded)

@@ -101,7 +101,7 @@ public class ResourceManager : MonoBehaviour
         current_food = Random.Range(1000, 10000);
         current_safety = Random.Range(1000, 10000);
 
-        //Test
+        //Test turn
         NewTurn();
     }
 
@@ -121,6 +121,12 @@ public class ResourceManager : MonoBehaviour
         turn.safety = current_safety;
 
         current_turn = turn;
+
+        //Update counters
+        ComputerController.Instance.foodText.text = current_turn.food.ToString();
+        ComputerController.Instance.rpText.text = current_turn.researchPoints.ToString();
+        ComputerController.Instance.currencyText.text = current_turn.currency.ToString();
+        ComputerController.Instance.populationText.text = current_turn.total_population.ToString();
     }
 
     public void AllocatePopulation(float workerPopulation, float scientistPopulation, float plannerPopulation, float farmerPopulation)
