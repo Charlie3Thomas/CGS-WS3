@@ -137,10 +137,10 @@ public class ResourceManager : MonoBehaviour
             return;
         }
 
-        workerPopulation = Remap(workerPopulation, 0f, 5f, 0f, 1f);
-        scientistPopulation = Remap(scientistPopulation, 0f, 5f, 0f, 1f);
-        plannerPopulation = Remap(plannerPopulation, 0f, 5f, 0f, 1f);
-        farmerPopulation = Remap(farmerPopulation, 0f, 5f, 0f, 1f);
+        workerPopulation = Remap(workerPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+        scientistPopulation = Remap(scientistPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+        plannerPopulation = Remap(plannerPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+        farmerPopulation = Remap(farmerPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
 
         //Worker
         {
