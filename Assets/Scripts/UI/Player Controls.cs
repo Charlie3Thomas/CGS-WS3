@@ -98,7 +98,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""3633e8dd-c257-4b82-a79c-1ea055b7bca2"",
                     ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": ""Press(behavior=1)"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Interact"",
@@ -295,6 +295,34 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Cursor"",
+            ""id"": ""8696a064-7c2b-421d-bb6c-8ba1d448b6a4"",
+            ""actions"": [
+                {
+                    ""name"": ""Interaction"",
+                    ""type"": ""Button"",
+                    ""id"": ""2b55c36f-c965-413b-8452-fab64f5e1e64"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""c97858b1-7540-43f5-a30f-f0afa5132f1c"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interaction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -312,6 +340,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Menu_Interact = m_Menu.FindAction("Interact", throwIfNotFound: true);
         m_Menu_CursorPosition = m_Menu.FindAction("CursorPosition", throwIfNotFound: true);
         m_Menu_Unpause = m_Menu.FindAction("Unpause", throwIfNotFound: true);
+        // Cursor
+        m_Cursor = asset.FindActionMap("Cursor", throwIfNotFound: true);
+        m_Cursor_Interaction = m_Cursor.FindAction("Interaction", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -489,6 +520,39 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         }
     }
     public MenuActions @Menu => new MenuActions(this);
+
+    // Cursor
+    private readonly InputActionMap m_Cursor;
+    private ICursorActions m_CursorActionsCallbackInterface;
+    private readonly InputAction m_Cursor_Interaction;
+    public struct CursorActions
+    {
+        private @PlayerControls m_Wrapper;
+        public CursorActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Interaction => m_Wrapper.m_Cursor_Interaction;
+        public InputActionMap Get() { return m_Wrapper.m_Cursor; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CursorActions set) { return set.Get(); }
+        public void SetCallbacks(ICursorActions instance)
+        {
+            if (m_Wrapper.m_CursorActionsCallbackInterface != null)
+            {
+                @Interaction.started -= m_Wrapper.m_CursorActionsCallbackInterface.OnInteraction;
+                @Interaction.performed -= m_Wrapper.m_CursorActionsCallbackInterface.OnInteraction;
+                @Interaction.canceled -= m_Wrapper.m_CursorActionsCallbackInterface.OnInteraction;
+            }
+            m_Wrapper.m_CursorActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Interaction.started += instance.OnInteraction;
+                @Interaction.performed += instance.OnInteraction;
+                @Interaction.canceled += instance.OnInteraction;
+            }
+        }
+    }
+    public CursorActions @Cursor => new CursorActions(this);
     public interface IGameActions
     {
         void OnInteract(InputAction.CallbackContext context);
@@ -503,5 +567,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnCursorPosition(InputAction.CallbackContext context);
         void OnUnpause(InputAction.CallbackContext context);
+    }
+    public interface ICursorActions
+    {
+        void OnInteraction(InputAction.CallbackContext context);
     }
 }

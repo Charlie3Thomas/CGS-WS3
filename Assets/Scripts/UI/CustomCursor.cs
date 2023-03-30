@@ -14,8 +14,8 @@ public class CustomCursor : MonoBehaviour
 
     private void Start()
     {
-        controls.Game.Interact.started += _ => StartedClick();
-        controls.Game.Interact.performed += _ => EndedClick();
+        controls.Cursor.Interaction.started += _ => StartedClick();
+        controls.Cursor.Interaction.performed += _ => EndedClick();
     }
 
     private void Awake()
