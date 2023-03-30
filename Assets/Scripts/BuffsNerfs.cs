@@ -17,7 +17,7 @@ public enum BuffsNerfsType
     AWARENESS_FACTOR,
     MONEY_BOOST,
     SCIENCE_BOOST,
-    MAGNITUDE_FACTOR
+    RESOURCE_FACTOR
 }
 
 [System.Serializable]

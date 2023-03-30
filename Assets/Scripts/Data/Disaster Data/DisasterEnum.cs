@@ -7,15 +7,10 @@ public class DisasterEnum
     public enum type
     {
         NONE,
-
-        EARTHQUAKE,
+        EARTHQUAKE,  
         TSUNAMI,
         VOLCANO,
-        HEAT_WAVE,
-        COLD_WAVE,
-        WILDFIRE,
-        STORM
-
-        // WILL NEED EXPANSION FOR MAN-MADE DISASTERS
+        TORNADO
+       
     }
 }
