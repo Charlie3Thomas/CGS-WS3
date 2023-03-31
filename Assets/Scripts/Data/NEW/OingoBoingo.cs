@@ -1,5 +1,5 @@
 using CT.Data;
-using CT.Technologies;
+using CT.Lookup;
 using UnityEngine;
 
 public class OingoBoingo : MonoBehaviour

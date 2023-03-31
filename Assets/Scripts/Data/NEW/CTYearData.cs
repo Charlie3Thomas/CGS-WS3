@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CT.Data
 {
     using System;
-    using Technologies;
+    using Lookup;
 
     public class CTYearData
     {

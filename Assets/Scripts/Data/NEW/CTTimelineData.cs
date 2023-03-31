@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CT.Data
 {
     using Enumerations;
-    using Technologies;
+    using Lookup;
     using System;
     using Data.Changes;
     using System.CodeDom;

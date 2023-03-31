@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static Unity.VisualScripting.AnnotationUtility;
 
-namespace CT.Technologies
+namespace CT.Lookup
 {
     public static class DataSheet
     {
@@ -33,8 +33,8 @@ namespace CT.Technologies
         {
             // Price scaling functionality?
 
-            //return technology_price[_tech];
-            return new CTCost(500, 500, 0, 0); // Placeholder cost
+            return technology_price[_tech];
+            //return new CTCost(500, 500, 0, 0); // Placeholder cost
         }
 
         public static CTCost GetDisasterImpact(CTDisasters _disaster, in CTYearData _year_data)

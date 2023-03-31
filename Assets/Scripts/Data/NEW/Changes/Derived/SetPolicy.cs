@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CT.Data.Changes
 {
-    using Technologies;
+    using Lookup;
     public class SetPolicy : CTChange
     {
 

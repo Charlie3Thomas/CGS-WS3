@@ -1,6 +1,6 @@
 using CT.Data;
 using CT.Data.Changes;
-using CT.Technologies;
+using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
