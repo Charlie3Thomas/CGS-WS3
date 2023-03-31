@@ -6,17 +6,17 @@ namespace CT.Data
     using System;
     using Technologies;
 
-    [System.Serializable]
     public class CTYearData
     {
         // Debugging
         //public int year;
-
         public bool year_changed_by_player = false;
-
 
         // Technologies
         public Dictionary<CTTechnologies, bool> active_technologues;
+
+        // Policies
+        public Dictionary<CTPolicies, bool> active_policies;
 
         #region Resources
 
@@ -141,7 +141,7 @@ namespace CT.Data
         }
 
 
-        #region Population Budget
+        #region Population Budget Readonly
         // Read only variables
         private int AssignedPopulation
         {
@@ -256,17 +256,6 @@ namespace CT.Data
             }
         }
 
-        public void DebugLogThings()
-        {
-            //Debug.Log($"Money: {Money}");
-            //Debug.Log($"Science: {Science}");
-            //Debug.Log($"Food: {Food}");
-            //Debug.Log($"Population: {Population}");
-            //Debug.Log($"Workers: {Workers}");
-            //Debug.Log($"Scientists: {Scientists}");
-            //Debug.Log($"Farmers: {Farmers}");
-            //Debug.Log($"Planners: {Planners}");
-        }
         #endregion
 
         #region Actions

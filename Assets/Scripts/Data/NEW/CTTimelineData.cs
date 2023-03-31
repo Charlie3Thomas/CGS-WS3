@@ -84,6 +84,23 @@ namespace CT.Data
             user_changes[_year].Add(new PurchaseTechnology(_tech));
         }
 
+        // Set Policy
+        public void ApplyPolicy(int _year, CTPolicies _policy)
+        {
+            if (_year < 0)
+                throw new ArgumentException("Year cannot be zero or lower!");
+
+            user_changes[_year].Add(new SetPolicy(_policy));
+        }
+
+        public void RevokoePolicy(int _year, CTPolicies _policy)
+        {
+            if (_year < 0)
+                throw new ArgumentException("Year cannot be zero or lower!");
+
+            user_changes[_year].Remove(new SetPolicy(_policy));
+        }
+
         // Set faction distribution
         /// <summary>
         /// Takes floats for each faction percentage. 
