@@ -95,11 +95,11 @@ public class ResourceManager : MonoBehaviour
     void Start()
     {
         //Testing values
-        current_total_population = Random.Range(1000, 10000);
-        current_currency = Random.Range(1000, 10000);
-        current_researchPoints = Random.Range(1000, 10000);
-        current_food = Random.Range(1000, 10000);
-        current_safety = Random.Range(1000, 10000);
+        current_total_population = 10000;
+        current_currency = 1000;
+        current_researchPoints = 1000;
+        current_food = 1000;
+        current_safety = 0;
 
         //Test turn
         NewTurn();
@@ -119,6 +119,8 @@ public class ResourceManager : MonoBehaviour
         turn.researchPoints = current_researchPoints;
         turn.food = current_food;
         turn.safety = current_safety;
+
+        Debug.Log(YearData._INSTANCE.current_year);
 
         current_turn = turn;
 
