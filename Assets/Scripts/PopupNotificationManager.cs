@@ -45,7 +45,6 @@ public class PopupNotificationManager : MonoBehaviour
 
     public void Show(string title, string content, ButtonType type, Action callBack = null)
     {
-        //play animation show
         panelAnimator.Play("Show");
         proceedButton.onClick.RemoveAllListeners();
         proceedButton.onClick.AddListener(onButtonClick);
@@ -63,7 +62,7 @@ public class PopupNotificationManager : MonoBehaviour
                 buttonText.text = "Cancel";
                 break;
             case ButtonType.NONE:
-                //Autohide
+                Invoke(nameof(hide), 3f);
                 break;
         }
         if(callBack != null)
@@ -74,7 +73,6 @@ public class PopupNotificationManager : MonoBehaviour
 
     private void hide()
     {
-        Debug.Log("HIDE");
         panelAnimator.Play("Hide");
     }
 
