@@ -13,14 +13,14 @@ public class OingoBoingo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        timeline = new CTTimelineData();
-        timeline.Initialise(1, DataSheet.turns_number);
+        //timeline = new CTTimelineData();
+        //timeline.Initialise(1, DataSheet.turns_number);
 
-        timeline.ApplyPolicy(0, CTPolicies.DrinkMoreWater);
-        timeline.BuyTech(0, CTTechnologies.Banking);
-        timeline.ChangePopulationDistribution(0, 0.1f, 0.1f, 0.8f, 0.0f);
-        timeline.ApplyDisasterEffect(0, CTDisasters.NoCoffee);
+        //timeline.ApplyPolicy(0, CTPolicies.DrinkMoreWater);
+        //timeline.BuyTech(0, CTTechnologies.Banking);
+        //timeline.ChangePopulationDistribution(0, 0.1f, 0.1f, 0.8f, 0.0f);
+        //timeline.ApplyDisasterEffect(0, CTDisasters.NoCoffee);
 
-        year = timeline.GetYearData(10);
+        //year = timeline.GetYearData(10);
     }
 }

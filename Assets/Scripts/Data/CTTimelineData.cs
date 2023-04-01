@@ -12,25 +12,17 @@ namespace CT.Data
         public List<CTChange>[] game_changes;
         CTYearData initial_year;
 
-        public void Initialise(uint _start_year, uint _end_year)
+        private CTTimelineData() { }
+
+        public CTTimelineData(uint _start_year, uint _end_year, List<CTChange>[] _user_changes, List<CTChange>[] _game_changes)
         {
             if (_start_year >= _end_year)
                 throw new ArgumentException("CTTimelineData.Initialise: Cannot assign the same start year and end year!");
 
             uint total_years = _end_year - _start_year;
-            //Debug.Log($"Total years : {total_years}");
 
-            user_changes = new List<CTChange>[total_years];
-            for (uint year = 0; year < total_years; year++)
-            {
-                user_changes[year] = new List<CTChange>();
-            }
-
-            game_changes = new List<CTChange>[total_years];
-            for (uint year = 0; year < total_years; year++)
-            {
-                game_changes[year] = new List<CTChange>();
-            }
+            user_changes = _user_changes;
+            game_changes = _game_changes;
 
             // Set initial year with base DataSheet values
             initial_year = new CTYearData();
