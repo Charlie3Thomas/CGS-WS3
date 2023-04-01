@@ -9,7 +9,10 @@ namespace CT.Lookup
 {
     public static class DataSheet
     {
-        public static uint turns_number;
+        public static uint turns_number = 40;
+
+        public static uint starting_year = 1900;
+        public static uint end_year = 2100;
 
         public static int starting_money = 10000;
         public static int starting_science = 10000;

@@ -1,14 +1,10 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace CT.Data
 {
-    using Enumerations;
     using Lookup;
     using System;
     using Data.Changes;
-    using System.CodeDom;
-    using OpenCover.Framework.Model;
 
     public class CTTimelineData
     {
@@ -45,7 +41,7 @@ namespace CT.Data
                 DataSheet.starting_population);
         }
 
-        public CTYearData GetYearData(int _year)
+        public CTYearData GetYearData(uint _year)
         {
             CTYearData ret = initial_year;
 
@@ -62,12 +58,14 @@ namespace CT.Data
                     change.ApplyChange(ref ret);
                 }
 
-                // Apply base upkeep costs from factions
+                // Apply net resource worth of each assigned population member for each turn between zero and requested turn
                 ret.ApplyCosts(DataSheet.worker_net * ret.Workers);
                 ret.ApplyCosts(DataSheet.scientist_net * ret.Scientists);
                 ret.ApplyCosts(DataSheet.farmers_net * ret.Farmers);
                 ret.ApplyCosts(DataSheet.planners_net * ret.Planners);
             }
+
+            
 
             return ret;
         }
@@ -93,7 +91,7 @@ namespace CT.Data
             user_changes[_year].Add(new SetPolicy(_policy));
         }
 
-        public void RevokoePolicy(int _year, CTPolicies _policy)
+        public void RevokePolicy(int _year, CTPolicies _policy)
         {
             if (_year < 0)
                 throw new ArgumentException("Year cannot be zero or lower!");
@@ -106,7 +104,7 @@ namespace CT.Data
         /// Takes floats for each faction percentage. 
         /// Floats should not total to greater than 1
         /// </summary>
-        public void ChangePopulationDistribution(int _year, float _workers, float _scientists, float _farmers, float _planners)
+        public void ChangePopulationDistribution(uint _year, float _workers, float _scientists, float _farmers, float _planners)
         {
             if (_year < 0)
                 throw new ArgumentException("Year cannot be zero or lower!");
