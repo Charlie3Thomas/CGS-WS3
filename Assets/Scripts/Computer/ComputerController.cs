@@ -333,7 +333,7 @@ public class ComputerController : MonoBehaviour
         panDownButton = GameObject.Find("PanDownButton");
         panBackFromUpButton = GameObject.Find("PanBackButtonFromUp");
         panBackFromDownButton = GameObject.Find("PanBackButtonFromDown");
-        Debug.Log(panBackFromUpButton.name);
+        //Debug.Log(panBackFromUpButton.name);
         panUpButton.SetActive(true);
         panDownButton.SetActive(true);
         panBackFromUpButton.SetActive(false);

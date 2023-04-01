@@ -22,10 +22,10 @@ namespace CT
     {
         public static GameManager _INSTANCE;
 
-        public List<CTChange>[] user_changes;
-        public List<CTChange>[] game_changes;
-        CTYearData turn = new CTYearData();
-        CTTimelineData prime_timeline;
+        private List<CTChange>[] user_changes;
+        private List<CTChange>[] game_changes;
+        private CTYearData turn = new CTYearData();
+        private CTTimelineData prime_timeline;
 
         public uint current_turn = 0;
 
@@ -51,25 +51,33 @@ namespace CT
 
         private void Start()
         {
+            // Initialise user changes list
             user_changes = new List<CTChange>[DataSheet.turns_number];
             for (uint year = 0; year < DataSheet.turns_number; year++)
             {
                 user_changes[year] = new List<CTChange>();
             }
 
+            // Initialise game changes list
             game_changes = new List<CTChange>[DataSheet.turns_number];
             for (uint year = 0; year < DataSheet.turns_number; year++)
             {
                 game_changes[year] = new List<CTChange>();
             }
 
+            // Initialise prime timeline
             prime_timeline = new CTTimelineData(0, DataSheet.turns_number, user_changes, game_changes);
             
             turn = prime_timeline.GetYearData(0);
+
+            UpdateResourceCounters();
+            UpdateFactionDistributionSliders();
+
             user_changes = prime_timeline.user_changes;
             game_changes = prime_timeline.game_changes;
-            coroutine = WaitThenNexTTurn(1);
-            StartCoroutine(coroutine);
+
+            //coroutine = WaitThenNexTTurn(1);
+            //StartCoroutine(coroutine);
         }
 
         private void Update()
@@ -87,9 +95,9 @@ namespace CT
 
                 prime_timeline = new CTTimelineData(0, DataSheet.turns_number, user_changes, game_changes);
 
-                int r = Random.Range(0, 10);
+                int r = Random.Range(0, 11);
 
-                if (r > 7)
+                if (r >= 5)
                 {
                     prime_timeline.ChangePopulationDistribution(current_turn, 0.25f, 0.25f, 0.25f, 0.25f);
                 }
@@ -126,9 +134,9 @@ namespace CT
 
         private void UpdateResourceCounters()
         {
-            Money.text = turn.Money.ToString();
-            Science.text = turn.Science.ToString();
-            Food.text = turn.Food.ToString();
+            //Money.text = turn.Money.ToString();
+            //Science.text = turn.Science.ToString();
+            //Food.text = turn.Food.ToString();
 
             ComputerController.Instance.foodText.text = turn.Food.ToString();
             ComputerController.Instance.rpText.text = turn.Science.ToString();
@@ -138,15 +146,17 @@ namespace CT
 
         private void UpdateFactionDistributionSliders()
         {
-            float workers = turn.Workers / turn.Population;
-            float scientists = turn.Scientists / turn.Population;
-            float farmers = turn.Farmers / turn.Population;
-            float planners = turn.Planners / turn.Population;
+            // Values here are correct
+            float workers = (float)turn.Workers / (float)turn.Population;
+            float scientists = (float)turn.Scientists / (float)turn.Population;
+            float farmers = (float)turn.Farmers / (float)turn.Population;
+            float planners = (float)turn.Planners / (float)turn.Population;
 
-            ComputerController.Instance.pointSelectors[3].pointValue = workers; // Worker
+            // This does not work as expected
             ComputerController.Instance.pointSelectors[0].pointValue = scientists; // Scientist
-            ComputerController.Instance.pointSelectors[2].pointValue = farmers; // Farmer
             ComputerController.Instance.pointSelectors[1].pointValue = planners; // Planner
+            ComputerController.Instance.pointSelectors[2].pointValue = farmers; // Farmer
+            ComputerController.Instance.pointSelectors[3].pointValue = workers; // Worker
         }
 
 
@@ -163,6 +173,7 @@ namespace CT
             float farm_ratio = Remap(farm_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
             float work_ratio = Remap(work_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
 
+            // !!! Should make sure that faction spread is not the same as the start of the turn before applying it as a "Change" !!! //
             prime_timeline.ChangePopulationDistribution(current_turn, work_ratio, sci_ratio, farm_ratio, plan_ratio);
 
             Debug.Log("Choices for faction distribution locked in!");

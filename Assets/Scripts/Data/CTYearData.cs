@@ -245,7 +245,7 @@ namespace CT.Data
             Farmers = _pop / 4;
             Planners = _pop / 4;
 
-            Debug.Log(Population);
+            //Debug.Log(Population);
 
             // Initialise active_technologues and assign Keys for each Enum type in CTTechnologies
             active_technologues = new Dictionary<CTTechnologies, bool>();

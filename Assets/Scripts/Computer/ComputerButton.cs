@@ -49,7 +49,7 @@ public class ComputerButton : MonoBehaviour
 
                 uint turn = (uint)((ComputerController.Instance.desiredYear - DataSheet.starting_year) / 5);
 
-                //GameManager._INSTANCE.ConfirmCheckoutYear(turn);
+                GameManager._INSTANCE.OnClickCheckoutYearButton(turn);
 
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
                 break;
