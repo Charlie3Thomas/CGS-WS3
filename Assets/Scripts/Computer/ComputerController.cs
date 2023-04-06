@@ -127,7 +127,7 @@ public class ComputerController : MonoBehaviour
 
     void Update()
     {
-        if (!cam)
+        if (!cam || PopupNotificationManager.Instance.IsActive)
             return;
 
         Ray ray = cam.ScreenPointToRay(mousePos);
@@ -141,7 +141,6 @@ public class ComputerController : MonoBehaviour
                 if (buttonAnim != null)
                     buttonAnim.SetTrigger("Press");
             }
-
             switch (computerState)
             {
                 case ComputerState.MAIN_COMPUTER:

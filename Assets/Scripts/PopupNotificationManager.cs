@@ -25,6 +25,8 @@ public class PopupNotificationManager : MonoBehaviour
 
     private static PopupNotificationManager _instance;
 
+    public bool IsActive { get { return panel.activeSelf; } }
+
     public static PopupNotificationManager Instance
     {
         get
@@ -74,6 +76,7 @@ public class PopupNotificationManager : MonoBehaviour
     private void hide()
     {
         panelAnimator.Play("Hide");
+        Time.timeScale = 1f;
     }
 
     private void onButtonClick()
