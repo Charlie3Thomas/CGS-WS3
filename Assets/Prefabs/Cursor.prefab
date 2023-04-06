@@ -47,4 +47,4 @@ MonoBehaviour:
   mainCursor: {fileID: 2800000, guid: f418b453326c7d946b52410f3caed8df, type: 3}
   clickedCursor: {fileID: 2800000, guid: 460b8c81943825c479af7ffbd80c9e5d, type: 3}
   settingsCusrsor: {fileID: 2800000, guid: f6b5dd15dd6519e4aa3ad03b1da0876d, type: 3}
-  resourceCursor: {fileID: 2800000, guid: b5300d131e8c0ce4184e6c0eec19d380, type: 3}
+  resourceCursor: {fileID: 2800000, guid: f6b5dd15dd6519e4aa3ad03b1da0876d, type: 3}
