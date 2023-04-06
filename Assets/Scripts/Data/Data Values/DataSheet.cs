@@ -1,26 +1,25 @@
 using CT.Data;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using static Unity.VisualScripting.AnnotationUtility;
+
 
 namespace CT.Lookup
 {
     public static class DataSheet
     {
-        public static uint turns_number = 40;
+        // Disaster cost to resources
+        private static Dictionary<CTDisasters, CTCost> disaster_impact;
 
+
+        #region Base Values
+        public static uint turns_number = 40;
         public static uint starting_year = 1900;
         public static uint end_year = 2100;
-
         public static int starting_money = 10000;
         public static int starting_science = 10000;
         public static int starting_food = 10000;
         public static int starting_population = 500;
+        #endregion
 
-        // Disaster cost to resources
-        private static Dictionary<CTDisasters, CTCost> disaster_impact;
 
         // Money, Science, Food, Population costs per tern for factions
         // Positive numbers show the cost

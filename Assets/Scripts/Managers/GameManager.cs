@@ -17,6 +17,7 @@ namespace CT
     using Data;
     using Lookup;
     using TMPro;
+    using System;
 
     public class GameManager : MonoBehaviour
     {
@@ -32,8 +33,6 @@ namespace CT
         [SerializeField] private TextMeshProUGUI Money;
         [SerializeField] private TextMeshProUGUI Science;
         [SerializeField] private TextMeshProUGUI Food;
-
-        private IEnumerator coroutine;
 
         private void Awake()
         {
@@ -76,51 +75,13 @@ namespace CT
             user_changes = prime_timeline.user_changes;
             game_changes = prime_timeline.game_changes;
 
-            // THIS IS A TEST
-            prime_timeline.ChangePopulationDistribution(3, 1.0f, 0, 0, 0);
-
-            UpdatePips(turn);
-
-            //coroutine = WaitThenNexTTurn(1);
-            //StartCoroutine(coroutine);
+            UpdatePips();
         }
 
         private void Update()
         {
             
-        }
-        
-
-
-        //private IEnumerator WaitThenNexTTurn(float t)
-        //{
-        //    while (true)
-        //    {
-        //        yield return new WaitForSeconds(t);
-
-        //        prime_timeline = new CTTimelineData(0, DataSheet.turns_number, user_changes, game_changes);
-
-        //        int r = Random.Range(0, 11);
-
-        //        if (r >= 5)
-        //        {
-        //            prime_timeline.ChangePopulationDistribution(current_turn, 0.25f, 0.25f, 0.25f, 0.25f);
-        //        }
-        //        else
-        //        {
-        //            prime_timeline.ChangePopulationDistribution(current_turn, 0.1f, 0.1f, 0.8f, 0.0f);
-        //        }
-
-        //        // Copy changes from timeline to local
-        //        user_changes = prime_timeline.user_changes;
-        //        game_changes = prime_timeline.game_changes;
-
-        //        turn = prime_timeline.GetYearData(++current_turn);
-
-        //        UpdateResourceCounters();
-        //        UpdateFactionDistributionSliders();
-        //    }
-        //}
+        }      
 
         public void OnClickCheckoutYearButton(uint _turn)
         {
@@ -136,16 +97,14 @@ namespace CT
             // Set faction distribution sliders to values at turn
             UpdateFactionDistributionSliders();
 
-            UpdatePips(turn);
+            UpdatePips();
 
+            // Lock in changes to faction distribution
+            ConfirmFactionDistribution();
         }
 
         private void UpdateResourceCounters()
         {
-            //Money.text = turn.Money.ToString();
-            //Science.text = turn.Science.ToString();
-            //Food.text = turn.Food.ToString();
-
             ComputerController.Instance.foodText.text = turn.Food.ToString();
             ComputerController.Instance.rpText.text = turn.Science.ToString();
             ComputerController.Instance.currencyText.text = turn.Money.ToString();
@@ -171,22 +130,37 @@ namespace CT
             ComputerController.Instance.pointSelectors[3].pointValue = workers; // Worker
         }
 
+        private void ProjectNetResource()
+        {
+            // Look at current faction distribution at current turn 
+
+            // Apply faction distribtion to population at current turn
+
+            // Get numbers for scientists, planners, farmers, workers
+
+            // Multiply scientists, planners, farmers, workers by DataSheet net values
+
+            // Put post-multiplcation net into the projection boxes
+
+            throw new NotImplementedException();
+        }
+
 
         #region Utility
 
-        private void UpdatePips(CTYearData _turn)
+        private void UpdatePips()
         {
             // Sci
-            ComputerController.Instance.pointSelectors[0].SetPoints(((float)_turn.Scientists / (float)_turn.Population) * 10);
+            ComputerController.Instance.pointSelectors[0].SetPoints(((float)turn.Scientists / (float)turn.Population) * 10);
             // Plan
-            ComputerController.Instance.pointSelectors[1].SetPoints(((float)_turn.Planners / (float)_turn.Population) * 10);
+            ComputerController.Instance.pointSelectors[1].SetPoints(((float)turn.Planners / (float)turn.Population) * 10);
             // Farmer
-            ComputerController.Instance.pointSelectors[2].SetPoints(((float)_turn.Farmers / (float)_turn.Population) * 10);
+            ComputerController.Instance.pointSelectors[2].SetPoints(((float)turn.Farmers / (float)turn.Population) * 10);
             // Worker
-            ComputerController.Instance.pointSelectors[3].SetPoints(((float)_turn.Workers / (float)_turn.Population) * 10);
+            ComputerController.Instance.pointSelectors[3].SetPoints(((float)turn.Workers / (float)turn.Population) * 10);
         }
 
-        private void GetFactionSelectorRatio()
+        private void ConfirmFactionDistribution()
         {
             float sci_abs = ComputerController.Instance.pointSelectors[0].pointValue; // Scientist
             float plan_abs = ComputerController.Instance.pointSelectors[1].pointValue; // Planner
@@ -205,11 +179,12 @@ namespace CT
 
             // Should make sure that faction spread is not the same as the start of the turn before applying it as a "Change"
             if (req_sci_ratio == current_sci_ratio &&
-                req_work_ratio == current_work_ratio &&
+                req_plan_ratio == current_plan_ratio &&
                 req_farm_ratio == current_farm_ratio &&
-                req_work_ratio == current_farm_ratio)
+                req_work_ratio == current_work_ratio)
             {
                 Debug.Log("Requested choice is identical to base distribution!");
+                return;
             }
             else
             {
