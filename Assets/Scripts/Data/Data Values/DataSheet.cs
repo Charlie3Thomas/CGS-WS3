@@ -1,9 +1,8 @@
-using CT.Data;
 using System.Collections.Generic;
-
 
 namespace CT.Lookup
 {
+    using Data;
     public static class DataSheet
     {
         // Disaster cost to resources

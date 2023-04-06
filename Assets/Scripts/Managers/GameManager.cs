@@ -18,6 +18,7 @@ namespace CT
     using Lookup;
     using TMPro;
     using System;
+    using Unity.VisualScripting;
 
     public class GameManager : MonoBehaviour
     {
@@ -85,6 +86,15 @@ namespace CT
 
         public void OnClickCheckoutYearButton(uint _turn)
         {
+            // Don't allow user to checkout year if the requested turn is the current turn
+            if (_turn == current_turn)
+                return;
+
+            // Lock in changes to faction distribution
+            ConfirmFactionDistribution();
+
+            current_turn = _turn;
+
             // Construct new timeline using stored changes
             prime_timeline = new CTTimelineData(_turn, DataSheet.turns_number, user_changes, game_changes);
 
@@ -98,9 +108,6 @@ namespace CT
             UpdateFactionDistributionSliders();
 
             UpdatePips();
-
-            // Lock in changes to faction distribution
-            ConfirmFactionDistribution();
         }
 
         private void UpdateResourceCounters()
