@@ -40,7 +40,7 @@ public class PopupNotificationManager : MonoBehaviour
 
     void Start()
     {
-        Show("MyTitle", "MyContent", ButtonType.OK);
+        //Show("MyTitle", "MyContent", ButtonType.OK);
     }
 
     public void Show(string title, string content, ButtonType type, Action callBack = null)
