@@ -5,6 +5,6 @@ namespace CT.Enumerations
         Worker,
         Scientist,
         Farmer,
-        Emergency
+        Planner
     }
 }

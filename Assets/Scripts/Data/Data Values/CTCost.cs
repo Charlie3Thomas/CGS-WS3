@@ -24,10 +24,22 @@ public class CTCost
     {
         CTCost ret = new CTCost();
 
-        ret.money = _c.money * m;
-        ret.science = _c.science * m;
-        ret.food = _c.food * m;
-        ret.population = _c.population * m;
+        ret.money       = _c.money      * m;
+        ret.science     = _c.science    * m;
+        ret.food        = _c.food       * m;
+        ret.population  = _c.population * m;
+
+        return ret;
+    }
+
+    public static CTCost operator+ (CTCost _c1, CTCost _c2)
+    {
+        CTCost ret = new CTCost();
+
+        ret.money       = _c1.money         + _c2.money;
+        ret.science     = _c1.science       + _c2.science;
+        ret.food        = _c1.food          + _c2.food;
+        ret.population  = _c1.population    + _c2.population;
 
         return ret;
     }

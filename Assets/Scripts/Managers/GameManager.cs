@@ -19,6 +19,7 @@ namespace CT
     using TMPro;
     using System;
     using Unity.VisualScripting;
+    using CT.Enumerations;
 
     public class GameManager : MonoBehaviour
     {
@@ -51,6 +52,16 @@ namespace CT
 
         private void Start()
         {
+            Initialise();
+        }
+
+        private void Update()
+        {
+            
+        }
+
+        private void Initialise()
+        {
             // Initialise user changes list
             user_changes = new List<CTChange>[DataSheet.turns_number];
             for (uint year = 0; year < DataSheet.turns_number; year++)
@@ -67,7 +78,7 @@ namespace CT
 
             // Initialise prime timeline
             prime_timeline = new CTTimelineData(0, DataSheet.turns_number, user_changes, game_changes);
-            
+
             turn = prime_timeline.GetYearData(0);
 
             UpdateResourceCounters();
@@ -76,13 +87,10 @@ namespace CT
             user_changes = prime_timeline.user_changes;
             game_changes = prime_timeline.game_changes;
 
-            UpdatePips();
-        }
+            UpdatePipsWithCurrentTurnData();
 
-        private void Update()
-        {
-            
-        }      
+            //ApplyPopulationGrowthChange(0, GetPopulationGrowth());
+        }
 
         public void OnClickCheckoutYearButton(uint _turn)
         {
@@ -107,7 +115,11 @@ namespace CT
             // Set faction distribution sliders to values at turn
             UpdateFactionDistributionSliders();
 
-            UpdatePips();
+            // Draw pips with turn data
+            UpdatePipsWithCurrentTurnData();
+
+            // Propogate population changes to all future turns
+            //ApplyPopulationGrowthChange(_turn, GetPopulationGrowth());
         }
 
         private void UpdateResourceCounters()
@@ -152,19 +164,70 @@ namespace CT
             throw new NotImplementedException();
         }
 
+        //private void ApplyPopulationGrowthChange(uint _changed_turn, uint _growth)
+        //{
+        //    for (uint i = _changed_turn; i < DataSheet.turns_number; i++)
+        //    {
+        //        // Clear Game Changes of pop and distribution changes from game_changes[i]
+        //        foreach (PopulationGrowth c in game_changes[i].FindAll(x => x is PopulationGrowth))
+        //            game_changes[i].Remove(c);
+        //        foreach (SetFactionDistribution c in game_changes[i].FindAll(x => x is SetFactionDistribution))
+        //            game_changes[i].Remove(c);
+
+        //        CTYearData data = prime_timeline.GetYearData(i);
+        //        game_changes[i].Add(new PopulationGrowth(_growth));
+
+        //        game_changes[i].Add(new SetFactionDistribution(
+        //            GetFactionDistribtion(CTFaction.Worker, data),
+        //            GetFactionDistribtion(CTFaction.Scientist, data),
+        //            GetFactionDistribtion(CTFaction.Farmer, data),
+        //            GetFactionDistribtion(CTFaction.Planner, data)));
+        //    }
+        //}
+
 
         #region Utility
 
-        private void UpdatePips()
+        private uint GetPopulationGrowth()
+        {
+            return 100;
+
+            throw new NotImplementedException();
+        }
+
+        private void UpdatePipsWithCurrentTurnData()
         {
             // Sci
-            ComputerController.Instance.pointSelectors[0].SetPoints(((float)turn.Scientists / (float)turn.Population) * 10);
+            ComputerController.Instance.pointSelectors[0].SetPoints(GetFactionDistribtion(CTFaction.Scientist, turn) * 10);
             // Plan
-            ComputerController.Instance.pointSelectors[1].SetPoints(((float)turn.Planners / (float)turn.Population) * 10);
+            ComputerController.Instance.pointSelectors[1].SetPoints(GetFactionDistribtion(CTFaction.Planner, turn) * 10);
             // Farmer
-            ComputerController.Instance.pointSelectors[2].SetPoints(((float)turn.Farmers / (float)turn.Population) * 10);
+            ComputerController.Instance.pointSelectors[2].SetPoints(GetFactionDistribtion(CTFaction.Farmer, turn) * 10);
             // Worker
-            ComputerController.Instance.pointSelectors[3].SetPoints(((float)turn.Workers / (float)turn.Population) * 10);
+            ComputerController.Instance.pointSelectors[3].SetPoints(GetFactionDistribtion(CTFaction.Worker, turn) * 10);
+        }
+
+        private float GetFactionDistribtion(CTFaction _faction, CTYearData _turn)
+        {
+            switch (_faction)
+            {
+                case CTFaction.Scientist:
+                    return ((float)_turn.Scientists / (float)_turn.Population);
+
+                case CTFaction.Planner:
+                    return ((float)_turn.Planners / (float)_turn.Population);
+
+                case CTFaction.Farmer:
+                    return ((float)_turn.Farmers / (float)_turn.Population);
+
+                case CTFaction.Worker:
+                    return ((float)_turn.Workers / (float)_turn.Population);
+
+                // Default at impossible error value
+                default:
+                    Debug.LogError("GameManager.GetFactionDistribution requested faction type is not implemented!");
+                    return -1.0f;
+            }
         }
 
         private void ConfirmFactionDistribution()

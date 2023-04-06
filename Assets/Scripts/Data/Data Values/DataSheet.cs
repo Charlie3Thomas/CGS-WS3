@@ -13,10 +13,11 @@ namespace CT.Lookup
         public static uint turns_number = 40;
         public static uint starting_year = 1900;
         public static uint end_year = 2100;
-        public static int starting_money = 10000;
-        public static int starting_science = 10000;
-        public static int starting_food = 10000;
+        public static int starting_money = 1000;
+        public static int starting_science = 1000;
+        public static int starting_food = 1000;
         public static int starting_population = 500;
+        public static float starvation_death_rate = 0.90f;
         #endregion
 
 
@@ -28,6 +29,7 @@ namespace CT.Lookup
         public static CTCost scientist_net  = new CTCost(0, -1, 1, 0);
         public static CTCost planners_net   = new CTCost(0, 5, 1, 0);
         public static CTCost farmers_net    = new CTCost(0, 0, -1, 0);
+        public static CTCost unemployed_net = new CTCost(1, 0, 1, 0);
 
 
         public static CTCost GetTechPrice(CTTechnologies _tech, in CTYearData _year_data)

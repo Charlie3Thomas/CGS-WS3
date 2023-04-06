@@ -11,8 +11,6 @@ public enum SelectorType
 
 public class PointSelector : MonoBehaviour
 {
-    public SelectorType type = SelectorType.WORKER;
-
     public GameObject pip;
     private Material pipMat;
 
@@ -27,8 +25,11 @@ public class PointSelector : MonoBehaviour
 
     public void AddPoints(float points)
     {
-        if(pointValue < pointLimit)
+        if (pointValue < pointLimit)
             pointValue += points;
+
+        if (pointValue > 10.0f)
+            pointValue = 10.0f;
 
         if (pipMat != null)
             pipMat.SetFloat("_FillAmount", pointValue);
@@ -38,8 +39,12 @@ public class PointSelector : MonoBehaviour
 
     public void RemovePoints(float points)
     {
+
         if(pointValue > 0)
             pointValue -= points;
+
+        if (pointValue < 0)
+            pointValue = 0;
 
         if (pipMat != null)
             pipMat.SetFloat("_FillAmount", pointValue);
@@ -49,10 +54,13 @@ public class PointSelector : MonoBehaviour
 
     public void SetPoints(float _points)
     {
-        if (pointValue < 0 || pointValue > 10.0f)
+        if (pointValue < 0)
             throw new ArgumentException("Point value is out of range");
 
         pointValue = _points;
+
+        if (pointValue > 10.0f)
+            pointValue = 10.0f;
 
         if (pipMat != null)
         {

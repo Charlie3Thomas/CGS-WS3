@@ -5,6 +5,7 @@ namespace CT.Data
     using Lookup;
     using System;
     using Data.Changes;
+    using FMOD;
 
     public class CTTimelineData
     {
@@ -51,13 +52,21 @@ namespace CT.Data
                 }
 
                 // Apply net resource worth of each assigned population member for each turn between zero and requested turn
-                ret.ApplyCosts(DataSheet.worker_net * ret.Workers);
-                ret.ApplyCosts(DataSheet.scientist_net * ret.Scientists);
-                ret.ApplyCosts(DataSheet.farmers_net * ret.Farmers);
-                ret.ApplyCosts(DataSheet.planners_net * ret.Planners);
-            }
+                CTCost net_total = new CTCost(0, 0, 0, 0);
+                net_total += (DataSheet.farmers_net * ret.Farmers);
+                net_total += (DataSheet.worker_net * ret.Workers);
+                net_total += (DataSheet.scientist_net * ret.Scientists);
+                net_total += (DataSheet.planners_net * ret.Planners);
+                net_total += (DataSheet.unemployed_net * ret.UnassignedPopulation);
 
-            
+                ret.ApplyCosts(net_total);
+
+                //ret.ApplyCosts(DataSheet.farmers_net * ret.Farmers);
+                //ret.ApplyCosts(DataSheet.worker_net * ret.Workers);
+                //ret.ApplyCosts(DataSheet.scientist_net * ret.Scientists);
+                //ret.ApplyCosts(DataSheet.planners_net * ret.Planners);
+                //ret.ApplyCosts(DataSheet.unemployed_net * ret.UnassignedPopulation);
+            }
 
             return ret;
         }

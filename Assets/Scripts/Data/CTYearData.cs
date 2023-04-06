@@ -4,6 +4,7 @@ using UnityEngine;
 namespace CT.Data
 {
     using System;
+    using CT.Enumerations;
     using Lookup;
 
     public class CTYearData
@@ -28,9 +29,11 @@ namespace CT.Data
 
             set
             {
+                //Debug.Log(value);
                 if (value < 0)
                 {
-                    throw new ArgumentException("Money cannot go below zero!");
+                    money = 0;
+                    //throw new ArgumentException("Money cannot go below zero!");
                 }
 
                 money = value;
@@ -45,9 +48,11 @@ namespace CT.Data
 
             set
             {
+                //Debug.Log(value);
                 if (value < 0)
                 {
-                    throw new ArgumentException("Science cannot go below zero!");
+                    science = 0;
+                    //throw new ArgumentException("Science cannot go below zero!");
                 }
 
                 science = value;
@@ -64,22 +69,28 @@ namespace CT.Data
             {
                 if (value < 0)
                 {
-                    throw new ArgumentException("Food cannot go below zero!");
+                    food = 0;
+                    Population += (int)(DataSheet.starvation_death_rate * value);
+                    //throw new ArgumentException("Food cannot go below zero!");
                 }
-
-                food = value;
+                else
+                {
+                    food = value;
+                }
             }
         }
 
         private int surplus_food;
         public int SurplusFood
         {
-            get { return food; }
+            get { return surplus_food; }
 
             set
             {
+                Debug.Log(value);
                 if (value < 0)
                 {
+                    surplus_food = 0;
                     throw new ArgumentException("Food cannot go below zero!");
                 }
 
@@ -104,7 +115,27 @@ namespace CT.Data
 
                 if (value < AssignedPopulation)
                 {
-                    while(value < AssignedPopulation)
+                    float planner_ratio = GetFactionRatio(CTFaction.Planner);
+                    float farmer_ratio = GetFactionRatio(CTFaction.Farmer);
+                    float worker_ratio = GetFactionRatio(CTFaction.Worker);
+                    float scientist_ratio = GetFactionRatio(CTFaction.Scientist);
+
+                    Planners = 0;
+                    Farmers = 0;
+                    Workers = 0;
+                    Scientists = 0;
+
+                    Population -= value;
+
+                    Planners = (int)(Population * planner_ratio);
+                    Farmers = (int)(Population * farmer_ratio);
+                    Workers = (int)(Population * worker_ratio);
+                    Scientists = (int)(Population * scientist_ratio);
+
+                    Population -= UnassignedPopulation;
+
+                    /*
+                    while (value < AssignedPopulation)
                     {
                         int oingo = UnityEngine.Random.Range(1, 5);
 
@@ -113,16 +144,34 @@ namespace CT.Data
                             switch (oingo)
                             {
                                 case 1:
-                                    Workers--;
+                                    if (Workers > 0)
+                                        Workers--;
+                                    else
+                                        continue;
                                     break;
+
                                 case 2:
-                                    Scientists--;
+                                    if (Scientists > 0)
+                                        Scientists--;
+                                    else
+                                        continue;
                                     break;
+
                                 case 3:
-                                    Farmers--;
+                                    if (Farmers > 0)
+                                        Farmers--;
+                                    else
+                                        continue;
                                     break;
+
                                 case 4:
-                                    Planners--;
+                                    if (Planners > 0)
+                                        Planners--;
+                                    else
+                                        continue;
+                                    break;
+
+                                default:
                                     break;
                             }
                         }
@@ -132,6 +181,7 @@ namespace CT.Data
                         }
                         population--;
                     }
+                    */
                 }
                 else
                 {
@@ -143,7 +193,7 @@ namespace CT.Data
 
         #region Population Budget Readonly
         // Read only variables
-        private int AssignedPopulation
+        public int AssignedPopulation
         {
             get
             {
@@ -154,7 +204,7 @@ namespace CT.Data
                     Planners;
             }
         }
-        private int UnassignedPopulation
+        public int UnassignedPopulation
         {
             get { return population - AssignedPopulation; }
 
@@ -241,10 +291,11 @@ namespace CT.Data
             Food = _food;
             Population = _pop;
 
-            Workers = (int)(_pop * 0.2f);
-            Scientists = (int)(_pop * 0.3f);
-            Farmers = (int)(_pop * 0.3f);
-            Planners = (int)(_pop * 0.2f);
+            Debug.Log("Setting entire population to workers");
+            Workers = (int)(_pop * 0.25f);
+            Scientists = (int)(_pop * 0.25f);
+            Farmers = (int)(_pop * 0.25f);
+            Planners = (int)(_pop * 0.25f);
 
             //Debug.Log(Population);
 
@@ -273,6 +324,27 @@ namespace CT.Data
 
             //Debug.Log("Pop " + _cost.population);
             Population -= _cost.population;
+        }
+        #endregion
+
+        #region Utility
+        private float GetFactionRatio(CTFaction _type)
+        {
+            switch (_type)
+            {
+                case CTFaction.Scientist:
+                    return (float)Scientists / (float)Population;
+                case CTFaction.Worker:
+                    return (float)Workers / (float)Population;
+                case CTFaction.Planner:
+                    return (float)Planners / (float)Population;
+                case CTFaction.Farmer:
+                    return (float)Farmers / (float)Population;
+                default:
+                    return -1.0f;
+            }
+
+
         }
         #endregion
     }
