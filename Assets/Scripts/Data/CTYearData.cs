@@ -240,10 +240,11 @@ namespace CT.Data
             Science = _science;
             Food = _food;
             Population = _pop;
-            Workers = _pop / 4;
-            Scientists = _pop / 4;
-            Farmers = _pop / 4;
-            Planners = _pop / 4;
+
+            Workers = (int)(_pop * 0.2f);
+            Scientists = (int)(_pop * 0.3f);
+            Farmers = (int)(_pop * 0.3f);
+            Planners = (int)(_pop * 0.2f);
 
             //Debug.Log(Population);
 

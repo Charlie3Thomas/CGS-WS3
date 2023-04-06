@@ -76,6 +76,11 @@ namespace CT
             user_changes = prime_timeline.user_changes;
             game_changes = prime_timeline.game_changes;
 
+            // THIS IS A TEST
+            prime_timeline.ChangePopulationDistribution(3, 1.0f, 0, 0, 0);
+
+            UpdatePips(turn);
+
             //coroutine = WaitThenNexTTurn(1);
             //StartCoroutine(coroutine);
         }
@@ -87,35 +92,35 @@ namespace CT
         
 
 
-        private IEnumerator WaitThenNexTTurn(float t)
-        {
-            while (true)
-            {
-                yield return new WaitForSeconds(t);
+        //private IEnumerator WaitThenNexTTurn(float t)
+        //{
+        //    while (true)
+        //    {
+        //        yield return new WaitForSeconds(t);
 
-                prime_timeline = new CTTimelineData(0, DataSheet.turns_number, user_changes, game_changes);
+        //        prime_timeline = new CTTimelineData(0, DataSheet.turns_number, user_changes, game_changes);
 
-                int r = Random.Range(0, 11);
+        //        int r = Random.Range(0, 11);
 
-                if (r >= 5)
-                {
-                    prime_timeline.ChangePopulationDistribution(current_turn, 0.25f, 0.25f, 0.25f, 0.25f);
-                }
-                else
-                {
-                    prime_timeline.ChangePopulationDistribution(current_turn, 0.1f, 0.1f, 0.8f, 0.0f);
-                }
+        //        if (r >= 5)
+        //        {
+        //            prime_timeline.ChangePopulationDistribution(current_turn, 0.25f, 0.25f, 0.25f, 0.25f);
+        //        }
+        //        else
+        //        {
+        //            prime_timeline.ChangePopulationDistribution(current_turn, 0.1f, 0.1f, 0.8f, 0.0f);
+        //        }
 
-                // Copy changes from timeline to local
-                user_changes = prime_timeline.user_changes;
-                game_changes = prime_timeline.game_changes;
+        //        // Copy changes from timeline to local
+        //        user_changes = prime_timeline.user_changes;
+        //        game_changes = prime_timeline.game_changes;
 
-                turn = prime_timeline.GetYearData(++current_turn);
+        //        turn = prime_timeline.GetYearData(++current_turn);
 
-                UpdateResourceCounters();
-                UpdateFactionDistributionSliders();
-            }
-        }
+        //        UpdateResourceCounters();
+        //        UpdateFactionDistributionSliders();
+        //    }
+        //}
 
         public void OnClickCheckoutYearButton(uint _turn)
         {
@@ -130,6 +135,9 @@ namespace CT
 
             // Set faction distribution sliders to values at turn
             UpdateFactionDistributionSliders();
+
+            UpdatePips(turn);
+
         }
 
         private void UpdateResourceCounters()
@@ -152,6 +160,10 @@ namespace CT
             float farmers = (float)turn.Farmers / (float)turn.Population;
             float planners = (float)turn.Planners / (float)turn.Population;
 
+            Money.text = workers.ToString();
+            Science.text = scientists.ToString();
+            Food.text = farmers.ToString();
+
             // This does not work as expected
             ComputerController.Instance.pointSelectors[0].pointValue = scientists; // Scientist
             ComputerController.Instance.pointSelectors[1].pointValue = planners; // Planner
@@ -161,6 +173,19 @@ namespace CT
 
 
         #region Utility
+
+        private void UpdatePips(CTYearData _turn)
+        {
+            // Sci
+            ComputerController.Instance.pointSelectors[0].SetPoints(((float)_turn.Scientists / (float)_turn.Population) * 10);
+            // Plan
+            ComputerController.Instance.pointSelectors[1].SetPoints(((float)_turn.Planners / (float)_turn.Population) * 10);
+            // Farmer
+            ComputerController.Instance.pointSelectors[2].SetPoints(((float)_turn.Farmers / (float)_turn.Population) * 10);
+            // Worker
+            ComputerController.Instance.pointSelectors[3].SetPoints(((float)_turn.Workers / (float)_turn.Population) * 10);
+        }
+
         private void GetFactionSelectorRatio()
         {
             float sci_abs = ComputerController.Instance.pointSelectors[0].pointValue; // Scientist
@@ -168,15 +193,29 @@ namespace CT
             float farm_abs = ComputerController.Instance.pointSelectors[2].pointValue; // Farmer
             float work_abs = ComputerController.Instance.pointSelectors[3].pointValue; // Worker
 
-            float sci_ratio = Remap(sci_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float plan_ratio = Remap(plan_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float farm_ratio = Remap(farm_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float work_ratio = Remap(work_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_sci_ratio = Remap(sci_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_plan_ratio = Remap(plan_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_farm_ratio = Remap(farm_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_work_ratio = Remap(work_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
 
-            // !!! Should make sure that faction spread is not the same as the start of the turn before applying it as a "Change" !!! //
-            prime_timeline.ChangePopulationDistribution(current_turn, work_ratio, sci_ratio, farm_ratio, plan_ratio);
+            float current_sci_ratio = (float)turn.Scientists / (float)turn.Population;
+            float current_plan_ratio = (float)turn.Planners / (float)turn.Population;
+            float current_farm_ratio = (float)turn.Farmers / (float)turn.Population;
+            float current_work_ratio = (float)turn.Workers / (float)turn.Population;
 
-            Debug.Log("Choices for faction distribution locked in!");
+            // Should make sure that faction spread is not the same as the start of the turn before applying it as a "Change"
+            if (req_sci_ratio == current_sci_ratio &&
+                req_work_ratio == current_work_ratio &&
+                req_farm_ratio == current_farm_ratio &&
+                req_work_ratio == current_farm_ratio)
+            {
+                Debug.Log("Requested choice is identical to base distribution!");
+            }
+            else
+            {
+                prime_timeline.ChangePopulationDistribution(current_turn, req_work_ratio, req_sci_ratio, req_farm_ratio, req_plan_ratio);
+                Debug.Log("Choices for faction distribution locked in!");
+            }
         }
 
         public float Remap(float value, float from1, float to1, float from2, float to2)

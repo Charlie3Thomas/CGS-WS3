@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum SelectorType
@@ -15,11 +16,11 @@ public class PointSelector : MonoBehaviour
     public GameObject pip;
     private Material pipMat;
 
-    [HideInInspector]
+    //[HideInInspector]
     public float pointValue;
     private float pointLimit = 10f;
 
-    private void Start()
+    private void Awake()
     {
         pipMat = pip.GetComponent<Renderer>().materials[1];
     }
@@ -44,5 +45,20 @@ public class PointSelector : MonoBehaviour
             pipMat.SetFloat("_FillAmount", pointValue);
 
         ComputerController.Instance.CheckPoints(this);
+    }
+
+    public void SetPoints(float _points)
+    {
+        if (pointValue < 0 || pointValue > 10.0f)
+            throw new ArgumentException("Point value is out of range");
+
+        pointValue = _points;
+
+        if (pipMat != null)
+        {
+            pipMat.SetFloat("_FillAmount", pointValue);
+        }
+        else
+            Debug.LogError("pipMat is null");
     }
 }
