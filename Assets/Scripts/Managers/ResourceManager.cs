@@ -120,7 +120,7 @@ public class ResourceManager : MonoBehaviour
         turn.food = current_food;
         turn.safety = current_safety;
 
-        Debug.Log(YearData._INSTANCE.current_year);
+        //Debug.Log(YearData._INSTANCE.current_year);
 
         current_turn = turn;
 
