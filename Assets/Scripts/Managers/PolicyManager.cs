@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 
 [System.Serializable]
 public class Policy
@@ -29,6 +30,8 @@ public class PolicyManager : MonoBehaviour
     public GameObject policyCardPrefab;
     public HashSet<string> finalChoices = new HashSet<string>();
 
+    private Vector2 scroll;
+
     void Awake()
     {
         if (instance == null)
@@ -46,12 +49,12 @@ public class PolicyManager : MonoBehaviour
     {
         if (currentPolicies.Count > 0)
         {
-            if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+            if (scroll.y > 0f)
             {
                 policyCardIndex = (policyCardIndex + 1) % currentPolicies.Count;
                 currentSelectedPolicy = currentPolicies[policyCardIndex];
             }
-            else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+            else if (scroll.y < 0f)
             {
                 policyCardIndex--;
                 if (policyCardIndex < 0)
@@ -176,5 +179,34 @@ public class PolicyManager : MonoBehaviour
     private static int SortByYear(Policy pol1, Policy pol2)
     {
         return pol1.year.CompareTo(pol2.year);
+    }
+    private void ScrollInput(InputAction.CallbackContext context)
+    {
+        scroll = context.ReadValue<Vector2>();
+    }
+
+    private void SubscribeInputs()
+    {
+        InputManager.onScroll += ScrollInput;
+    }
+
+    private void UnsubscribeInputs()
+    {
+        InputManager.onScroll -= ScrollInput;
+    }
+
+    private void OnEnable()
+    {
+        SubscribeInputs();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeInputs();
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeInputs();
     }
 }
