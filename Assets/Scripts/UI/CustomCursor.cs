@@ -9,6 +9,7 @@ public class CustomCursor : MonoBehaviour
     public Texture2D mainCursor;
     public Texture2D clickedCursor;
     public Texture2D settingsCusrsor;
+    public Texture2D resourceCursor;
 
     private PlayerControls controls;
 
@@ -48,11 +49,17 @@ public class CustomCursor : MonoBehaviour
         ChangeCursor(mainCursor);
     }
 
+    public void OnHoverOverResourceSelector()
+    {
+        ChangeCursor(resourceCursor);
+    }
+    public void SetDefaultCursor()
+    {
+        ChangeCursor(mainCursor);
+    }
 
     private void ChangeCursor(Texture2D cursorType)
     {
-
         Cursor.SetCursor(cursorType, Vector2.zero, CursorMode.Auto);
-
     }
 }
