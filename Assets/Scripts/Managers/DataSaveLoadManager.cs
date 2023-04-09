@@ -54,8 +54,20 @@ public class DataSaveLoadManager : MonoBehaviour
     private ResourceData resourceData;
     private DisasterData disasterData;
     private PolicyData policyData;
+    private PlayerData playerData;
 
-    
+    private static DataSaveLoadManager _instance;
+    public static DataSaveLoadManager Instance
+    {
+        get { return _instance; }
+    }
+
+    private void Awake()
+    {
+        if (_instance == null || _instance != this)
+            _instance = this;
+    }
+
     void Start()
     {
         resourceManager = ResourceManager.instance;
@@ -82,6 +94,9 @@ public class DataSaveLoadManager : MonoBehaviour
     public void Load()
     {
         loadPlayerData();
+        loadResources();
+        loadDisaster();
+        loadPolicy();
     }
 
     private void saveResource()
@@ -103,8 +118,7 @@ public class DataSaveLoadManager : MonoBehaviour
 
     private void loadResources()
     {
-        string s = PlayerPrefs.GetString(resourceKey);
-        resourceData = JsonUtility.FromJson<ResourceData>(s);
+        resourceData = playerData.resources;
         resourceManager.current_turn = resourceData.turn;
         resourceManager.current_total_population = resourceData.total_population;
         resourceManager.current_researchPoints = resourceData.researchPoints;
@@ -112,7 +126,7 @@ public class DataSaveLoadManager : MonoBehaviour
         resourceManager.current_safety = resourceData.safety;
         resourceManager.current_currency = resourceData.currency;
         resourceManager.turnList = resourceData.turnList;
-        Debug.Log("Resource Loaded :: " + s);
+        Debug.Log("Resouce loaded");
     }
 
     private void saveDisaster()
@@ -120,59 +134,52 @@ public class DataSaveLoadManager : MonoBehaviour
         disasterData = new DisasterData();
         disasterData.numOfDisasters = disasterManager.numOfDisasters;
         disasterData.disasterList = disasterManager.disasterList;
-        string s = JsonUtility.ToJson(disasterData);
-        PlayerPrefs.SetString(disasterKey, s);
+        //string s = JsonUtility.ToJson(disasterData);
+        //PlayerPrefs.SetString(disasterKey, s);
     }
     private void loadDisaster()
     {
-        string s = PlayerPrefs.GetString(disasterKey);
-        disasterData = JsonUtility.FromJson<DisasterData>(s);
+        disasterData = playerData.disasters;
         disasterManager.numOfDisasters = disasterData.numOfDisasters;
         disasterManager.disasterList = disasterData.disasterList;
-        Debug.Log("Disaster Loaded :: " + s);
+        Debug.Log("Disaster loaded");
     }
     private void savePolicy()
     {
-        PolicyData policy = new PolicyData();
-        policy.currentPolicies = policyManager.currentPolicies;
-        policy.currentSelectedPolicy = policyManager.currentSelectedPolicy;
-        policy.policyList = policyManager.policyList;
-        policy.finalChoices = policyManager.finalChoices;
-        string s = JsonUtility.ToJson(policy);
-        PlayerPrefs.SetString(policyKey, s);
+        policyData = new PolicyData();
+        policyData.currentPolicies = policyManager.currentPolicies;
+        policyData.currentSelectedPolicy = policyManager.currentSelectedPolicy;
+        policyData.policyList = policyManager.policyList;
+        policyData.finalChoices = policyManager.finalChoices;
     }
 
     private void loadPolicy()
     {
-        string s = PlayerPrefs.GetString(policyKey);
-        PolicyData policy = JsonUtility.FromJson<PolicyData>(s);
-        policyManager.currentPolicies = policy.currentPolicies;
-        policyManager.currentSelectedPolicy = policy.currentSelectedPolicy;
-        policyManager.policyList = policy.policyList;
-        policyManager.finalChoices = policy.finalChoices;
-        Debug.Log("Policy Loaded :: " + s);
+        policyData = playerData.policies;
+        policyManager.currentPolicies = policyData.currentPolicies;
+        policyManager.currentSelectedPolicy = policyData.currentSelectedPolicy;
+        policyManager.policyList = policyData.policyList;
+        policyManager.finalChoices = policyData.finalChoices;
+        Debug.Log("Policy loaded");
     }
 
     private async void savePlayerData()
     {
-        PlayerData data = new PlayerData();
-        data.resources = resourceData;
-        data.disasters = disasterData;
-        data.policies = policyData;
-        string s = JsonUtility.ToJson(data);
+        playerData = new PlayerData();
+        playerData.resources = resourceData;
+        playerData.disasters = disasterData;
+        playerData.policies = policyData;
+        string s = JsonUtility.ToJson(playerData);
         PlayerPrefs.SetString(playerDataKey, s);
-        Debug.Log("Player Data :: " + s);
-
         await ForceSaveSingleData(playerDataKey, s);
     }
 
     private async void loadPlayerData()
     {
-        //string s = PlayerPrefs.GetString(playerDataKey);
-        PlayerData data = await RetrieveSpecificData<PlayerData>(playerDataKey);
-        resourceData = data.resources;
-        disasterData = data.disasters;
-        policyData = data.policies;
+        playerData = await RetrieveSpecificData<PlayerData>(playerDataKey);
+        resourceData = playerData.resources;
+        disasterData = playerData.disasters;
+        policyData = playerData.policies;
         Debug.Log("DATA RECEIVED :: " + resourceData.total_population);
     }
 
@@ -180,24 +187,9 @@ public class DataSaveLoadManager : MonoBehaviour
     {
         try
         {
-            Dictionary<string, object> oneElement = new Dictionary<string, object>();
-
-            // It's a text input field, but let's see if you actually entered a number.
-            if (Int32.TryParse(value, out int wholeNumber))
-            {
-                oneElement.Add(key, wholeNumber);
-            }
-            else if (Single.TryParse(value, out float fractionalNumber))
-            {
-                oneElement.Add(key, fractionalNumber);
-            }
-            else
-            {
-                oneElement.Add(key, value);
-            }
-
-            await CloudSaveService.Instance.Data.ForceSaveAsync(oneElement);
-
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            data.Add(key, value);
+            await CloudSaveService.Instance.Data.ForceSaveAsync(data);
             Debug.Log($"Successfully saved {key}:{value}");
         }
         catch (CloudSaveValidationException e)
@@ -226,7 +218,7 @@ public class DataSaveLoadManager : MonoBehaviour
             }
             else
             {
-                Debug.Log($"There is no such key as {key}!");
+                Debug.Log($"Key not found : {key}!");
             }
         }
         catch (CloudSaveValidationException e)
