@@ -43,7 +43,7 @@ public class AudioUIManager : MonoBehaviour
         musicVolumeSlider.onValueChanged.AddListener( delegate {AudioSliderChanged(AudioSliders.music, musicVolumeSlider.value); });
         sfxVolumeSlider.onValueChanged.AddListener( delegate {AudioSliderChanged(AudioSliders.sfx, sfxVolumeSlider.value); });
         uiVolumeSlider.onValueChanged.AddListener( delegate {AudioSliderChanged(AudioSliders.ui, uiVolumeSlider.value); });
-
+        FmodRouting.SetUpBuses();
         LoadPlayerPrefAudioSettings();
          
     }
@@ -57,7 +57,7 @@ public class AudioUIManager : MonoBehaviour
     private void HidePopUp()
     {
         audioPanel.SetActive(false);     
-        SnapshotHandler.instance.StopSnapShot();
+        SnapshotHandler.instance.StopSnapShot(SnapshotHandler.instance.optionsSnapShotinstance);
      
     }
     

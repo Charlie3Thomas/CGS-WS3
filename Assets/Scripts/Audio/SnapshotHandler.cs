@@ -10,7 +10,10 @@ public class SnapshotHandler : MonoBehaviour
     private static SnapshotHandler m_instace;
 
     public EventReference optionsSnapshot;
-    EventInstance snapShotinstance;
+    public EventReference panSnapshot;
+
+    public EventInstance optionsSnapShotinstance {get; private set;}
+    public EventInstance panSnapShotinstance {get; private set;}
     
     // Start is called before the first frame update
     private void Start()
@@ -18,17 +21,23 @@ public class SnapshotHandler : MonoBehaviour
         m_instace = this;
     }
 
-    public void StartOptionsSnapShot( )
+    public void StartOptionsSnapShot()
     {
         
-        snapShotinstance = RuntimeManager.CreateInstance(optionsSnapshot);
-        snapShotinstance.start();
+        optionsSnapShotinstance = RuntimeManager.CreateInstance(optionsSnapshot);
+        optionsSnapShotinstance.start();
+    }
+
+    public void StartCameraPanSnapShot()
+    {
+        panSnapShotinstance = RuntimeManager.CreateInstance(panSnapshot);
+        panSnapShotinstance.start();
     }
 
     // Update is called once per frame
-    public void StopSnapShot()
+    public void StopSnapShot(EventInstance instance)
     {
-        snapShotinstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        snapShotinstance.release();
+        instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        instance.release();
     }
 }
