@@ -28,8 +28,6 @@ public class WindowGraph : MonoBehaviour
    private Func<int, string> getAxisLabelX;
    private Func<float, string> getAxisLabelY;
 
-   private int startingYear = 1900;
-
    //Example data set
    List<float> valueList;
 
@@ -37,12 +35,16 @@ public class WindowGraph : MonoBehaviour
    private bool isLineChartActive = true;
 
 
-   //Example graph
-   IGraphVisual lineGraphVisual;
-   //IGraphVisual barChartVisual;
-       
+    //Example graph
+    //IGraphVisual lineGraphVisual;
+    IGraphVisual popLineGraphVisual;
+    IGraphVisual moneyLineGraphVisual;
+    IGraphVisual foodLineGraphVisual;
+    IGraphVisual scienceLineGraphVisual;
+    //IGraphVisual barChartVisual;
 
-   private void Awake()
+
+    private void Awake()
    {
        instance = this;
        //Set up references 
@@ -57,26 +59,26 @@ public class WindowGraph : MonoBehaviour
        graphVisualObjectList = new List<IGraphVisualObject>();
 
        //Example data set used for all buttons, as in my GRD project data sets were being handled outside of this script. All graph visual data set are set to this dummy list
-       valueList = new List<float>() {5, 90, 80, 60, 70, 55};
-       
+       //valueList = new List<float>() {0, 5000, 900, 8000, 600, 7000, 10000};
 
 
-       //Intitialise different chart visuals (For multiple Displays) 
 
-       //Example graph
-       lineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(1, 1, 1, .5f));
+        //Intitialise different chart visuals (For multiple Displays) 
+
+        //Population graph
+        popLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(1, 1, 1, .5f));
        //barChartVisual = new BarChartVisual(graphContainer, Color.red, .8f);
        
-       //Money data Graphs
-       IGraphVisual moneyLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(238, 130, 238, .3f));
+       //Money graph
+       moneyLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(238, 130, 238, .3f));
        //IGraphVisual moneyBarChartVisual = new BarChartVisual(graphContainer, Color.green, .8f);
 
-       //C02 Data graphs
-       IGraphVisual co2LineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.white, new Color(255, 0, 0, .3f));
+       //Food Graph
+       foodLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.white, new Color(255, 0, 0, .3f));
        //IGraphVisual co2BarChartVisual = new BarChartVisual(graphContainer, Color.red, .8f);
 
-       //Trees planted Data graphs
-       IGraphVisual treesLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.blue, new Color(176, 224, 230, .3f));
+       //Science Graph
+       scienceLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.blue, new Color(176, 224, 230, .3f));
         //IGraphVisual treesBarChartVisual = new BarChartVisual(graphContainer, Color.blue, .8f);
 
 
@@ -98,7 +100,12 @@ public class WindowGraph : MonoBehaviour
         */
 
         isLineChartActive = true;
-        SetGraphVisual(lineGraphVisual);
+        UpdateAndShowGraphs(
+            new List<float>() { 500, 2555, 900, 8000, 600, 7000, 2334 },
+            new List<float>() { 1000, 5000, 2000, 8000, 600, 7000, 8665 },
+            new List<float>() { 1000, 3222, 4268, 5253, 612, 2689, 5378 },
+            new List<float>() { 1000, 8421, 8537, 8000, 600, 7000, 10000 }
+            );
 
         /*
        transform.Find("LineGraphButton").GetComponent<Button_UI>().ClickFunc = () => 
@@ -166,22 +173,22 @@ public class WindowGraph : MonoBehaviour
            }
        };
        */
-       
 
-       /////////TESTING PURPOSES WILL CREATE RANDOM CHART VALUES EVERY .5 OF A SECOND TO SHOW DYNAMIC GRAPH AT WORK////////////
-      /*
-       FunctionPeriodic.Create(() => {
-            valueList.Clear();
-            for(int i = 0; i < UnityEngine.Random.Range(5, 25); i++)
-            {
-                valueList.Add(UnityEngine.Random.Range(0,500));
-            }
 
-            ShowGraph(valueList, graphVisual, -1, (int _i) => "Year: " + (_i + 10), (float _f) => Mathf.RoundToInt(_f) + "Tons");
-       }, .5f);  
-       */
-       
-  }
+        /////////TESTING PURPOSES WILL CREATE RANDOM CHART VALUES EVERY .5 OF A SECOND TO SHOW DYNAMIC GRAPH AT WORK////////////
+        /*
+         FunctionPeriodic.Create(() => {
+              valueList.Clear();
+              for(int i = 0; i < UnityEngine.Random.Range(5, 25); i++)
+              {
+                  valueList.Add(UnityEngine.Random.Range(0,500));
+              }
+
+              ShowGraph(valueList, graphVisual, -1, (int _i) => "Year: " + (_i + 10), (float _f) => Mathf.RoundToInt(_f) + "Tons");
+         }, .5f);  
+         */
+
+    }
   
   public static void ShowToolTip_Static(string tooltipText, Vector2 anchoredPosition)
   {
@@ -203,6 +210,35 @@ public class WindowGraph : MonoBehaviour
     
     tooltipGameObject.transform.SetAsLastSibling(); //So it shows up on top of graph
   }
+
+    public void UpdateAndShowGraphs(List<float> popValues, List<float> moneyValues, List<float> foodValues, List<float> scienceValues)
+    {
+        //Clear previous list of values before displaying new ones
+        foreach (GameObject gameObject in gameObjectList)
+        {
+            Destroy(gameObject);
+        }
+
+        gameObjectList.Clear();
+
+
+        foreach (IGraphVisualObject graphVisualObject in graphVisualObjectList)
+        {
+            graphVisualObject.CleanUp();
+        }
+
+        graphVisualObjectList.Clear();
+
+        popLineGraphVisual.CleanUp();
+        moneyLineGraphVisual.CleanUp();
+        foodLineGraphVisual.CleanUp();
+        scienceLineGraphVisual.CleanUp();
+
+        SetGraphVisual(popLineGraphVisual, popValues);
+        SetGraphVisual(moneyLineGraphVisual, moneyValues);
+        SetGraphVisual(foodLineGraphVisual, foodValues);
+        SetGraphVisual(scienceLineGraphVisual, scienceValues);
+    }
 
   public static void HideToolTip_Static()
   {
@@ -235,9 +271,9 @@ public class WindowGraph : MonoBehaviour
   }
 
 
-  private void SetGraphVisual(IGraphVisual graphVisual)
+  private void SetGraphVisual(IGraphVisual graphVisual, List<float> _valueList)
   {
-      ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount, this.getAxisLabelX, this.getAxisLabelY);
+      ShowGraph(_valueList, graphVisual, this.maxVisibleValueAmount, this.getAxisLabelX, this.getAxisLabelY);
   }
 
    private void ShowGraph(List<float> valueList, IGraphVisual graphVisual, int maxVisibleValueAmount = -1, Func<int, string> getAxisLabelX = null, Func<float, string> getAxisLabelY = null)
@@ -271,30 +307,6 @@ public class WindowGraph : MonoBehaviour
       {
         getAxisLabelY = delegate (float _f) {return _f.ToString(); }; //Default behavior delegated to set Y label
       }
-     
-     
-     
-      //Clear previous list of values before displaying new ones
-
-      
-        foreach (GameObject gameObject in gameObjectList)
-        {
-          Destroy(gameObject);
-        }
-
-        gameObjectList.Clear();
-
-
-      foreach(IGraphVisualObject graphVisualObject in graphVisualObjectList)
-      {
-          graphVisualObject.CleanUp();
-      }
-      
-    
-      graphVisualObjectList.Clear();
-
-      graphVisual.CleanUp();
-      
 
       float graphHeight = graphContainer.sizeDelta.y;
       float graphWidth = graphContainer.sizeDelta.x;
