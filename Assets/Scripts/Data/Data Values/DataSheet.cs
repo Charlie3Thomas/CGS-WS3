@@ -3,6 +3,8 @@ using System.Collections.Generic;
 namespace CT.Lookup
 {
     using Data;
+    using FMOD;
+
     public static class DataSheet
     {
         // Disaster cost to resources
@@ -14,9 +16,9 @@ namespace CT.Lookup
         public static uint starting_year = 1900;
         public static uint end_year = 2100;
         public static uint turns_number = (end_year - starting_year) / turn_steps;
-        public static int starting_money = 1000;
-        public static int starting_science = 1000;
-        public static int starting_food = 1000;
+        public static int starting_money = 100000;
+        public static int starting_science = 100000;
+        public static int starting_food = 100000;
         public static int starting_population = 500;
         public static float starvation_survival_rate = 0.90f;
         #endregion
@@ -44,7 +46,8 @@ namespace CT.Lookup
         public static CTCost GetDisasterImpact(CTDisasters _disaster, in CTYearData _year_data)
         {
             //return disaster_impact[_disaster];
-            return new CTCost(0, 0, 0, 100); // Placeholder cost 100 pop
+            UnityEngine.Debug.Log("Disaster");
+            return new CTCost(0, 0, 0, 0); // Placeholder cost 100 pop
         }
 
         // Technology cost lookup table

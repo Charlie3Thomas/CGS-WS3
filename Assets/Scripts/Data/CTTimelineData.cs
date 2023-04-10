@@ -38,7 +38,7 @@ namespace CT.Data
         {
             CTYearData ret = initial_year;
 
-            for (int i = 0; i < _year; i++)
+            for (int i = 0; i <= _year; i++)
             {
                 // Disaster instances for year
                 foreach (CTChange change in game_changes[i])

@@ -67,16 +67,22 @@ namespace CT.Data
             get { return food; }
 
             set
-            {
+            {   // Starvation
                 if (value < 0)
                 {
-                    food = 0;
+                    food = 0; 
                     Population = (int)(Population * DataSheet.starvation_survival_rate);
                     //throw new ArgumentException("Food cannot go below zero!");
                 }
                 else
                 {
                     food = value;
+                }
+
+                // Growth
+                if (value > Population)
+                {
+                    Population = (int)(Population * 1.1f);
                 }
             }
         }
@@ -100,7 +106,7 @@ namespace CT.Data
         }
 
         // Population 
-        private int population;
+        private int population = DataSheet.starting_population;
         public int Population
         {
             get { return population; }
@@ -186,7 +192,25 @@ namespace CT.Data
                 }
                 else
                 {
+                    if (value == 0)
+                        return;
+
+                    float planner_ratio = GetFactionRatio(CTFaction.Planner);
+                    float farmer_ratio = GetFactionRatio(CTFaction.Farmer);
+                    float worker_ratio = GetFactionRatio(CTFaction.Worker);
+                    float scientist_ratio = GetFactionRatio(CTFaction.Scientist);
+
+                    Planners = 0;
+                    Farmers = 0;
+                    Workers = 0;
+                    Scientists = 0;
+
                     this.population = value;
+
+                    Planners = (int)(Population * planner_ratio);
+                    Farmers = (int)(Population * farmer_ratio);
+                    Workers = (int)(Population * worker_ratio);
+                    Scientists = (int)(Population * scientist_ratio);
                 }
             }
         }
@@ -292,7 +316,7 @@ namespace CT.Data
             Food = _food;
             Population = _pop;
 
-            Debug.Log("Setting entire population to workers");
+            Debug.Log("Setting base faction distribution");
             Workers = (int)(_pop * 0.25f);
             Scientists = (int)(_pop * 0.25f);
             Farmers = (int)(_pop * 0.25f);
@@ -344,8 +368,6 @@ namespace CT.Data
                 default:
                     return -1.0f;
             }
-
-
         }
         #endregion
     }

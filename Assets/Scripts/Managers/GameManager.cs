@@ -20,6 +20,7 @@ namespace CT
     using System;
     using Unity.VisualScripting;
     using CT.Enumerations;
+    using System.Linq;
 
     public class GameManager : MonoBehaviour
     {
@@ -32,9 +33,10 @@ namespace CT
 
         public uint current_turn = 0;
 
-        [SerializeField] private TextMeshProUGUI Money;
-        [SerializeField] private TextMeshProUGUI Science;
-        [SerializeField] private TextMeshProUGUI Food;
+        [SerializeField] private TextMeshProUGUI Planners;
+        [SerializeField] private TextMeshProUGUI Workers;
+        [SerializeField] private TextMeshProUGUI Farmers;
+        [SerializeField] private TextMeshProUGUI Scientists;
 
         private void Awake()
         {
@@ -53,13 +55,22 @@ namespace CT
         private void Start()
         {
             Initialise();
-
-            Invoke("OingoBoingo", 1.0f);
+            SetBaseFactionSpreadPerTurn();
+            //Invoke("DebugDisasterChanges", 1.0f);
         }
 
         private void Update()
         {
-            
+            //// Values here are correct
+            //float workers = (float)turn.Workers / (float)turn.Population;
+            //float scientists = (float)turn.Scientists / (float)turn.Population;
+            //float farmers = (float)turn.Farmers / (float)turn.Population;
+            //float planners = (float)turn.Planners / (float)turn.Population;
+
+            //Planners.text = planners.ToString();
+            //Workers.text = workers.ToString();
+            //Farmers.text = farmers.ToString();
+            //Scientists.text = scientists.ToString();
         }
 
         private void Initialise()
@@ -122,6 +133,19 @@ namespace CT
 
             // Propogate population changes to all future turns
             //ApplyPopulationGrowthChange(_turn, GetPopulationGrowth());
+
+            if (game_changes[_turn][0].GetType() == typeof (SetFactionDistribution))
+            {
+                // Get variables from game_changes[_turn][0] if of type SetFactionDistribution
+                SetFactionDistribution change = (SetFactionDistribution)game_changes[_turn][0];
+
+                Debug.Log(
+                    $"Planners: {change.planner_percentage},  " +
+                    $"Workers: {change.worker_percentage}, " +
+                    $"Farmers: {change.farmer_percentage}, " +
+                    $"Scientists: {change.scientist_percentage}");
+            }
+            
         }
 
         private void UpdateResourceCounters()
@@ -140,9 +164,10 @@ namespace CT
             float farmers = (float)turn.Farmers / (float)turn.Population;
             float planners = (float)turn.Planners / (float)turn.Population;
 
-            Money.text = workers.ToString();
-            Science.text = scientists.ToString();
-            Food.text = farmers.ToString();
+            Planners.text = planners.ToString();
+            Workers.text = workers.ToString();
+            Farmers.text = farmers.ToString();
+            Scientists.text = scientists.ToString();
 
             // This does not work as expected
             ComputerController.Instance.pointSelectors[0].pointValue = scientists; // Scientist
@@ -193,6 +218,19 @@ namespace CT
             game_changes[_disaster.turn].Add(new ApplyDisaster(_disaster));            
         }
 
+        private void SetBaseFactionSpreadPerTurn()
+        {
+            // for each turn between zero and max turns
+            // generate a new faction distribution for each turn
+            // add to list of turns in index of for loop
+
+            for (int i = 1; i < DataSheet.turns_number; i++)
+            {
+                Vector4 spread = GetRandomFactionSpread();
+                game_changes[i].Add(new SetFactionDistribution(spread[0], spread[1], spread[2], spread[3]));
+            }
+        }
+
 
         #region Utility
 
@@ -205,14 +243,23 @@ namespace CT
 
         private void UpdatePipsWithCurrentTurnData()
         {
+            //// Sci
+            //ComputerController.Instance.pointSelectors[0].SetPoints(GetFactionDistribtion(CTFaction.Scientist, turn) * 10);
+            //// Plan
+            //ComputerController.Instance.pointSelectors[1].SetPoints(GetFactionDistribtion(CTFaction.Planner, turn) * 10);
+            //// Farmer
+            //ComputerController.Instance.pointSelectors[2].SetPoints(GetFactionDistribtion(CTFaction.Farmer, turn) * 10);
+            //// Worker
+            //ComputerController.Instance.pointSelectors[3].SetPoints(GetFactionDistribtion(CTFaction.Worker, turn) * 10);
+
             // Sci
             ComputerController.Instance.pointSelectors[0].SetPoints(GetFactionDistribtion(CTFaction.Scientist, turn) * 10);
             // Plan
             ComputerController.Instance.pointSelectors[1].SetPoints(GetFactionDistribtion(CTFaction.Planner, turn) * 10);
             // Farmer
-            ComputerController.Instance.pointSelectors[2].SetPoints(GetFactionDistribtion(CTFaction.Farmer, turn) * 10);
+            ComputerController.Instance.pointSelectors[3].SetPoints(GetFactionDistribtion(CTFaction.Farmer, turn) * 10);
             // Worker
-            ComputerController.Instance.pointSelectors[3].SetPoints(GetFactionDistribtion(CTFaction.Worker, turn) * 10);
+            ComputerController.Instance.pointSelectors[2].SetPoints(GetFactionDistribtion(CTFaction.Worker, turn) * 10);
         }
 
         private float GetFactionDistribtion(CTFaction _faction, CTYearData _turn)
@@ -277,15 +324,73 @@ namespace CT
         }
         #endregion
 
-        private void OingoBoingo()
+        private void DebugDisasterChanges()
         {
 
 
             for (int i = 0; i < 40; i++)
             {
                 if (game_changes[i].Count != 0)
+                {
                     Debug.Log($"Game Changes Turn {i} Size = {game_changes[i].Count}");
+                }
             }
+        }
+
+        private Vector4 GetRandomFactionSpread()
+        {
+            System.Random rand = new System.Random();
+
+            float[] floats = { 0, 0, 0, 0 };
+
+            floats[0] = (float)rand.NextDouble();
+            floats[1] = (float)rand.NextDouble();
+            floats[2] = (float)rand.NextDouble();
+            floats[3] = (float)rand.NextDouble();
+
+            float sum = floats[0] + floats[1] + floats[2] + floats[3];
+
+            floats[0] = Mathf.Round(floats[0] / sum * 10f) / 10f;
+            floats[1] = Mathf.Round(floats[1] / sum * 10f) / 10f;
+            floats[2] = Mathf.Round(floats[2] / sum * 10f) / 10f;
+            floats[3] = Mathf.Round(floats[3] / sum * 10f) / 10f;
+
+            float adjusted_sum = floats[0] + floats[1] + floats[2] + floats[3];
+
+            float adjustment = (adjusted_sum > 1.0f) ? -0.1f : 0.1f;
+
+            if (adjusted_sum != 1.0f)
+            {
+                // If sum is less than 1.0f
+                if (adjusted_sum < 1.0f)
+                {
+                    float lowest = floats.Min();
+                    for (int i = 0; i < floats.Length; i++)
+                    {
+                        if (floats[i] == lowest)
+                        {
+                            floats[i] += 0.1f;
+                            break;
+                        }
+                    }
+                }
+                else // If sum is greater than 1.0f
+                {
+                    float highest = floats.Max();
+                    for (int i = 0; i < floats.Length; i++)
+                    {
+                        if (floats[i] == highest)
+                        {
+                            floats[i] -= 0.1f;
+                            break;
+                        }
+                    }
+                }
+
+                adjusted_sum = floats[0] + floats[1] + floats[2] + floats[3];
+
+            }
+            return new Vector4(floats[0], floats[1], floats[2], floats[3]);
         }
 
     }
