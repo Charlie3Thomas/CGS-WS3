@@ -1,22 +1,9 @@
+using CT;
+using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-
-public enum disasterType
-{
-    FLOOD,
-    EARTHQUAKE,
-    DROUGHT,
-    TORNADO
-}
-
-[System.Serializable]
-public class Disaster
-{
-    public disasterType type;
-    public int year;
-    public float intensity;
-}
 
 public class DisasterManager : MonoBehaviour
 {
@@ -75,24 +62,45 @@ public class DisasterManager : MonoBehaviour
 
     void CreateDisasterList()
     {
-        HashSet<int> uniqueYears = new HashSet<int>();
+        HashSet<int> uniqueTurns = new HashSet<int>();
         for (int i = 0; i < numOfDisasters; i++)
         {
             Disaster dis = new Disaster();
-            dis.type = (disasterType)Random.Range(0, System.Enum.GetValues(typeof(disasterType)).Length);
+            dis.type = (CTDisasters)Random.Range(0, System.Enum.GetValues(typeof(CTDisasters)).Length);
             //dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
             //while (!uniqueYears.Add(dis.year))
             //{
             //    //dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
             //}
+
+            dis.turn = Random.Range(4,  (int)CT.Lookup.DataSheet.turns_number + 1);
+
+            while (!uniqueTurns.Add(dis.turn))
+            {
+                dis.turn = Random.Range(0, (int)CT.Lookup.DataSheet.turns_number + 1);
+            }
+
+            dis.year = (int)(dis.turn * CT.Lookup.DataSheet.turn_steps + CT.Lookup.DataSheet.starting_year) + Random.Range(0, 5);
+
             dis.intensity = Random.Range(1f, 10f);
+
             disasterList.Add(dis);
         }
         disasterList.Sort(SortByYear);
+
+        WriteDisastersToGameManager();
     }
 
     private static int SortByYear(Disaster dis1, Disaster dis2)
     {
         return dis1.year.CompareTo(dis2.year);
+    }
+
+    private void WriteDisastersToGameManager()
+    {
+        foreach (Disaster d in disasterList)
+        {
+            GameManager._INSTANCE.AddDisastersToGameChanges(d);
+        }
     }
 }

@@ -12,19 +12,33 @@ public class Seed : MonoBehaviour
 
     private void Awake()
     {
+        string seed = "";
+
         if (forceDefaultSeed)
         {
-            gameSeed = "Default";
+            seed = "Default";
         }
         else
         {
             for(int i = 0; i < seedLength; i++)
             {
-                gameSeed += chars[Random.Range(0, chars.Length)];
+                seed += chars[Random.Range(0, chars.Length)];
             }
         }
 
+        SetSeed(seed);
+    }
+
+    public void SetSeed(string _seed)
+    {
+        // May be needed at some point idk
+        gameSeed = _seed;
         currentSeed = gameSeed.GetHashCode();
         Random.InitState(currentSeed);
+    }
+
+    public string GetSeed()
+    {
+        return gameSeed;
     }
 }

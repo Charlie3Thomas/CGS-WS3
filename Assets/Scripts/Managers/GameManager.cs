@@ -53,6 +53,8 @@ namespace CT
         private void Start()
         {
             Initialise();
+
+            Invoke("OingoBoingo", 1.0f);
         }
 
         private void Update()
@@ -185,6 +187,12 @@ namespace CT
         //    }
         //}
 
+        public void AddDisastersToGameChanges(Disaster _disaster)
+        {
+            // Take generated disasters from the disaster manager and insert them into the game changes list
+            game_changes[_disaster.turn].Add(new ApplyDisaster(_disaster));            
+        }
+
 
         #region Utility
 
@@ -268,6 +276,17 @@ namespace CT
             return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
         }
         #endregion
+
+        private void OingoBoingo()
+        {
+
+
+            for (int i = 0; i < 40; i++)
+            {
+                if (game_changes[i].Count != 0)
+                    Debug.Log($"Game Changes Turn {i} Size = {game_changes[i].Count}");
+            }
+        }
 
     }
 }

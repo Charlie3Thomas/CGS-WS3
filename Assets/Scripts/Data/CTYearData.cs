@@ -54,8 +54,9 @@ namespace CT.Data
                     science = 0;
                     //throw new ArgumentException("Science cannot go below zero!");
                 }
+                else
+                    science = value;
 
-                science = value;
             }
         }
 
@@ -70,7 +71,7 @@ namespace CT.Data
                 if (value < 0)
                 {
                     food = 0;
-                    Population += (int)(DataSheet.starvation_death_rate * value);
+                    Population = (int)(Population * DataSheet.starvation_survival_rate);
                     //throw new ArgumentException("Food cannot go below zero!");
                 }
                 else

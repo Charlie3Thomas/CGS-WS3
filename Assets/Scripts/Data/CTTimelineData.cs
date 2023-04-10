@@ -113,7 +113,7 @@ namespace CT.Data
             user_changes[_year].Add(new SetFactionDistribution(_workers, _scientists, _farmers, _planners));
         }
 
-        public void ApplyDisasterEffect(int _year, CTDisasters _disaster)
+        public void ApplyDisasterEffect(int _year, Disaster _disaster)
         {
             if (_year < 0)
                 throw new ArgumentException("Year cannot be zero or lower!");

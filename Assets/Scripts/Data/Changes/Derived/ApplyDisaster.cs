@@ -15,12 +15,16 @@ public class ApplyDisaster : CTChange
 {
     public ApplyDisaster() { }
 
-    public ApplyDisaster(CTDisasters _disaster)
+    public ApplyDisaster(Disaster _disaster)
     {
-        this.disaster = _disaster;
+        this.disaster = _disaster.type;
+        this.turn = _disaster.turn;
+        this.intensity = _disaster.intensity;
     }
 
     public CTDisasters disaster;
+    public int turn;
+    public float intensity;
 
     public override void ApplyChange(ref CTYearData _year)
     {

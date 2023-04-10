@@ -10,14 +10,15 @@ namespace CT.Lookup
 
 
         #region Base Values
-        public static uint turns_number = 40;
+        public static uint turn_steps = 5;
         public static uint starting_year = 1900;
         public static uint end_year = 2100;
+        public static uint turns_number = (end_year - starting_year) / turn_steps;
         public static int starting_money = 1000;
         public static int starting_science = 1000;
         public static int starting_food = 1000;
         public static int starting_population = 500;
-        public static float starvation_death_rate = 0.90f;
+        public static float starvation_survival_rate = 0.90f;
         #endregion
 
 
@@ -183,13 +184,10 @@ namespace CT.Lookup
 
     public enum CTDisasters
     {
-        // Placeholder
-        NoCoffee,
-        NoMilk,
-        TrainsGone,
-        Overslept,
-        RanOutOfMoney,
-        ForgotToEat
+        Earthquake,
+        Tsunami,
+        Volcano,
+        Tornado
     };
 
     public enum CTPolicies
