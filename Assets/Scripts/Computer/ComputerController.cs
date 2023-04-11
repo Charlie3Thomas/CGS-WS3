@@ -26,6 +26,10 @@ public class ComputerController : MonoBehaviour
     public GameObject[] policyCards = new GameObject[7];
     [HideInInspector]
     public List<PointSelector> pointSelectors;
+    [HideInInspector]
+    public GameObject graph;
+    [HideInInspector]
+    public GameObject screen;
 
     // Anims
     [HideInInspector]
@@ -74,6 +78,8 @@ public class ComputerController : MonoBehaviour
     public bool onScreen = false;
     [HideInInspector]
     public bool onTech = false;
+    [HideInInspector]
+    public bool showGraph = false;
 
     // UI
     private GameObject panUpButton;
@@ -145,6 +151,7 @@ public class ComputerController : MonoBehaviour
             switch (computerState)
             {
                 case ComputerState.MAIN_COMPUTER:
+                    // Moving the year slider
                     if (yearSliding)
                     {
                         float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
@@ -165,6 +172,7 @@ public class ComputerController : MonoBehaviour
 
                         newRemappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
                         yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
+                        UpdateSlider();
                     }
 
                     if (isInteractingPressed && hit.transform.CompareTag("YearSlider"))
@@ -178,10 +186,11 @@ public class ComputerController : MonoBehaviour
                     {
                         Cursor.visible = true;
                         Cursor.lockState = CursorLockMode.None;
+                        Debug.Log("RELEASE");
                         yearSliding = false;
                     }
 
-                    onScreen = hit.transform.name == "Screen";
+                    onScreen = hit.transform.gameObject == screen;
 
                     InteractWithScreen(hit, onScreen, screenCam);
 
@@ -267,9 +276,11 @@ public class ComputerController : MonoBehaviour
                         Cursor.lockState = CursorLockMode.None;
                         Cursor.visible = true;
                     }
+
                     break;
                 case ComputerState.JOURNAL:
                     // Specific journal stuff
+
                     break;
             }
         }
@@ -311,46 +322,62 @@ public class ComputerController : MonoBehaviour
     // Call whenever you want to set up everything including references (could be used to reset)
     void Setup()
     {
+        // Camera Functionality
+        cam = GetComponent<Camera>();
         screenCam = GameObject.FindGameObjectWithTag("ScreenCamera").GetComponent<Camera>();
         techCam = GameObject.FindGameObjectWithTag("TechCamera").GetComponent<Camera>();
         lookAt = GameObject.FindGameObjectWithTag("LookTarget").transform;
-        computerState = ComputerState.MAIN_COMPUTER;
         lookAt.localPosition = defaultLook;
+
+        // Set References to Objects
         panUpButton = GameObject.Find("PanUpButton");
         panDownButton = GameObject.Find("PanDownButton");
         panBackFromUpButton = GameObject.Find("PanBackButtonFromUp");
         panBackFromDownButton = GameObject.Find("PanBackButtonFromDown");
-        panUpButton.SetActive(true);
-        panDownButton.SetActive(true);
-        panBackFromUpButton.SetActive(false);
-        panBackFromDownButton.SetActive(false);
-        cam = GetComponent<Camera>();
-        newPos = Vector3.zero;
+        screen = GameObject.FindGameObjectWithTag("Screen");
+        notepad = GameObject.FindGameObjectWithTag("Notepad");
+        journal = GameObject.FindGameObjectWithTag("Journal");
+        graph = GameObject.FindGameObjectWithTag("Graph");
         yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
-        desiredYear = YearData._INSTANCE.current_year;
+
+        // Texts
         yearText = GameObject.FindGameObjectWithTag("YearCounter").GetComponent<TMP_Text>();
         foodText = GameObject.FindGameObjectWithTag("FoodCounter").GetComponent<TMP_Text>();
         rpText = GameObject.FindGameObjectWithTag("RPCounter").GetComponent<TMP_Text>();
         currencyText = GameObject.FindGameObjectWithTag("CurrencyCounter").GetComponent<TMP_Text>();
         populationText = GameObject.FindGameObjectWithTag("PopCounter").GetComponent<TMP_Text>();
-        notepad = GameObject.FindGameObjectWithTag("Notepad");
-        journal = GameObject.FindGameObjectWithTag("Journal");
         disasterNameText = notepad.transform.GetChild(1).GetChild(0).GetComponent<TMP_Text>();
         disasterYearText = notepad.transform.GetChild(1).GetChild(1).GetComponent<TMP_Text>();
         disasterMagnitudeText = notepad.transform.GetChild(1).GetChild(2).GetComponent<TMP_Text>();
         disasterDeathTollText = notepad.transform.GetChild(1).GetChild(3).GetComponent<TMP_Text>();
         safetyText = notepad.transform.GetChild(1).GetChild(4).GetComponent<TMP_Text>();
-        notepad.SetActive(true);
-        journal.SetActive(false);
-        pointSelectors = new List<PointSelector>(FindObjectsOfType<PointSelector>());
         yearSlider = GameObject.FindGameObjectWithTag("YearSlider");
 
+        // Policy Cards Setup
         policyCards = GameObject.FindGameObjectsWithTag("PolicyCard");
         for (int i = 0; i < policyCards.Length; i++)
         {
             pCardTexts[i] = policyCards[i].transform.GetChild(0).GetComponent<TMP_Text>();
             pCardAnims[i] = policyCards[i].GetComponent<Animator>();
         }
+
+        // Set States
+        computerState = ComputerState.MAIN_COMPUTER;
+        notepad.SetActive(true);
+        journal.SetActive(false);
+        panUpButton.SetActive(true);
+        panDownButton.SetActive(true);
+        panBackFromUpButton.SetActive(false);
+        panBackFromDownButton.SetActive(false);
+        graph.SetActive(false);
+
+        // Set Values
+        desiredYear = YearData._INSTANCE.current_year;
+        showGraph = false;
+
+        // Misc
+        pointSelectors = new List<PointSelector>(FindObjectsOfType<PointSelector>());
+        newPos = Vector3.zero;
 
         UpdateSlider();
     }
