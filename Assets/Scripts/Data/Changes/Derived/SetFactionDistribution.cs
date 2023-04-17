@@ -17,8 +17,11 @@ public class SetFactionDistribution : CTChange
     {
         float total_assigned = _workers + _scientists + _farmers + _planners;
 
+        //Debug.Log($"{total_assigned} {_workers} {_scientists} {_farmers} {_planners}");
+
         if (total_assigned > 1)
         {
+            Debug.Log(total_assigned);
             throw new ArgumentException("Cannot assign more than 100% of population!");
         }
 

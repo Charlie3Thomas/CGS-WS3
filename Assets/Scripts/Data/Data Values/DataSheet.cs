@@ -19,8 +19,13 @@ namespace CT.Lookup
         public static int starting_money = 100000;
         public static int starting_science = 100000;
         public static int starting_food = 100000;
-        public static int starting_population = 500;
+
+        // This is 10% lower than the desired 500 for reasons
+        // It is lazy and stupid, but for now it works
+        // Please bear in mind, that if you change food_surplus_population_gain, this value will need to be changed as well
+        public static int starting_population = 455; 
         public static float starvation_survival_rate = 0.90f;
+        public static float food_surplus_population_gain = 1.10f;
         #endregion
 
 

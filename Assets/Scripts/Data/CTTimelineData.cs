@@ -27,6 +27,7 @@ namespace CT.Data
 
             // Set initial year with base DataSheet values
             initial_year = new CTYearData();
+
             initial_year.Initialise(
                 DataSheet.starting_money,
                 DataSheet.starting_science,
@@ -37,6 +38,8 @@ namespace CT.Data
         public CTYearData GetYearData(uint _year)
         {
             CTYearData ret = initial_year;
+
+            ret.turn = _year;
 
             for (int i = 0; i <= _year; i++)
             {

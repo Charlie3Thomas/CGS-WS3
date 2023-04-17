@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using System;
+using System.Linq;
 
 /*
     SELECTOR ORDER:
@@ -13,14 +16,11 @@ using UnityEngine;
 
 namespace CT
 {
-    using Data.Changes;
     using Data;
+    using Data.Changes;
     using Lookup;
-    using TMPro;
-    using System;
+    using Enumerations;
     using Unity.VisualScripting;
-    using CT.Enumerations;
-    using System.Linq;
 
     public class GameManager : MonoBehaviour
     {
@@ -133,19 +133,19 @@ namespace CT
 
             // Propogate population changes to all future turns
             //ApplyPopulationGrowthChange(_turn, GetPopulationGrowth());
+            game_changes[_turn].Add(new SetFactionDistribution(0.25f, 0.25f, 0.25f, 0.25f));
 
-            if (game_changes[_turn][0].GetType() == typeof (SetFactionDistribution))
+            if (game_changes[_turn][0].GetType() == typeof(SetFactionDistribution))
             {
                 // Get variables from game_changes[_turn][0] if of type SetFactionDistribution
-                SetFactionDistribution change = (SetFactionDistribution)game_changes[_turn][0];
+                //SetFactionDistribution change = (SetFactionDistribution)game_changes[_turn][0];
 
-                Debug.Log(
-                    $"Planners: {change.planner_percentage},  " +
-                    $"Workers: {change.worker_percentage}, " +
-                    $"Farmers: {change.farmer_percentage}, " +
-                    $"Scientists: {change.scientist_percentage}");
+                //Debug.Log(
+                //    $"Planners: {change.planner_percentage},  " +
+                //    $"Workers: {change.worker_percentage}, " +
+                //    $"Farmers: {change.farmer_percentage}, " +
+                //    $"Scientists: {change.scientist_percentage}");
             }
-            
         }
 
         private void UpdateResourceCounters()

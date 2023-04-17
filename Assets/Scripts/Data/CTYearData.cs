@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace CT.Data
 {
-    using System;
-    using CT.Enumerations;
+    using Enumerations;
     using Lookup;
 
     public class CTYearData
     {
         // Debugging
-        //public int year;
+        public uint turn;
         public bool year_changed_by_player = false;
 
         // Technologies
@@ -70,7 +70,7 @@ namespace CT.Data
             {   // Starvation
                 if (value < 0)
                 {
-                    food = 0; 
+                    food = 0;
                     Population = (int)(Population * DataSheet.starvation_survival_rate);
                     //throw new ArgumentException("Food cannot go below zero!");
                 }
@@ -82,7 +82,7 @@ namespace CT.Data
                 // Growth
                 if (value > Population)
                 {
-                    Population = (int)(Population * 1.1f);
+                    Population = (int)(Population * DataSheet.food_surplus_population_gain);
                 }
             }
         }
@@ -316,11 +316,15 @@ namespace CT.Data
             Food = _food;
             Population = _pop;
 
-            Debug.Log("Setting base faction distribution");
-            Workers = (int)(_pop * 0.25f);
-            Scientists = (int)(_pop * 0.25f);
-            Farmers = (int)(_pop * 0.25f);
-            Planners = (int)(_pop * 0.25f);
+            if (turn == 0)
+            {
+                Debug.Log($"Setting base faction distribution for turn {turn}");
+                Workers = (int)(_pop * 0.25f);
+                Scientists = (int)(_pop * 0.25f);
+                Farmers = (int)(_pop * 0.25f);
+                Planners = (int)(_pop * 0.25f);
+            }
+
 
             //Debug.Log(Population);
 
