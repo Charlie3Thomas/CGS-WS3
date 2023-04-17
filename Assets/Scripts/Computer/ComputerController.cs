@@ -312,7 +312,10 @@ public class ComputerController : MonoBehaviour
                 if(cam == techCam)
                 {
                     if (camHit.transform.CompareTag("TechNode"))
+                    {
                         camHit.transform.GetComponent<TechNode>().Unlock();
+                    }
+                        
                 }
 
                 if (cam == screenCam)

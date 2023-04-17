@@ -1,13 +1,16 @@
+using CT;
+using CT.Data;
+using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 //Nodes 23, 24, 46, 47, 48, 62 are unique and need their own implementations
 public class TechNode : MonoBehaviour
 {
     private TechTree tree;
-    public int id = 0;
-    public string name = "";
+    public CTTechnologies tech;
     [SerializeReference]
     public Resource requiredMoney = new Resource { allocType = AllocType.MONEY };
     [SerializeReference]
@@ -26,7 +29,6 @@ public class TechNode : MonoBehaviour
     private void Start()
     {
         tree = GameObject.FindGameObjectWithTag("TechTree").GetComponent<TechTree>();
-        id = transform.GetSiblingIndex() + 1;
         lineRenderers = new List<LineRenderer>();
         mat = GetComponent<Renderer>().material;
         mat.SetVector("_Color", faded);
@@ -70,6 +72,8 @@ public class TechNode : MonoBehaviour
             return;
         }
 
+        Debug.Log(tech.ToString());
+
         if (unlocked)
         {
             AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "AlreadyUnlocked"));
@@ -92,15 +96,14 @@ public class TechNode : MonoBehaviour
 
         if (allRequiredNodesUnlocked)
         {
-            if (tree.sciencePoints.amount >= requiredScience.amount && tree.money.amount >= requiredMoney.amount)
+            if (GameManager._INSTANCE.PurchaseTechnology(tech))
             {
                 unlocked = true;
-                mat.SetVector("_Color", Lit * 8);
-                tree.sciencePoints.amount -= requiredScience.amount;
-                tree.money.amount -= requiredMoney.amount;
-                tree.UpdateBuffs(buffs);
+                //mat.SetVector("_Color", Lit * 8);
+                //tree.UpdateBuffs(buffs);
                 SpecialCase();
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "Unlocked"));
+                UpdateTechNodes();
             }
             else
             {
@@ -108,49 +111,70 @@ public class TechNode : MonoBehaviour
 
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
             }
+
         }
     }
 
     void SpecialCase()
     {
-        switch(id)
+        switch(tech)
         {
-            case 23:
+            case CTTechnologies.RiskAssessment:
                 {
                     DisasterManager.instance.showMagnitude = true;
                     DisasterManager.instance.WriteDisastersInJournal();
                 }
                 break;
-            case 24:
+            case CTTechnologies.PopulationAssessment:
                 {
                     DisasterManager.instance.showDeathToll = true;
                     DisasterManager.instance.WriteDisastersInJournal();
                 }
                 break;
-            case 46:
+            case CTTechnologies.Marketplace1:
                 {
-                    float temp_money = tree.money.amount;
-                    float temp_science = tree.sciencePoints.amount;
-                    tree.money.amount = temp_science / 5;
-                    tree.sciencePoints.amount = temp_money;
+                    //float temp_money = tree.money.amount;
+                    //float temp_science = tree.sciencePoints.amount;
+                    //tree.money.amount = temp_science / 5;
+                    //tree.sciencePoints.amount = temp_money;
                 }
                 break;
-            case 47:
+            case CTTechnologies.Marketplace2:
                 {
-                    float temp_money = tree.money.amount;
-                    float temp_science = tree.sciencePoints.amount;
-                    tree.money.amount = temp_science * 2;
-                    tree.sciencePoints.amount = temp_money;
+                    //float temp_money = tree.money.amount;
+                    //float temp_science = tree.sciencePoints.amount;
+                    //tree.money.amount = temp_science * 2;
+                    //tree.sciencePoints.amount = temp_money;
                 }
                 break;
-            case 48:
+            case CTTechnologies.SafetyRating:
                 {
                     DisasterManager.instance.showSafety = true;
                 }
                 break;
-            case 62:
+            case CTTechnologies.MemoryFlash:
                 // Reset awareness
                 break;
         }
+    }
+
+    public void UpdateTechNodes()
+    {
+        unlocked = false;
+        List<CTTechnologies> active_techs = GameManager._INSTANCE.GetUnlockedTechnologiesInTurn();
+
+        Debug.Log($"TechNode:UpdateTechNodes:active_techs = {active_techs.Count}");
+
+        foreach (CTTechnologies t in active_techs)
+        {
+            if (t == this.tech)
+            {
+                this.unlocked = true;
+                tree.LookupBuffs(t);
+                break;
+            }
+        }
+
+        this.mat.SetVector("_Color", unlocked ? Lit * 8 : faded);
     }
 }

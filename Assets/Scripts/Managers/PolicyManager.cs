@@ -146,8 +146,8 @@ public class PolicyManager : MonoBehaviour
 
         for (int i = 0; i < Random.Range(1, 3); i++)
         {
-            pol.buffs_nerfs.Add(new BuffsNerfs((BuffsNerfsType)Random.Range(0, System.Enum.GetValues(typeof(BuffsNerfsType)).Length),
-                Mathf.Round(Random.Range(-1f, 1f) * 100f) / 100f));
+            //pol.buffs_nerfs.Add(new BuffsNerfs((BuffsNerfsType)Random.Range(0, System.Enum.GetValues(typeof(BuffsNerfsType)).Length),
+            //    Mathf.Round(Random.Range(-1f, 1f) * 100f) / 100f));
         }
 
         //pol.requiredFaction = (FactionEnum.type)Random.Range(0, 4);
@@ -161,11 +161,11 @@ public class PolicyManager : MonoBehaviour
         ComputerController.Instance.pCardAnims[missingPolicyCard - 1] = pc.GetComponent<Animator>();
         ComputerController.Instance.pCardTexts[missingPolicyCard - 1] = pc.transform.GetChild(0).GetComponent<TMP_Text>();
 
-        string effect = "";
-        foreach (BuffsNerfs bns in pol.buffs_nerfs)
-        {
-            effect += ((bns.amount > 0) ? "Increase in " : "Decrease in ")  + bns.type.ToString().ToLower() + " by " + (Mathf.Abs(bns.amount) * 100) + "%\n";
-        }
+        //string effect = "";
+        //foreach (BuffsNerfs bns in pol.buffs_nerfs)
+        //{
+        //    effect += ((bns.amount > 0) ? "Increase in " : "Decrease in ")  + bns.type.ToString().ToLower() + " by " + (Mathf.Abs(bns.amount) * 100) + "%\n";
+        //}
 
         //ComputerController.Instance.pCardTexts[missingPolicyCard - 1].text = pol.finalTitle + "\n" + effect + "Requirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
                 //"\nCost: " + pol.cost.amount + " " + pol.cost.allocType.ToString().ToLower() + "s";

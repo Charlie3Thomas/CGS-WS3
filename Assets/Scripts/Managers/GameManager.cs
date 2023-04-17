@@ -21,6 +21,7 @@ namespace CT
     using Lookup;
     using Enumerations;
     using Unity.VisualScripting;
+    using CT.Data.Resources;
 
     public class GameManager : MonoBehaviour
     {
@@ -146,6 +147,9 @@ namespace CT
                 //    $"Farmers: {change.farmer_percentage}, " +
                 //    $"Scientists: {change.scientist_percentage}");
             }
+
+            FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
+            FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
         }
 
         private void UpdateResourceCounters()
@@ -393,5 +397,58 @@ namespace CT
             return new Vector4(floats[0], floats[1], floats[2], floats[3]);
         }
 
+        public CTYearData GetTurnData()
+        {
+            return turn;
+        }
+
+        public bool PurchaseTechnology(CTTechnologies _t)
+        {
+            // Check if you can afford tech
+            if (DataSheet.technology_price[_t] <= GetResourceTotals())
+            {
+                user_changes[current_turn].Add(new PurchaseTechnology(_t));
+                return true;
+            }
+            return false;            
+        }
+
+        private CTResourceTotals GetResourceTotals()
+        {
+            return new CTResourceTotals(turn.Money, turn.Science, turn.Food, turn.Population);
+        }
+
+        public List<CTTechnologies> GetUnlockedTechnologiesInTurn()
+        {
+            List<CTTechnologies> ret = new List<CTTechnologies>();
+
+            for (int i = 0; i <= current_turn; i++)
+            {
+                Debug.Log("Oingo");
+                foreach (CTChange c in user_changes[i])
+                {
+                    if (c.GetType() == typeof(PurchaseTechnology))
+                    {
+                        PurchaseTechnology p = (PurchaseTechnology)c;
+                        ret.Add(p.tech);
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        private void CheckForTimelineConflicts()
+        {
+            // look at current proposed change
+            
+            // check for the same change forward in time
+
+            // if there is the same changes forward in time, remove the change from the timeline
+
+            // add the change to the timeline at the current time
+
+            // add a big hit to the awareness meter
+        }
     }
 }
