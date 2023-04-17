@@ -318,7 +318,7 @@ namespace CT.Data
 
             if (turn == 0)
             {
-                Debug.Log($"Setting base faction distribution for turn {turn}");
+                //Debug.Log($"Setting base faction distribution for turn {turn}");
                 Workers = (int)(_pop * 0.25f);
                 Scientists = (int)(_pop * 0.25f);
                 Farmers = (int)(_pop * 0.25f);

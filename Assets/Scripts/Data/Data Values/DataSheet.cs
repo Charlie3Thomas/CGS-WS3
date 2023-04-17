@@ -52,7 +52,7 @@ namespace CT.Lookup
         public static CTCost GetDisasterImpact(CTDisasters _disaster, in CTYearData _year_data)
         {
             //return disaster_impact[_disaster];
-            UnityEngine.Debug.Log("Disaster");
+            //UnityEngine.Debug.Log("Disaster");
             return new CTCost(0, 0, 0, 0); // Placeholder cost 100 pop
         }
 

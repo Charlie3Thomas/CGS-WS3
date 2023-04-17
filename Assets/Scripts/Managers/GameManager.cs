@@ -136,17 +136,19 @@ namespace CT
             //ApplyPopulationGrowthChange(_turn, GetPopulationGrowth());
             game_changes[_turn].Add(new SetFactionDistribution(0.25f, 0.25f, 0.25f, 0.25f));
 
-            if (game_changes[_turn][0].GetType() == typeof(SetFactionDistribution))
-            {
-                // Get variables from game_changes[_turn][0] if of type SetFactionDistribution
-                //SetFactionDistribution change = (SetFactionDistribution)game_changes[_turn][0];
+            //if (game_changes[_turn][0].GetType() == typeof(SetFactionDistribution))
+            //{
+            //    // Get variables from game_changes[_turn][0] if of type SetFactionDistribution
+            //    //SetFactionDistribution change = (SetFactionDistribution)game_changes[_turn][0];
 
-                //Debug.Log(
-                //    $"Planners: {change.planner_percentage},  " +
-                //    $"Workers: {change.worker_percentage}, " +
-                //    $"Farmers: {change.farmer_percentage}, " +
-                //    $"Scientists: {change.scientist_percentage}");
-            }
+            //    //Debug.Log(
+            //    //    $"Planners: {change.planner_percentage},  " +
+            //    //    $"Workers: {change.worker_percentage}, " +
+            //    //    $"Farmers: {change.farmer_percentage}, " +
+            //    //    $"Scientists: {change.scientist_percentage}");
+            //}
+
+            CheckForTimelineConflicts();
 
             FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
@@ -424,7 +426,6 @@ namespace CT
 
             for (int i = 0; i <= current_turn; i++)
             {
-                Debug.Log("Oingo");
                 foreach (CTChange c in user_changes[i])
                 {
                     if (c.GetType() == typeof(PurchaseTechnology))
@@ -438,17 +439,38 @@ namespace CT
             return ret;
         }
 
+        /// <summary>
+        /// Look at the change being made, and if the same change is made in the future, remove the change from the timeline
+        /// This specifically applies to technology purchaes for now
+        /// </summary>
         private void CheckForTimelineConflicts()
         {
-            // look at current proposed change
-            
-            // check for the same change forward in time
+            Dictionary<CTTechnologies, Vector2> changes = new Dictionary<CTTechnologies, Vector2>();
 
-            // if there is the same changes forward in time, remove the change from the timeline
-
-            // add the change to the timeline at the current time
-
-            // add a big hit to the awareness meter
+            // Backwards from the end of the timeline
+            for (int t = user_changes.Count() - 1; t >= 0; t--)
+            {   // Look through every change in the list
+                for (int c = 0; c < user_changes[t].Count(); c++)
+                {   // If the change in the list is of type PurchaseTechnology
+                    if (user_changes[t][c].GetType() == typeof(PurchaseTechnology))
+                    {
+                        Debug.Log("Found type of purchase technology");
+                        // Copy the change
+                        PurchaseTechnology p = (PurchaseTechnology)user_changes[t][c];
+                        
+                        // Add the change to the dictionary
+                        if (!changes.ContainsKey(p.tech))
+                        {
+                            changes.Add(p.tech, new Vector2(t, c));
+                        }
+                        else
+                        {
+                            Debug.Log($"The cost of the technology {p.tech} {DataSheet.technology_price[p.tech]} was refunded in the year {(int)changes[p.tech].x}");                            
+                            user_changes[(int)changes[p.tech].x].RemoveAt((int)changes[p.tech].y);
+                        }
+                    }
+                }
+            }
         }
     }
 }
