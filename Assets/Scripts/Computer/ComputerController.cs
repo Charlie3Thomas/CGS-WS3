@@ -144,154 +144,20 @@ public class ComputerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            if (isInteractingPressed && hit.transform.CompareTag("Button"))
-            {
-                buttonAnim = hit.transform.GetComponent<Animator>();
-
-                if (buttonAnim != null)
-                    buttonAnim.SetTrigger("Press");
-            }
-
+            PressButton(hit);
             switch (computerState)
             {
                 case ComputerState.MAIN_COMPUTER:
-                    // Moving the year slider
-                    if (yearSliding)
-                    {
-                        float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
-                        float newRemappedValue = remappedValue + mouseDelta.x * 0.025f;
-                        desiredYear = (int)Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
-
-                        if (desiredYear % 5 != 0)
-                        {
-                            desiredYear = desiredYear - (desiredYear % 5);
-                            AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
-                        }
-
-                        if (desiredYear < YearData._INSTANCE.earliest_year)
-                            desiredYear = YearData._INSTANCE.earliest_year;
-
-                        if (desiredYear > YearData._INSTANCE.latest_year)
-                            desiredYear = YearData._INSTANCE.latest_year;
-
-                        newRemappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
-                        yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
-                        UpdateSlider();
-                    }
-
-                    if (isInteractingPressed && hit.transform.CompareTag("YearSlider"))
-                    {
-                        Cursor.visible = false;
-                        Cursor.lockState = CursorLockMode.Locked;
-                        yearSliding = true;
-                    }
-
-                    if (isInteractingReleased)
-                    {
-                        Cursor.visible = true;
-                        Cursor.lockState = CursorLockMode.None;
-                        Debug.Log("RELEASE");
-                        yearSliding = false;
-                    }
-
-                    onScreen = hit.transform.gameObject == screen;
-
-                    InteractWithScreen(hit, onScreen, screenCam);
-
-                    if (isSelectingPressed && onScreen && !yearSliding)
-                    {
-                        touchingScreen = true;
-                        Cursor.lockState = CursorLockMode.Locked;
-                        Cursor.visible = false;
-                    }
-
-                    if (isSelectingReleased && !yearSliding)
-                    {
-                        touchingScreen = false;
-                        Cursor.lockState = CursorLockMode.None;
-                        Cursor.visible = true;
-                    }
-
-                    if (isInteractingPressed && hit.transform.CompareTag("PointsSelector"))
-                    {
-                        pointsSelectorAnim = hit.transform.GetComponent<Animator>();
-                       
-
-                        if (pointsSelectorAnim != null)
-                            AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.pipEvent, null, ("PipDirection", "Up"));
-                            pointsSelectorAnim.SetTrigger("PointsUp");
-                    }
-
-                    if (isSelectingPressed && hit.transform.CompareTag("PointsSelector"))
-                    {
-                        pointsSelectorAnim = hit.transform.GetComponent<Animator>();
-                        
-
-                        if (pointsSelectorAnim != null)
-                            AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.pipEvent, null, ("PipDirection", "Down"));
-                            pointsSelectorAnim.SetTrigger("PointsDown");
-                    }
-
-                    // Year knob up/down
-                    if (yearKnobAnim != null)
-                    {
-                        yearKnobAnim.SetBool("YearDownHold", isSelectingHeld && hit.transform.CompareTag("YearKnob"));
-                        yearKnobAnim.SetBool("YearUpHold", isInteractingHeld && hit.transform.CompareTag("YearKnob"));
-                    }
-
-                    // Select policy card
-                    if (isInteractingPressed && hit.transform.CompareTag("PolicyCard"))
-                    {
-                        if(PolicyManager.instance.currentPolicies.Count > 2)
-                            PolicyManager.instance.currentPolicies.Remove(PolicyManager.instance.currentSelectedPolicy);
-
-                        PolicyManager.instance.currentPolicies.Add(hit.transform.GetComponent<PolicyCard>().policy);
-                        PolicyManager.instance.currentSelectedPolicy = hit.transform.GetComponent<PolicyCard>().policy;
-                        PolicyManager.instance.finalChoices.Remove(hit.transform.GetComponent<PolicyCard>().policy.finalTitle);
-                        PolicyManager.instance.policyList.Remove(hit.transform.GetComponent<PolicyCard>().policy);
-                        Destroy(hit.transform.gameObject);
-                        PolicyManager.instance.ReplacePolicyCard();
-                    }
-
-                    // Policy cards hover
-                    for (int i = 0; i < 7; i++)
-                    {
-                        if (pCardAnims[i] != null && policyCards[i] != null)
-                            pCardAnims[i].SetBool("IsOver", hit.transform.name == policyCards[i].name);
-                    }
-
-                    if (isShifting && !panning)
-                    {
-                        vCam.Follow = lookAt;
-                        shiftPos = new Vector3(shiftPos.x + (mouseDelta.x * 0.05f), shiftPos.y + (mouseDelta.y * 0.05f), 0.0f);
-                        lookAt.localPosition = shiftPos;
-                    }
-                    else
-                    {
-                        shiftPos = defaultLook;
-                        lookAt.localPosition = defaultLook;
-                    }
+                    YearSlider(hit);
+                    MapScreen(hit);
+                    PointSelectors(hit);
+                    YearKnob(hit);
+                    PolicyCards(hit);
+                    Focus();
 
                     break;
                 case ComputerState.TECH_TREE_SCREEN:
-                    // Specific tech tree stuff
-                    onTech = hit.transform.name == "TechTreeScreen";
-
-                    InteractWithScreen(hit, onTech, techCam);
-
-                    if (isSelectingPressed && onTech && !yearSliding)
-                    {
-                        touchingTechScreen = true;
-                        Cursor.lockState = CursorLockMode.Locked;
-                        Cursor.visible = false;
-                    }
-
-                    if (isSelectingReleased && !yearSliding)
-                    {
-                        touchingTechScreen = false;
-                        Cursor.lockState = CursorLockMode.None;
-                        Cursor.visible = true;
-                    }
+                    TechScreen(hit);
 
                     break;
                 case ComputerState.JOURNAL:
@@ -302,16 +168,177 @@ public class ComputerController : MonoBehaviour
         }
         else
         {
-            onScreen = false;
-            touchingScreen = false;
-            onTech = false;
-            touchingTechScreen = false;
+            ResetScreenInteractions();
         }
 
-        isInteractingPressed = false;
-        isInteractingReleased = false;
-        isSelectingPressed = false;
-        isSelectingReleased = false;
+        ResetMouseButtons();
+    }
+
+    private void PressButton(RaycastHit _hit)
+    {
+        if (isInteractingPressed && _hit.transform.CompareTag("Button"))
+        {
+            buttonAnim = _hit.transform.GetComponent<Animator>();
+
+            if (buttonAnim != null)
+                buttonAnim.SetTrigger("Press");
+        }
+    }
+
+    private void TechScreen(RaycastHit _hit)
+    {
+        // Specific tech tree stuff
+        onTech = _hit.transform.name == "TechTreeScreen";
+
+        InteractWithScreen(_hit, onTech, techCam);
+
+        if (isSelectingPressed && onTech && !yearSliding)
+        {
+            touchingTechScreen = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        if (isSelectingReleased && !yearSliding)
+        {
+            touchingTechScreen = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+    }
+
+    private void MapScreen(RaycastHit _hit)
+    {
+        onScreen = _hit.transform.gameObject == screen;
+        InteractWithScreen(_hit, onScreen, screenCam);
+
+        if (isSelectingPressed && onScreen && !yearSliding)
+        {
+            touchingScreen = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        if (isSelectingReleased && !yearSliding)
+        {
+            touchingScreen = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+    }
+
+    private void YearSlider(RaycastHit _hit)
+    {
+        // Moving the year slider
+        if (yearSliding)
+        {
+            float remappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+            float newRemappedValue = remappedValue + mouseDelta.x * 0.025f;
+            desiredYear = (int)RAUtility.Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
+
+            if (desiredYear % 5 != 0)
+            {
+                desiredYear = desiredYear - (desiredYear % 5);
+                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
+            }
+
+            if (desiredYear < YearData._INSTANCE.earliest_year)
+                desiredYear = YearData._INSTANCE.earliest_year;
+
+            if (desiredYear > YearData._INSTANCE.latest_year)
+                desiredYear = YearData._INSTANCE.latest_year;
+
+            newRemappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+            yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
+            UpdateSlider();
+        }
+
+        if (isInteractingPressed && _hit.transform.CompareTag("YearSlider"))
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            yearSliding = true;
+        }
+
+        if (isInteractingReleased)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            //Debug.Log("RELEASE");
+            yearSliding = false;
+        }
+    }
+
+    private void PointSelectors(RaycastHit _hit)
+    {
+        if (isInteractingPressed && _hit.transform.CompareTag("PointsSelector"))
+        {
+            pointsSelectorAnim = _hit.transform.GetComponent<Animator>();
+
+
+            if (pointsSelectorAnim != null)
+                AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.pipEvent, null, ("PipDirection", "Up"));
+            pointsSelectorAnim.SetTrigger("PointsUp");
+        }
+
+        if (isSelectingPressed && _hit.transform.CompareTag("PointsSelector"))
+        {
+            pointsSelectorAnim = _hit.transform.GetComponent<Animator>();
+
+
+            if (pointsSelectorAnim != null)
+                AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.pipEvent, null, ("PipDirection", "Down"));
+            pointsSelectorAnim.SetTrigger("PointsDown");
+        }
+    }
+
+    private void YearKnob(RaycastHit _hit)
+    {
+        // Year knob up/down
+        if (yearKnobAnim != null)
+        {
+            yearKnobAnim.SetBool("YearDownHold", isSelectingHeld && _hit.transform.CompareTag("YearKnob"));
+            yearKnobAnim.SetBool("YearUpHold", isInteractingHeld && _hit.transform.CompareTag("YearKnob"));
+        }
+    }
+
+    private void PolicyCards(RaycastHit _hit)
+    {
+        // Select policy card
+        if (isInteractingPressed && _hit.transform.CompareTag("PolicyCard"))
+        {
+            if (PolicyManager.instance.currentPolicies.Count > 2)
+                PolicyManager.instance.currentPolicies.Remove(PolicyManager.instance.currentSelectedPolicy);
+
+            PolicyManager.instance.currentPolicies.Add(_hit.transform.GetComponent<PolicyCard>().policy);
+            PolicyManager.instance.currentSelectedPolicy = _hit.transform.GetComponent<PolicyCard>().policy;
+            PolicyManager.instance.finalChoices.Remove(_hit.transform.GetComponent<PolicyCard>().policy.finalTitle);
+            PolicyManager.instance.policyList.Remove(_hit.transform.GetComponent<PolicyCard>().policy);
+            Destroy(_hit.transform.gameObject);
+            PolicyManager.instance.ReplacePolicyCard();
+        }
+
+        // Policy cards hover
+        for (int i = 0; i < 7; i++)
+        {
+            if (pCardAnims[i] != null && policyCards[i] != null)
+                pCardAnims[i].SetBool("IsOver", _hit.transform.name == policyCards[i].name);
+        }
+    }
+
+    private void Focus()
+    {
+        if (isShifting && !panning)
+        {
+            vCam.Follow = lookAt;
+            shiftPos = new Vector3(shiftPos.x + (mouseDelta.x * 0.05f), shiftPos.y + (mouseDelta.y * 0.05f), 0.0f);
+            lookAt.localPosition = shiftPos;
+        }
+        else
+        {
+            shiftPos = defaultLook;
+            lookAt.localPosition = defaultLook;
+        }
     }
 
     private void InteractWithScreen(RaycastHit hit, bool screen, Camera cam)
@@ -333,6 +360,14 @@ public class ComputerController : MonoBehaviour
                     newPos = camHit.transform.position;
             }
         }
+    }
+
+    private void ResetScreenInteractions()
+    {
+        onScreen = false;
+        touchingScreen = false;
+        onTech = false;
+        touchingTechScreen = false;
     }
 
     // Call whenever you want to set up everything including references (could be used to reset)
@@ -400,14 +435,9 @@ public class ComputerController : MonoBehaviour
         UpdateSlider();
     }
 
-    private float Remap(float value, float from1, float to1, float from2, float to2)
-    {
-        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
-    }
-
     public void UpdateSlider()
     {
-        float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+        float remappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
         yearSlider.transform.localPosition = new Vector3(remappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
 
         yearText.text = desiredYear.ToString();
@@ -506,6 +536,14 @@ public class ComputerController : MonoBehaviour
         panUpButton.SetActive(true);
         panDownButton.SetActive(true);
         yield return null;
+    }
+
+    private void ResetMouseButtons()
+    {
+        isInteractingPressed = false;
+        isInteractingReleased = false;
+        isSelectingPressed = false;
+        isSelectingReleased = false;
     }
 
     private void CursorPosInput(InputAction.CallbackContext context)
