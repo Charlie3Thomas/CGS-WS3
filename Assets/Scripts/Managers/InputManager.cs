@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviour
     public static InputManager instance;
 
     public static event Action<InputAction.CallbackContext> onInteract;
+    public static event Action<InputAction.CallbackContext> onShift;
     public static event Action<InputAction.CallbackContext> onScroll;
     public static event Action<InputAction.CallbackContext> onSelect;
     public static event Action<InputAction.CallbackContext> onCursorPos;
@@ -32,6 +33,11 @@ public class InputManager : MonoBehaviour
     public void OnInteract(InputAction.CallbackContext context)
     {
         onInteract?.Invoke(context);
+    }
+
+    public void OnShift(InputAction.CallbackContext context)
+    {
+        onShift?.Invoke(context);
     }
 
     public void OnSelect(InputAction.CallbackContext context)

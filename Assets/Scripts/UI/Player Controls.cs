@@ -37,6 +37,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""567220dd-ce5e-4607-9895-cefa2a696c76"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Scroll"",
                     ""type"": ""PassThrough"",
                     ""id"": ""691fc475-bf8a-431a-b41a-6b391c866a3c"",
@@ -192,6 +201,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""101403a4-58ab-45e7-be3d-fabe12d7f962"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -330,6 +350,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         // Game
         m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
         m_Game_Interact = m_Game.FindAction("Interact", throwIfNotFound: true);
+        m_Game_Shift = m_Game.FindAction("Shift", throwIfNotFound: true);
         m_Game_Scroll = m_Game.FindAction("Scroll", throwIfNotFound: true);
         m_Game_Select = m_Game.FindAction("Select", throwIfNotFound: true);
         m_Game_Aim = m_Game.FindAction("Aim", throwIfNotFound: true);
@@ -403,6 +424,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Game;
     private IGameActions m_GameActionsCallbackInterface;
     private readonly InputAction m_Game_Interact;
+    private readonly InputAction m_Game_Shift;
     private readonly InputAction m_Game_Scroll;
     private readonly InputAction m_Game_Select;
     private readonly InputAction m_Game_Aim;
@@ -413,6 +435,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         private @PlayerControls m_Wrapper;
         public GameActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Interact => m_Wrapper.m_Game_Interact;
+        public InputAction @Shift => m_Wrapper.m_Game_Shift;
         public InputAction @Scroll => m_Wrapper.m_Game_Scroll;
         public InputAction @Select => m_Wrapper.m_Game_Select;
         public InputAction @Aim => m_Wrapper.m_Game_Aim;
@@ -430,6 +453,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_GameActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnInteract;
+                @Shift.started -= m_Wrapper.m_GameActionsCallbackInterface.OnShift;
+                @Shift.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnShift;
+                @Shift.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnShift;
                 @Scroll.started -= m_Wrapper.m_GameActionsCallbackInterface.OnScroll;
                 @Scroll.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnScroll;
                 @Scroll.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnScroll;
@@ -452,6 +478,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @Shift.started += instance.OnShift;
+                @Shift.performed += instance.OnShift;
+                @Shift.canceled += instance.OnShift;
                 @Scroll.started += instance.OnScroll;
                 @Scroll.performed += instance.OnScroll;
                 @Scroll.canceled += instance.OnScroll;
@@ -556,6 +585,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     public interface IGameActions
     {
         void OnInteract(InputAction.CallbackContext context);
+        void OnShift(InputAction.CallbackContext context);
         void OnScroll(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);

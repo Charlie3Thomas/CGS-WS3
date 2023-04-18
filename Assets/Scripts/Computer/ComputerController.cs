@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Cinemachine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
@@ -20,6 +21,7 @@ public class ComputerController : MonoBehaviour
     private Transform lookAt;
     private Camera screenCam;
     private Camera techCam;
+    private CinemachineVirtualCamera vCam;
     private ComputerState computerState = ComputerState.MAIN_COMPUTER;
 
     [HideInInspector]
@@ -88,6 +90,7 @@ public class ComputerController : MonoBehaviour
     private GameObject panBackFromDownButton;
     private bool panning = false;
     private Vector3 defaultLook = new Vector3(0f, -0.5f, 0f);
+    private Vector3 shiftPos;
     private Vector3 lookDown = new Vector3(0f, -12f, 0f);
     private Vector3 lookUp = new Vector3(0f, 12f, 0f);
     [HideInInspector]
@@ -114,6 +117,7 @@ public class ComputerController : MonoBehaviour
     private bool isSelectingHeld;
     private bool isSelectingPressed;
     private bool isSelectingReleased;
+    private bool isShifting;
     private bool isPausing;
 
     void Awake()
@@ -256,6 +260,18 @@ public class ComputerController : MonoBehaviour
                             pCardAnims[i].SetBool("IsOver", hit.transform.name == policyCards[i].name);
                     }
 
+                    if (isShifting && !panning)
+                    {
+                        vCam.Follow = lookAt;
+                        shiftPos = new Vector3(shiftPos.x + (mouseDelta.x * 0.05f), shiftPos.y + (mouseDelta.y * 0.05f), 0.0f);
+                        lookAt.localPosition = shiftPos;
+                    }
+                    else
+                    {
+                        shiftPos = defaultLook;
+                        lookAt.localPosition = defaultLook;
+                    }
+
                     break;
                 case ComputerState.TECH_TREE_SCREEN:
                     // Specific tech tree stuff
@@ -326,7 +342,9 @@ public class ComputerController : MonoBehaviour
         cam = GetComponent<Camera>();
         screenCam = GameObject.FindGameObjectWithTag("ScreenCamera").GetComponent<Camera>();
         techCam = GameObject.FindGameObjectWithTag("TechCamera").GetComponent<Camera>();
+        vCam = GameObject.Find("ComputerVirtualCamera").GetComponent<CinemachineVirtualCamera>();
         lookAt = GameObject.FindGameObjectWithTag("LookTarget").transform;
+        shiftPos = defaultLook;
         lookAt.localPosition = defaultLook;
 
         // Set References to Objects
@@ -428,6 +446,8 @@ public class ComputerController : MonoBehaviour
 
     public void Pan(int value)
     {
+        vCam.Follow = null;
+        lookAt.localPosition = defaultLook;
         switch((ComputerState)value)
         {
             case ComputerState.MAIN_COMPUTER:
@@ -517,6 +537,22 @@ public class ComputerController : MonoBehaviour
         }
     }
 
+    private void ShiftInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            vCam.m_Lens.FieldOfView = 20.0f;
+            Cursor.lockState = CursorLockMode.Locked;
+            isShifting = true;
+        }
+        else if (context.canceled)
+        {
+            vCam.m_Lens.FieldOfView = 60.0f;
+            Cursor.lockState = CursorLockMode.None;
+            isShifting = false;
+        }
+    }
+
     private void SelectInput(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -542,6 +578,7 @@ public class ComputerController : MonoBehaviour
     private void SubscribeInputs()
     {
         InputManager.onCursorPos += CursorPosInput;
+        InputManager.onShift += ShiftInput;
         InputManager.onAim += AimInput;
         InputManager.onScroll += ScrollInput;
         InputManager.onInteract += InteractInput;
@@ -552,6 +589,7 @@ public class ComputerController : MonoBehaviour
     private void UnsubscribeInputs()
     {
         InputManager.onCursorPos -= CursorPosInput;
+        InputManager.onShift -= ShiftInput;
         InputManager.onAim -= AimInput;
         InputManager.onScroll -= ScrollInput;
         InputManager.onInteract -= InteractInput;
