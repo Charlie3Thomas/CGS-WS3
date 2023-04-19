@@ -29,8 +29,12 @@ namespace CT
 
         private List<CTChange>[] user_changes;
         private List<CTChange>[] game_changes;
+
         private CTYearData turn = new CTYearData();
         private CTTimelineData prime_timeline;
+
+        public List<CTChange>[] UserChanges { get { return user_changes; } }
+        public List<CTChange>[] GameChanges { get { return game_changes; } }
 
         public uint current_turn = 0;
 
@@ -72,6 +76,12 @@ namespace CT
             //Workers.text = workers.ToString();
             //Farmers.text = farmers.ToString();
             //Scientists.text = scientists.ToString();
+        }
+
+        public void LoadData(List<CTChange>[] _userChanges, List<CTChange>[] _gameChanges)
+        {
+            user_changes = _userChanges;
+            game_changes = _gameChanges;
         }
 
         private void Initialise()
