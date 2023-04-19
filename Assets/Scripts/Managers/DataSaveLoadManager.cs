@@ -25,7 +25,7 @@ public class DisasterData
 {
     public int numOfDisasters;
     public List<Disaster> disasterList;
-    public Dictionary<int, DisasterEnum.type> disaster_timeline;
+    //public Dictionary<int, DisasterEnum.type> disaster_timeline;
 }
 [Serializable]
 public class PolicyData
@@ -46,9 +46,9 @@ public class YearSaveData
 [Serializable]
 public class FactionData
 {
-    public Dictionary<int, Dictionary<FactionEnum.type, int>> number_data;
-    public Dictionary<int, Dictionary<FactionEnum.type, int>> happiness_data;
-    public Dictionary<int, Dictionary<FactionEnum.type, int>> budget_data;
+    //public Dictionary<int, Dictionary<FactionEnum.type, int>> number_data;
+    //public Dictionary<int, Dictionary<FactionEnum.type, int>> happiness_data;
+    //public Dictionary<int, Dictionary<FactionEnum.type, int>> budget_data;
 }
 [Serializable]
 public class PlayerData
@@ -65,11 +65,11 @@ public class DataSaveLoadManager : MonoBehaviour
     private ResourceManager resourceManager;
     private DisasterManager disasterManager;
     private PolicyManager policyManager;
-    private YearData yearData;
-    private DisasterTimelineData disasterTimelineData;
-    private FactionNumberData factionNumberData;
-    private FactionHappinessData factionHappinessData;
-    private FactionBudgetData factionBudgetData;
+    //private YearData yearData;
+    //private DisasterTimelineData disasterTimelineData;
+    //private FactionNumberData factionNumberData;
+    //private FactionHappinessData factionHappinessData;
+    //private FactionBudgetData factionBudgetData;
 
     private const string playerDataKey = "PLAYER_DATA";
 
@@ -97,11 +97,11 @@ public class DataSaveLoadManager : MonoBehaviour
         resourceManager = ResourceManager.instance;
         disasterManager = DisasterManager.instance;
         policyManager = PolicyManager.instance;
-        yearData = YearData._INSTANCE;
-        disasterTimelineData = DisasterTimelineData._INSTANCE;
-        factionNumberData = FactionNumberData._INSTANCE;
-        factionHappinessData = FactionHappinessData._INSTANCE;
-        factionBudgetData = FactionBudgetData._INSTANCE;
+    //    yearData = YearData._INSTANCE;
+    //    disasterTimelineData = DisasterTimelineData._INSTANCE;
+    //    factionNumberData = FactionNumberData._INSTANCE;
+    //    factionHappinessData = FactionHappinessData._INSTANCE;
+    //    factionBudgetData = FactionBudgetData._INSTANCE;
     }
 
     void Update()
@@ -163,7 +163,7 @@ public class DataSaveLoadManager : MonoBehaviour
         disasterData = new DisasterData();
         disasterData.numOfDisasters = disasterManager.numOfDisasters;
         disasterData.disasterList = disasterManager.disasterList;
-        disasterData.disaster_timeline = disasterTimelineData.disaster_timeline;
+        //disasterData.disaster_timeline = disasterTimelineData.disaster_timeline;
         //string s = JsonUtility.ToJson(disasterData);
         //PlayerPrefs.SetString(disasterKey, s);
     }
@@ -172,7 +172,7 @@ public class DataSaveLoadManager : MonoBehaviour
         disasterData = playerData.disasters;
         disasterManager.numOfDisasters = disasterData.numOfDisasters;
         disasterManager.disasterList = disasterData.disasterList;
-        disasterTimelineData.disaster_timeline = disasterData.disaster_timeline;
+        //disasterTimelineData.disaster_timeline = disasterData.disaster_timeline;
         Debug.Log("Disaster loaded");
     }
     private void savePolicy()
@@ -197,35 +197,35 @@ public class DataSaveLoadManager : MonoBehaviour
     private void saveYearData()
     {
         yearSaveData = new YearSaveData();
-        yearSaveData.changed_years = yearData.changed_years;
-        yearSaveData.current_year = yearData.current_year;
-        yearSaveData.earliest_year = yearData.earliest_year;
-        yearSaveData.latest_year = yearData.latest_year;
+        //yearSaveData.changed_years = yearData.changed_years;
+        //yearSaveData.current_year = yearData.current_year;
+        //yearSaveData.earliest_year = yearData.earliest_year;
+        //yearSaveData.latest_year = yearData.latest_year;
     }
 
     private void loadYearData()
     {
         yearSaveData = playerData.yearData;
-        yearData.current_year = yearSaveData.current_year;
-        yearData.latest_year = yearSaveData.latest_year;
-        yearData.earliest_year = yearSaveData.earliest_year;
-        yearData.changed_years = yearSaveData.changed_years;
+        //yearData.current_year = yearSaveData.current_year;
+        //yearData.latest_year = yearSaveData.latest_year;
+        //yearData.earliest_year = yearSaveData.earliest_year;
+        //yearData.changed_years = yearSaveData.changed_years;
     }
 
     private void saveFactionData()
     {
         factionData = new FactionData();
-        factionData.number_data = factionNumberData.number_data;
-        factionData.happiness_data = factionHappinessData.happiness_data;
-        factionData.budget_data = factionBudgetData.budget_data;
+        //factionData.number_data = factionNumberData.number_data;
+        //factionData.happiness_data = factionHappinessData.happiness_data;
+        //factionData.budget_data = factionBudgetData.budget_data;
     }
 
     private void loadFactionData()
     {
         factionData = playerData.factionData;
-        factionNumberData.number_data = factionData.number_data;
-        factionHappinessData.happiness_data = factionData.happiness_data;
-        factionBudgetData.budget_data = factionData.budget_data;
+        //factionNumberData.number_data = factionData.number_data;
+        //factionHappinessData.happiness_data = factionData.happiness_data;
+        //factionBudgetData.budget_data = factionData.budget_data;
     }
 
     private async void savePlayerData()

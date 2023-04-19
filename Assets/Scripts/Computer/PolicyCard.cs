@@ -14,6 +14,6 @@ public class PolicyCard : MonoBehaviour
 
     public void PlayHideSound()
     {
-        Debug.Log("Play hide sound");
+        //Debug.Log("Play hide sound");
     }
 }

@@ -113,22 +113,22 @@ public class ResourceManager : MonoBehaviour
         turn.planner = new Planner();
         turn.farmer = new Farmer();
 
-        turn.year = YearData._INSTANCE.current_year;
+        //turn.year = YearData._INSTANCE.current_year;
         turn.total_population = current_total_population;
         turn.currency = current_currency;
         turn.researchPoints = current_researchPoints;
         turn.food = current_food;
         turn.safety = current_safety;
 
-        Debug.Log(YearData._INSTANCE.current_year);
+        //Debug.Log(YearData._INSTANCE.current_year);
 
         current_turn = turn;
 
         //Update counters
-        ComputerController.Instance.foodText.text = current_turn.food.ToString();
-        ComputerController.Instance.rpText.text = current_turn.researchPoints.ToString();
-        ComputerController.Instance.currencyText.text = current_turn.currency.ToString();
-        ComputerController.Instance.populationText.text = current_turn.total_population.ToString();
+        //ComputerController.Instance.foodText.text = current_turn.food.ToString();
+        //ComputerController.Instance.rpText.text = current_turn.researchPoints.ToString();
+        //ComputerController.Instance.currencyText.text = current_turn.currency.ToString();
+        //ComputerController.Instance.populationText.text = current_turn.total_population.ToString();
     }
 
     public void AllocatePopulation(float workerPopulation, float scientistPopulation, float plannerPopulation, float farmerPopulation)

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum SelectorType
@@ -10,28 +11,27 @@ public enum SelectorType
 
 public class PointSelector : MonoBehaviour
 {
-    public SelectorType type = SelectorType.WORKER;
-
     public GameObject pip;
     private Material pipMat;
     private CustomCursor customCursor;
-    [HideInInspector]
+
+    //[HideInInspector]
     public float pointValue;
     private float pointLimit = 10f;
 
     private void Awake()
     {
         customCursor = FindObjectOfType<CustomCursor>();
-    }
-    private void Start()
-    {
         pipMat = pip.GetComponent<Renderer>().materials[1];
     }
-
+    
     public void AddPoints(float points)
     {
-        if(pointValue < pointLimit)
+        if (pointValue < pointLimit)
             pointValue += points;
+
+        if (pointValue > 10.0f)
+            pointValue = 10.0f;
 
         if (pipMat != null)
             pipMat.SetFloat("_FillAmount", pointValue);
@@ -41,20 +41,34 @@ public class PointSelector : MonoBehaviour
 
     public void RemovePoints(float points)
     {
+
         if(pointValue > 0)
             pointValue -= points;
+
+        if (pointValue < 0)
+            pointValue = 0;
 
         if (pipMat != null)
             pipMat.SetFloat("_FillAmount", pointValue);
 
         ComputerController.Instance.CheckPoints(this);
     }
-    void OnMouseOver()
+
+    public void SetPoints(float _points)
     {
-        customCursor.OnHoverOverResourceSelector();
-    }
-    private void OnMouseExit()
-    {
-        customCursor.SetDefaultCursor();
+        if (pointValue < 0)
+            throw new ArgumentException("Point value is out of range");
+
+        pointValue = _points;
+
+        if (pointValue > 10.0f)
+            pointValue = 10.0f;
+
+        if (pipMat != null)
+        {
+            pipMat.SetFloat("_FillAmount", pointValue);
+        }
+        else
+            Debug.LogError("pipMat is null");
     }
 }
