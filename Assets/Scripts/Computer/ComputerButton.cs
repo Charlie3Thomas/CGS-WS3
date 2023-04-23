@@ -52,6 +52,7 @@ public class ComputerButton : MonoBehaviour
                 GameManager._INSTANCE.OnClickCheckoutYearButton(turn);
 
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+
                 break;
 
             case buttonType.JOURNAL_NOTEPAD:

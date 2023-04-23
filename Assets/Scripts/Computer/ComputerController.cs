@@ -23,6 +23,8 @@ public class ComputerController : MonoBehaviour
     private Camera screenCam;
     private Camera techCam;
     private ComputerState computerState = ComputerState.MAIN_COMPUTER;
+    [HideInInspector]
+    public Material mat_awareness;
 
     [HideInInspector]
     public GameObject[] policyCards = new GameObject[7];
@@ -370,6 +372,8 @@ public class ComputerController : MonoBehaviour
         }
 
         UpdateSlider();
+
+        mat_awareness = GameObject.Find("Liquid").GetComponent<Renderer>().material;
     }
 
     public void UpdateSlider()
