@@ -60,7 +60,6 @@ namespace CT
         {
             Initialise();
             SetBaseFactionSpreadPerTurn();
-
         }
 
         private void Update()
@@ -168,12 +167,27 @@ namespace CT
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
         }
 
-        private void UpdateResourceCounters()
+        public void AddDisastersToGameChanges(Disaster _disaster)
         {
-            ComputerController.Instance.foodText.text = turn.Food.ToString();
-            ComputerController.Instance.rpText.text = turn.Science.ToString();
-            ComputerController.Instance.currencyText.text = turn.Money.ToString();
-            ComputerController.Instance.populationText.text = turn.Population.ToString();
+            // Take generated disasters from the disaster manager and insert them into the game changes list
+            game_changes[_disaster.turn].Add(new ApplyDisaster(_disaster));            
+        }
+
+
+        #region Utility
+        private void ProjectNetResource()
+        {
+            // Look at current faction distribution at current turn 
+
+            // Apply faction distribtion to population at current turn
+
+            // Get numbers for scientists, planners, farmers, workers
+
+            // Multiply scientists, planners, farmers, workers by DataSheet net values
+
+            // Put post-multiplcation net into the projection boxes
+
+            throw new NotImplementedException();
         }
 
         private void UpdateFactionDistributionPips()
@@ -196,46 +210,12 @@ namespace CT
             ComputerController.Instance.pointSelectors[3].pointValue = workers; // Worker
         }
 
-        private void ProjectNetResource()
+        private void UpdateResourceCounters()
         {
-            // Look at current faction distribution at current turn 
-
-            // Apply faction distribtion to population at current turn
-
-            // Get numbers for scientists, planners, farmers, workers
-
-            // Multiply scientists, planners, farmers, workers by DataSheet net values
-
-            // Put post-multiplcation net into the projection boxes
-
-            throw new NotImplementedException();
-        }
-
-        //private void ApplyPopulationGrowthChange(uint _changed_turn, uint _growth)
-        //{
-        //    for (uint i = _changed_turn; i < DataSheet.turns_number; i++)
-        //    {
-        //        // Clear Game Changes of pop and distribution changes from game_changes[i]
-        //        foreach (PopulationGrowth c in game_changes[i].FindAll(x => x is PopulationGrowth))
-        //            game_changes[i].Remove(c);
-        //        foreach (SetFactionDistribution c in game_changes[i].FindAll(x => x is SetFactionDistribution))
-        //            game_changes[i].Remove(c);
-
-        //        CTYearData data = prime_timeline.GetYearData(i);
-        //        game_changes[i].Add(new PopulationGrowth(_growth));
-
-        //        game_changes[i].Add(new SetFactionDistribution(
-        //            GetFactionDistribtion(CTFaction.Worker, data),
-        //            GetFactionDistribtion(CTFaction.Scientist, data),
-        //            GetFactionDistribtion(CTFaction.Farmer, data),
-        //            GetFactionDistribtion(CTFaction.Planner, data)));
-        //    }
-        //}
-
-        public void AddDisastersToGameChanges(Disaster _disaster)
-        {
-            // Take generated disasters from the disaster manager and insert them into the game changes list
-            game_changes[_disaster.turn].Add(new ApplyDisaster(_disaster));            
+            ComputerController.Instance.foodText.text = turn.Food.ToString();
+            ComputerController.Instance.rpText.text = turn.Science.ToString();
+            ComputerController.Instance.currencyText.text = turn.Money.ToString();
+            ComputerController.Instance.populationText.text = turn.Population.ToString();
         }
 
         private void SetBaseFactionSpreadPerTurn()
@@ -250,9 +230,6 @@ namespace CT
                 game_changes[i].Add(new SetFactionDistribution(spread[0], spread[1], spread[2], spread[3]));
             }
         }
-
-
-        #region Utility
 
         private uint GetPopulationGrowth()
         {
@@ -454,7 +431,7 @@ namespace CT
         {
             List<CTTechnologies> ret = new List<CTTechnologies>();
 
-            for (int i = 1; i <= current_turn; i++)
+            for (int i = 0; i <= current_turn; i++)
             {
                 foreach (CTChange c in user_changes[i])
                 {

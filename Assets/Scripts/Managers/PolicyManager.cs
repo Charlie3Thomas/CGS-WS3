@@ -44,22 +44,22 @@ public class PolicyManager : MonoBehaviour
 
     private void Update()
     {
-        if (currentPolicies.Count > 0)
-        {
-            if (Input.GetAxis("Mouse ScrollWheel") > 0f)
-            {
-                policyCardIndex = (policyCardIndex + 1) % currentPolicies.Count;
-                currentSelectedPolicy = currentPolicies[policyCardIndex];
-            }
-            else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
-            {
-                policyCardIndex--;
-                if (policyCardIndex < 0)
-                    policyCardIndex = currentPolicies.Count - 1;
+        //if (currentPolicies.Count > 0)
+        //{
+        //    if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+        //    {
+        //        policyCardIndex = (policyCardIndex + 1) % currentPolicies.Count;
+        //        currentSelectedPolicy = currentPolicies[policyCardIndex];
+        //    }
+        //    else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+        //    {
+        //        policyCardIndex--;
+        //        if (policyCardIndex < 0)
+        //            policyCardIndex = currentPolicies.Count - 1;
 
-                currentSelectedPolicy = currentPolicies[policyCardIndex];
-            }
-        }
+        //        currentSelectedPolicy = currentPolicies[policyCardIndex];
+        //    }
+        //}
     }
 
     public void NewPolicySet()
