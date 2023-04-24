@@ -31,6 +31,9 @@ namespace CT.Lookup
         public static readonly float starting_scientists = 0.2f;
         public static readonly float starting_farmers = 0.3f;
         public static readonly float starting_planners = 0.2f;
+
+        public static readonly float policy_card_min_scale = 25.0f;
+        public static readonly float policy_card_max_scale = 500.0f;
         #endregion
 
 
@@ -57,6 +60,27 @@ namespace CT.Lookup
         {
             //return disaster_impact[_disaster];
             //UnityEngine.Debug.Log("Disaster");
+
+            switch (_disaster)
+            {
+                case (CTDisasters.Earthquake):
+                    // Impacts all
+                    break;
+
+                case (CTDisasters.Volcano):
+                    // Impacts 
+                    break;
+
+                case (CTDisasters.Tornado):
+
+                    break;
+
+                case (CTDisasters.Tsunami):
+
+                    break;
+            }
+
+
             return new CTCost(0, 0, 0, 0); // Placeholder cost 100 pop
         }
 
@@ -195,6 +219,56 @@ namespace CT.Lookup
             [CTTechnologies.MemoryFlash]            = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.CUSTOM },                                          new List<float>() { 0.0f }),
         };
 
+        public static readonly string[] policy_buff_suffixes = new string[]
+        {
+            "Bonus",
+            "Reward", 
+            "Gain",
+            "Boost",
+            "Increase",
+            "Enhance",
+            "Raise",
+            "Windfall",
+            "Extra"
+        };
+
+        public static readonly string[] policy_nerf_suffixes = new string[]
+        {
+            "Loss",
+            "Penalty",
+            "Misfortune",
+            "Decrease",
+            "Deprivation",
+            "Waste",
+            "Diminishment"
+        };
+
+        public static readonly string[] policy_degree_prefixes = new string[]
+        {
+            "Minor",
+            "Moderate",
+            "Major",
+            "Extreme"
+        };
+
+        public static readonly Dictionary<BuffsNerfsType, string> policy_type = new Dictionary<BuffsNerfsType, string>()
+        {
+            [BuffsNerfsType.MONEY_GAIN]         = "Finance",
+            [BuffsNerfsType.FOOD_GAIN]          = "Agriculture",
+            [BuffsNerfsType.SCIENCE_GAIN]       = "Research",
+            [BuffsNerfsType.MONEY_UPKEEP]       = "Finance",
+            [BuffsNerfsType.FOOD_UPKEEP]        = "Agriculture",
+            [BuffsNerfsType.SCIENCE_UPKEEP]     = "Research",
+            [BuffsNerfsType.SAFETY_FACTOR]      = "Security",
+            [BuffsNerfsType.MONEY_BOOST]        = "Finance",
+            [BuffsNerfsType.SCIENCE_BOOST]      = "Research",
+            [BuffsNerfsType.AWARENESS_FACTOR]   = "Stealth",
+            [BuffsNerfsType.RESOURCE_FACTOR]    = "INVALID BUFF/NERF TYPE",
+            [BuffsNerfsType.FOOD_RESERVES]      = "INVALID BUFF/NERF TYPE",
+            [BuffsNerfsType.MONEY_CAPACITY]     = "INVALID BUFF/NERF TYPE",
+            [BuffsNerfsType.SCIENCE_CAPACITY]   = "INVALID BUFF/NERF TYPE",
+            [BuffsNerfsType.CUSTOM]             = "INVALID BUFF/NERF TYPE"
+        };
     }
 
     public enum CTTechnologies
@@ -281,20 +355,20 @@ namespace CT.Lookup
 
     public enum BuffsNerfsType
     {
-        CUSTOM,
-        MONEY_BOOST,
-        SCIENCE_BOOST,
         MONEY_GAIN,
         FOOD_GAIN,
         SCIENCE_GAIN,
         MONEY_UPKEEP,
         FOOD_UPKEEP,
         SCIENCE_UPKEEP,
+        SAFETY_FACTOR,
+        MONEY_BOOST,
+        SCIENCE_BOOST,
+        AWARENESS_FACTOR,
+        RESOURCE_FACTOR,
+        FOOD_RESERVES,
         MONEY_CAPACITY,
         SCIENCE_CAPACITY,
-        FOOD_RESERVES,
-        SAFETY_FACTOR,
-        AWARENESS_FACTOR,
-        RESOURCE_FACTOR
+        CUSTOM
     }
 }
