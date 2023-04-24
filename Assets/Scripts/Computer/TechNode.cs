@@ -154,7 +154,7 @@ public class TechNode : MonoBehaviour
                 break;
             case CTTechnologies.MemoryFlash:
                 // Reset awareness
-                // NUKE GAMEMANAGER.INSTANCE.AWARENESS_CHANGES
+                GameManager._INSTANCE.ResetAwareness();
                 break;
         }
     }

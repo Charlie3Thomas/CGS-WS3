@@ -35,7 +35,8 @@ namespace CT
         private CTTimelineData prime_timeline;
 
         [SerializeField] private uint current_turn = 0;
-        public int user_changes_in_turn;
+        private int user_changes_in_turn;
+        private Vector3 current_turn_resource_expenditure;
 
         [SerializeField] private TextMeshProUGUI Planners;
         [SerializeField] private TextMeshProUGUI Workers;
@@ -62,9 +63,9 @@ namespace CT
             SetBaseFactionSpreadPerTurn();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            
+            UpdateResourceCounters();
         }
 
         private void Initialise()
@@ -94,6 +95,8 @@ namespace CT
             prime_timeline = new CTTimelineData(0, DataSheet.turns_number, user_changes, game_changes);
 
             turn = prime_timeline.GetYearData(0);
+
+            current_turn_resource_expenditure = new Vector3(0, 0, 0);
 
             UpdateResourceCounters();
             UpdateFactionDistributionPips();
@@ -129,6 +132,8 @@ namespace CT
 
             // store timeline turn data
             turn = prime_timeline.GetYearData(_turn);
+
+            current_turn_resource_expenditure = new Vector3(0, 0, 0);
 
             // Set resource counters to values at turn
             UpdateResourceCounters();
@@ -212,10 +217,17 @@ namespace CT
 
         private void UpdateResourceCounters()
         {
-            ComputerController.Instance.foodText.text = turn.Food.ToString();
-            ComputerController.Instance.rpText.text = turn.Science.ToString();
-            ComputerController.Instance.currencyText.text = turn.Money.ToString();
+            //ComputerController.Instance.foodText.text = turn.Food.ToString();
+            //ComputerController.Instance.rpText.text = turn.Science.ToString();
+            //ComputerController.Instance.currencyText.text = turn.Money.ToString();
+            //ComputerController.Instance.populationText.text = turn.Population.ToString();
+
+            ComputerController.Instance.currencyText.text = (turn.Money - (int)current_turn_resource_expenditure.x).ToString();
+            ComputerController.Instance.rpText.text = (turn.Science - (int)current_turn_resource_expenditure.y).ToString();
+            ComputerController.Instance.foodText.text = (turn.Food - (int)current_turn_resource_expenditure.z).ToString();
             ComputerController.Instance.populationText.text = turn.Population.ToString();
+
+            GetTimelineAwareness();
         }
 
         private void SetBaseFactionSpreadPerTurn()
@@ -417,6 +429,11 @@ namespace CT
             if (DataSheet.technology_price[_t] <= GetResourceTotals())
             {
                 user_changes[current_turn].Add(new PurchaseTechnology(_t));
+                current_turn_resource_expenditure += new Vector3(
+                    DataSheet.technology_price[_t].money,   // x
+                    DataSheet.technology_price[_t].science, // y
+                    DataSheet.technology_price[_t].food);   // z
+
                 return true;
             }
             return false;            
@@ -424,7 +441,11 @@ namespace CT
 
         private CTResourceTotals GetResourceTotals()
         {
-            return new CTResourceTotals(turn.Money, turn.Science, turn.Food, turn.Population);
+            return new CTResourceTotals(
+                turn.Money - (int)current_turn_resource_expenditure.x, 
+                turn.Science - (int)current_turn_resource_expenditure.y, 
+                turn.Food - (int)current_turn_resource_expenditure.z, 
+                turn.Population);
         }
 
         public List<CTTechnologies> GetUnlockedTechnologiesInTurn()
@@ -483,7 +504,11 @@ namespace CT
 
         public void ResetAwareness()
         {
-            throw new NotImplementedException();
+            awareness_changes = new List<CTChange>[DataSheet.turns_number];
+            for (uint year = 0; year < DataSheet.turns_number; year++)
+            {
+                awareness_changes[year] = new List<CTChange>();
+            }
         }
 
         private void GetChangesAtTurn()

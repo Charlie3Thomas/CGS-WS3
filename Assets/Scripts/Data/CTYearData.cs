@@ -6,6 +6,7 @@ namespace CT.Data
 {
     using Enumerations;
     using Lookup;
+    using Unity.VisualScripting;
 
     public class CTYearData
     {
@@ -68,7 +69,10 @@ namespace CT.Data
             get { return food; }
 
             set
-            {   // Starvation
+            {
+                if (value == food)
+                    return;
+                // Starvation
                 if (value < 0)
                 {
                     food = 0;
@@ -85,7 +89,8 @@ namespace CT.Data
                 // Growth
                 if (value > Population)
                 {
-                    Population = (int)(Population * DataSheet.food_surplus_population_gain);
+                    Population += (int)(Population * DataSheet.food_surplus_population_gain);
+                    Debug.Log("Population growth!");
                 }
             }
         }
