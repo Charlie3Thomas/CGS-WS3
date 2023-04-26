@@ -21,6 +21,7 @@ namespace CT.Data
 
         #region Resources
 
+        #region Consumables
         // Money
         private int money;
         public int Money
@@ -29,6 +30,9 @@ namespace CT.Data
 
             set
             {
+                if (value == money)
+                    return;
+
                 //Debug.Log(value);
                 if (value < 0)
                 {
@@ -48,6 +52,8 @@ namespace CT.Data
 
             set
             {
+                if (value < science)
+                    return;
                 //Debug.Log(value);
                 if (value < 0)
                 {
@@ -67,11 +73,16 @@ namespace CT.Data
             get { return food; }
 
             set
-            {   // Starvation
+            {
+                if (value == food)
+                    return;
+                // Starvation
                 if (value < 0)
                 {
                     food = 0;
-                    Population = (int)(Population * DataSheet.starvation_survival_rate);
+                    float adjusted = ScalePopulationStarvation(value, Population);
+                    Population -= (int)(Population * (DataSheet.starvation_rate *  adjusted));
+                    Debug.Log("Population is starving!");
                     //throw new ArgumentException("Food cannot go below zero!");
                 }
                 else
@@ -82,7 +93,8 @@ namespace CT.Data
                 // Growth
                 if (value > Population)
                 {
-                    Population = (int)(Population * DataSheet.food_surplus_population_gain);
+                    Population += (int)(Population * DataSheet.food_surplus_population_gain);
+                    Debug.Log("Population growth!");
                 }
             }
         }
@@ -94,6 +106,9 @@ namespace CT.Data
 
             set
             {
+                if (value < surplus_food)
+                    return;
+
                 Debug.Log(value);
                 if (value < 0)
                 {
@@ -112,6 +127,9 @@ namespace CT.Data
             get { return population; }
             set
             {
+                if (value == population) 
+                    return;
+
                 // If value is less than assigned population is it implicitly less than total population
                 // An error must be thrown if population is set to less than the assigned workers
                 // Could cause issues when killing population?
@@ -132,7 +150,7 @@ namespace CT.Data
                     Workers = 0;
                     Scientists = 0;
 
-                    Population -= value;
+                    Population = value;
 
                     Planners = (int)(Population * planner_ratio);
                     Farmers = (int)(Population * farmer_ratio);
@@ -214,6 +232,7 @@ namespace CT.Data
                 }
             }
         }
+        #endregion
 
 
         #region Population Budget Readonly
@@ -235,7 +254,6 @@ namespace CT.Data
 
         }
         #endregion
-
 
 
         #region Types of Population
@@ -304,6 +322,22 @@ namespace CT.Data
         }
         #endregion
 
+        private float awareness;
+        public float Awareness
+        {
+            get 
+            {
+                return awareness;
+            }
+            set 
+            {
+                if (value == awareness)
+                    return;
+
+                awareness = value;
+            }
+        }
+
         #endregion
 
 
@@ -319,10 +353,10 @@ namespace CT.Data
             if (turn == 0)
             {
                 //Debug.Log($"Setting base faction distribution for turn {turn}");
-                Workers = (int)(_pop * 0.25f);
-                Scientists = (int)(_pop * 0.25f);
-                Farmers = (int)(_pop * 0.25f);
-                Planners = (int)(_pop * 0.25f);
+                Workers = (int)(_pop * DataSheet.starting_workers);
+                Scientists = (int)(_pop * DataSheet.starting_scientists);
+                Farmers = (int)(_pop * DataSheet.starting_farmers);
+                Planners = (int)(_pop * DataSheet.starting_planners);
             }
 
 
@@ -373,6 +407,15 @@ namespace CT.Data
                     return -1.0f;
             }
         }
+
+        private float ScalePopulationStarvation(float _v, float _p)
+        {
+            float ret = (Mathf.Abs(_v) / _p);
+            if (ret > 1.0f)
+                ret = 1.0f;
+            return ret;
+        }
+
         #endregion
     }
 }

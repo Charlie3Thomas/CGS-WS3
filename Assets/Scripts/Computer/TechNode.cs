@@ -154,6 +154,7 @@ public class TechNode : MonoBehaviour
                 break;
             case CTTechnologies.MemoryFlash:
                 // Reset awareness
+                GameManager._INSTANCE.ResetAwareness();
                 break;
         }
     }
@@ -163,7 +164,7 @@ public class TechNode : MonoBehaviour
         unlocked = false;
         List<CTTechnologies> active_techs = GameManager._INSTANCE.GetUnlockedTechnologiesInTurn();
 
-        //Debug.Log($"TechNode:UpdateTechNodes:active_techs = {active_techs.Count}");
+        Debug.Log($"TechNode:UpdateTechNodes:active_techs = {active_techs.Count}");
 
         foreach (CTTechnologies t in active_techs)
         {

@@ -105,7 +105,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _FillAmount: 1
+    - _FillAmount: 0
     - _FoamWidth: 0.059
     - _Foam_Smoothness: 0
     - _Frequency: 1

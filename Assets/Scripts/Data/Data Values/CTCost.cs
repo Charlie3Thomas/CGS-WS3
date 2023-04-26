@@ -147,4 +147,24 @@ public class CTCost
 
     #endregion
 
+    #region Utility
+
+    public string GetString()
+    {
+        string ret = "";
+
+        if (money > 0)
+            ret += "Money: " + money + " ";
+        if (science > 0)
+            ret += "Science: " + science + " ";
+        if (food > 0)
+            ret += "Food: " + food + " ";
+        if (population > 0)
+            ret += "Population: " + population + " ";
+
+        return ret;
+    }
+
+    #endregion
+
 }

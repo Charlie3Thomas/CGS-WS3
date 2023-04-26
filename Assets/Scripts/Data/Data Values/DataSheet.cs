@@ -17,16 +17,23 @@ namespace CT.Lookup
         public static readonly uint starting_year = 1900;
         public static readonly uint end_year = 2100;
         public static readonly uint turns_number = (end_year - starting_year) / turn_steps;
-        public static readonly int starting_money = 100000;
+        public static readonly int starting_money = 15000;
         public static readonly int starting_science = 100000;
         public static readonly int starting_food = 100000;
+        public static readonly float year_change_awareness_rate = 0.05f;
+        public static readonly float year_override_awareness_rate = 0.15f;
 
-        // This is 10% lower than the desired 500 for reasons
-        // It is lazy and stupid, but for now it works
-        // Please bear in mind, that if you change food_surplus_population_gain, this value will need to be changed as well
-        public static readonly int starting_population = 455; 
-        public static readonly float starvation_survival_rate = 0.90f;
-        public static readonly float food_surplus_population_gain = 1.10f;
+        public static readonly int starting_population = 500; 
+        public static readonly float starvation_rate = 0.40f;
+        public static readonly float food_surplus_population_gain = 0.10f;
+
+        public static readonly float starting_workers = 0.3f;
+        public static readonly float starting_scientists = 0.2f;
+        public static readonly float starting_farmers = 0.3f;
+        public static readonly float starting_planners = 0.2f;
+
+        public static readonly float policy_card_min_scale = 25.0f;
+        public static readonly float policy_card_max_scale = 500.0f;
         #endregion
 
 
@@ -53,75 +60,96 @@ namespace CT.Lookup
         {
             //return disaster_impact[_disaster];
             //UnityEngine.Debug.Log("Disaster");
+
+            switch (_disaster)
+            {
+                case (CTDisasters.Earthquake):
+                    // Impacts all
+                    break;
+
+                case (CTDisasters.Volcano):
+                    // Impacts 
+                    break;
+
+                case (CTDisasters.Tornado):
+
+                    break;
+
+                case (CTDisasters.Tsunami):
+
+                    break;
+            }
+
+
             return new CTCost(0, 0, 0, 0); // Placeholder cost 100 pop
         }
 
         // Technology cost lookup table
         public static readonly Dictionary<CTTechnologies, CTCost> technology_price = new Dictionary<CTTechnologies, CTCost>()
         {
-            //                                  Cost : Money | Science | Food | Population
-            [CTTechnologies.Banking]                = new CTCost( 5000,   500, 0, 0 ),
-            [CTTechnologies.Laboratory]             = new CTCost( 5000,  1000, 0, 0 ),
-            [CTTechnologies.TownPlanning]           = new CTCost(10000,  1000, 0, 0 ),
-            [CTTechnologies.Granary]                = new CTCost( 1000,   500, 0, 0 ),
-            [CTTechnologies.Lockers]                = new CTCost( 1000,   200, 0, 0 ),
-            [CTTechnologies.DamageMitigation1]      = new CTCost( 1000,   250, 0, 0 ),
-            [CTTechnologies.DamageMitigation2]      = new CTCost( 1000,   250, 0, 0 ),
-            [CTTechnologies.Stockpiling]            = new CTCost( 2000,   500, 0, 0 ),
-            [CTTechnologies.Revenue]                = new CTCost(    0,   500, 0, 0 ),
-            [CTTechnologies.Innovation]             = new CTCost( 1000,   250, 0, 0 ),
-            [CTTechnologies.Construction1]          = new CTCost( 1500,   500, 0, 0 ),
-            [CTTechnologies.Construction2]          = new CTCost( 2000,   750, 0, 0 ),
-            [CTTechnologies.SuperRevenue]           = new CTCost(    0,  1000, 0, 0 ),
-            [CTTechnologies.SuperLockers]           = new CTCost( 2000,   400, 0, 0 ),
-            [CTTechnologies.Inspiration]            = new CTCost( 2500,  1000, 0, 0 ),
-            [CTTechnologies.Zoning]                 = new CTCost( 2500,  1000, 0, 0 ),
-            [CTTechnologies.SuperStockpiling]       = new CTCost( 1500,   500, 0, 0 ),
-            [CTTechnologies.FinanceManagement]      = new CTCost( 500,    750, 0, 0 ),
-            [CTTechnologies.AlarmSystem]            = new CTCost( 3000,  1000, 0, 0 ),
-            [CTTechnologies.ResearchCentre]         = new CTCost( 5000,   100, 0, 0 ),
-            [CTTechnologies.StoreHouse]             = new CTCost( 1750,   750, 0, 0 ),
-            [CTTechnologies.SafeHouse]              = new CTCost( 3500,  1500, 0, 0 ),
-            [CTTechnologies.RiskAssessment]         = new CTCost( 5000,  1000, 0, 0 ),
-            [CTTechnologies.PopulationAssessment]   = new CTCost( 5000,  1000, 0, 0 ),
-            [CTTechnologies.Digitization]           = new CTCost( 1000,  1250, 0, 0 ),
-            [CTTechnologies.CropRotation]           = new CTCost( 3000,   750, 0, 0 ),
-            [CTTechnologies.Fertilization]          = new CTCost( 2500,   500, 0, 0 ),
-            [CTTechnologies.Alchemy]                = new CTCost( 7500,     0, 0, 0 ),
-            [CTTechnologies.Seismometer]            = new CTCost( 3000,  1000, 0, 0 ),
-            [CTTechnologies.Automation]             = new CTCost( 3000,  1000, 0, 0 ),
-            [CTTechnologies.FoodTechnology]         = new CTCost( 3000,  1000, 0, 0 ),
-            [CTTechnologies.InterestBoost]          = new CTCost( 1000,  2000, 0, 0 ),
-            [CTTechnologies.DigitalSeismometer]     = new CTCost( 3500,  1250, 0, 0 ),
-            [CTTechnologies.Seismography]           = new CTCost( 3500,  1250, 0, 0 ),
-            [CTTechnologies.DigitalCurrency]        = new CTCost( 3000,  1000, 0, 0 ),
-            [CTTechnologies.DigitalPayment]         = new CTCost(    0,  1000, 0, 0 ),
-            [CTTechnologies.Blueprints]             = new CTCost( 4000,  1000, 0, 0 ),
-            [CTTechnologies.Greenprints]            = new CTCost( 4000,  1000, 0, 0 ),
-            [CTTechnologies.NetBanking]             = new CTCost( 5000,  2000, 0, 0 ),
-            [CTTechnologies.ResearchDome]           = new CTCost( 5000,     0, 0, 0 ),
-            [CTTechnologies.RapidRelief]            = new CTCost( 5000,  1500, 0, 0 ),
-            [CTTechnologies.SeismicInvisibility]    = new CTCost( 5000,  1500, 0, 0 ),
-            [CTTechnologies.FloodManagement]        = new CTCost( 5000,  1500, 0, 0 ),
-            [CTTechnologies.Robotics]               = new CTCost( 5000,  3000, 0, 0 ),
-            [CTTechnologies.Bluffing]               = new CTCost( 5000,  3000, 0, 0 ),
-            [CTTechnologies.Marketplace1]           = new CTCost( 7500,  3500, 0, 0 ),
-            [CTTechnologies.Marketplace2]           = new CTCost( 7500,  3500, 0, 0 ),
-            [CTTechnologies.SafetyRating]           = new CTCost( 7500,  3500, 0, 0 ),
-            [CTTechnologies.Warehousing]            = new CTCost( 5000,  2500, 0, 0 ),
-            [CTTechnologies.TechnologyCentre]       = new CTCost( 5000,  2500, 0, 0 ),
-            [CTTechnologies.LifelineSupport]        = new CTCost( 5000,  2500, 0, 0 ),
-            [CTTechnologies.SupremeFinancing]       = new CTCost(    0,  2000, 0, 0 ),
-            [CTTechnologies.SupremeChemistry]       = new CTCost( 5000,     0, 0, 0 ),
-            [CTTechnologies.SupremeStealth]         = new CTCost(10000,  5000, 0, 0 ),
-            [CTTechnologies.SuperCivilization]      = new CTCost(25000, 10000, 0, 0 ),
-            [CTTechnologies.ArtificialIntelligence] = new CTCost(25000, 10000, 0, 0 ),
-            [CTTechnologies.InhumanForesight]       = new CTCost(25000, 10000, 0, 0 ),
-            [CTTechnologies.RobotWorkers]           = new CTCost(25000, 10000, 0, 0 ),
-            [CTTechnologies.AlienMastery]           = new CTCost(25000, 10000, 0, 0 ),
-            [CTTechnologies.AlienSuperiority]       = new CTCost(27500, 11000, 0, 0 ),
-            [CTTechnologies.AlienDomination]        = new CTCost(30000, 12000, 0, 0 ),
-            [CTTechnologies.MemoryFlash]            = new CTCost(50000, 15000, 0, 0 )
+            //                                           Cost : Money | Science | Food | Population
+            [CTTechnologies.Banking]                = new CTCost( 5000,   500,      0,      0 ),
+            [CTTechnologies.Laboratory]             = new CTCost( 5000,  1000,      0,      0 ),
+            [CTTechnologies.TownPlanning]           = new CTCost(10000,  1000,      0,      0 ),
+            [CTTechnologies.Granary]                = new CTCost( 1000,   500,      0,      0 ),
+            [CTTechnologies.Lockers]                = new CTCost( 1000,   200,      0,      0 ),
+            [CTTechnologies.DamageMitigation1]      = new CTCost( 1000,   250,      0,      0 ),
+            [CTTechnologies.DamageMitigation2]      = new CTCost( 1000,   250,      0,      0 ),
+            [CTTechnologies.Stockpiling]            = new CTCost( 2000,   500,      0,      0 ),
+            [CTTechnologies.Revenue]                = new CTCost(    0,   500,      0,      0 ),
+            [CTTechnologies.Innovation]             = new CTCost( 1000,   250,      0,      0 ),
+            [CTTechnologies.Construction1]          = new CTCost( 1500,   500,      0,      0 ),
+            [CTTechnologies.Construction2]          = new CTCost( 2000,   750,      0,      0 ),
+            [CTTechnologies.SuperRevenue]           = new CTCost(    0,  1000,      0,      0 ),
+            [CTTechnologies.SuperLockers]           = new CTCost( 2000,   400,      0,      0 ),
+            [CTTechnologies.Inspiration]            = new CTCost( 2500,  1000,      0,      0 ),
+            [CTTechnologies.Zoning]                 = new CTCost( 2500,  1000,      0,      0 ),
+            [CTTechnologies.SuperStockpiling]       = new CTCost( 1500,   500,      0,      0 ),
+            [CTTechnologies.FinanceManagement]      = new CTCost( 500,    750,      0,      0 ),
+            [CTTechnologies.AlarmSystem]            = new CTCost( 3000,  1000,      0,      0 ),
+            [CTTechnologies.ResearchCentre]         = new CTCost( 5000,   100,      0,      0 ),
+            [CTTechnologies.StoreHouse]             = new CTCost( 1750,   750,      0,      0 ),
+            [CTTechnologies.SafeHouse]              = new CTCost( 3500,  1500,      0,      0 ),
+            [CTTechnologies.RiskAssessment]         = new CTCost( 5000,  1000,      0,      0 ),
+            [CTTechnologies.PopulationAssessment]   = new CTCost( 5000,  1000,      0,      0 ),
+            [CTTechnologies.Digitization]           = new CTCost( 1000,  1250,      0,      0 ),
+            [CTTechnologies.CropRotation]           = new CTCost( 3000,   750,      0,      0 ),
+            [CTTechnologies.Fertilization]          = new CTCost( 2500,   500,      0,      0 ),
+            [CTTechnologies.Alchemy]                = new CTCost( 7500,     0,      0,      0 ),
+            [CTTechnologies.Seismometer]            = new CTCost( 3000,  1000,      0,      0 ),
+            [CTTechnologies.Automation]             = new CTCost( 3000,  1000,      0,      0 ),
+            [CTTechnologies.FoodTechnology]         = new CTCost( 3000,  1000,      0,      0 ),
+            [CTTechnologies.InterestBoost]          = new CTCost( 1000,  2000,      0,      0 ),
+            [CTTechnologies.DigitalSeismometer]     = new CTCost( 3500,  1250,      0,      0 ),
+            [CTTechnologies.Seismography]           = new CTCost( 3500,  1250,      0,      0 ),
+            [CTTechnologies.DigitalCurrency]        = new CTCost( 3000,  1000,      0,      0 ),
+            [CTTechnologies.DigitalPayment]         = new CTCost(    0,  1000,      0,      0 ),
+            [CTTechnologies.Blueprints]             = new CTCost( 4000,  1000,      0,      0 ),
+            [CTTechnologies.Greenprints]            = new CTCost( 4000,  1000,      0,      0 ),
+            [CTTechnologies.NetBanking]             = new CTCost( 5000,  2000,      0,      0 ),
+            [CTTechnologies.ResearchDome]           = new CTCost( 5000,     0,      0,      0 ),
+            [CTTechnologies.RapidRelief]            = new CTCost( 5000,  1500,      0,      0 ),
+            [CTTechnologies.SeismicInvisibility]    = new CTCost( 5000,  1500,      0,      0 ),
+            [CTTechnologies.FloodManagement]        = new CTCost( 5000,  1500,      0,      0 ),
+            [CTTechnologies.Robotics]               = new CTCost( 5000,  3000,      0,      0 ),
+            [CTTechnologies.Bluffing]               = new CTCost( 5000,  3000,      0,      0 ),
+            [CTTechnologies.Marketplace1]           = new CTCost( 7500,  3500,      0,      0 ),
+            [CTTechnologies.Marketplace2]           = new CTCost( 7500,  3500,      0,      0 ),
+            [CTTechnologies.SafetyRating]           = new CTCost( 7500,  3500,      0,      0 ),
+            [CTTechnologies.Warehousing]            = new CTCost( 5000,  2500,      0,      0 ),
+            [CTTechnologies.TechnologyCentre]       = new CTCost( 5000,  2500,      0,      0 ),
+            [CTTechnologies.LifelineSupport]        = new CTCost( 5000,  2500,      0,      0 ),
+            [CTTechnologies.SupremeFinancing]       = new CTCost(    0,  2000,      0,      0 ),
+            [CTTechnologies.SupremeChemistry]       = new CTCost( 5000,     0,      0,      0 ),
+            [CTTechnologies.SupremeStealth]         = new CTCost(10000,  5000,      0,      0 ),
+            [CTTechnologies.SuperCivilization]      = new CTCost(25000, 10000,      0,      0 ),
+            [CTTechnologies.ArtificialIntelligence] = new CTCost(25000, 10000,      0,      0 ),
+            [CTTechnologies.InhumanForesight]       = new CTCost(25000, 10000,      0,      0 ),
+            [CTTechnologies.RobotWorkers]           = new CTCost(25000, 10000,      0,      0 ),
+            [CTTechnologies.AlienMastery]           = new CTCost(25000, 10000,      0,      0 ),
+            [CTTechnologies.AlienSuperiority]       = new CTCost(27500, 11000,      0,      0 ),
+            [CTTechnologies.AlienDomination]        = new CTCost(30000, 12000,      0,      0 ),
+            [CTTechnologies.MemoryFlash]            = new CTCost(50000, 15000,      0,      0 )
         };
 
         // Tech buffs lookup table
@@ -191,6 +219,56 @@ namespace CT.Lookup
             [CTTechnologies.MemoryFlash]            = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.CUSTOM },                                          new List<float>() { 0.0f }),
         };
 
+        public static readonly string[] policy_buff_suffixes = new string[]
+        {
+            "Bonus",
+            "Reward", 
+            "Gain",
+            "Boost",
+            "Increase",
+            "Enhancement",
+            "Raise",
+            "Windfall",
+            "Surge"
+        };
+
+        public static readonly string[] policy_nerf_suffixes = new string[]
+        {
+            "Loss",
+            "Penalty",
+            "Misfortune",
+            "Decrease",
+            "Deprivation",
+            "Waste",
+            "Diminishment"
+        };
+
+        public static readonly string[] policy_degree_prefixes = new string[]
+        {
+            "Minor",
+            "Moderate",
+            "Major",
+            "Extreme"
+        };
+
+        public static readonly Dictionary<BuffsNerfsType, string> policy_type = new Dictionary<BuffsNerfsType, string>()
+        {
+            [BuffsNerfsType.MONEY_GAIN]         = "Wealth",
+            [BuffsNerfsType.FOOD_GAIN]          = "Agriculture",
+            [BuffsNerfsType.SCIENCE_GAIN]       = "Research",
+            [BuffsNerfsType.MONEY_UPKEEP]       = "Wealth",
+            [BuffsNerfsType.FOOD_UPKEEP]        = "Agriculture",
+            [BuffsNerfsType.SCIENCE_UPKEEP]     = "Research",
+            [BuffsNerfsType.SAFETY_FACTOR]      = "Security",
+            [BuffsNerfsType.MONEY_BOOST]        = "Wealth",
+            [BuffsNerfsType.SCIENCE_BOOST]      = "Research",
+            [BuffsNerfsType.AWARENESS_FACTOR]   = "Stealth",
+            [BuffsNerfsType.RESOURCE_FACTOR]    = "INVALID BUFF/NERF TYPE",
+            [BuffsNerfsType.FOOD_RESERVES]      = "INVALID BUFF/NERF TYPE",
+            [BuffsNerfsType.MONEY_CAPACITY]     = "INVALID BUFF/NERF TYPE",
+            [BuffsNerfsType.SCIENCE_CAPACITY]   = "INVALID BUFF/NERF TYPE",
+            [BuffsNerfsType.CUSTOM]             = "INVALID BUFF/NERF TYPE"
+        };
     }
 
     public enum CTTechnologies
@@ -277,20 +355,20 @@ namespace CT.Lookup
 
     public enum BuffsNerfsType
     {
-        CUSTOM,
-        MONEY_BOOST,
-        SCIENCE_BOOST,
         MONEY_GAIN,
         FOOD_GAIN,
         SCIENCE_GAIN,
         MONEY_UPKEEP,
         FOOD_UPKEEP,
         SCIENCE_UPKEEP,
+        SAFETY_FACTOR,
+        MONEY_BOOST,
+        SCIENCE_BOOST,
+        AWARENESS_FACTOR,
+        RESOURCE_FACTOR,
+        FOOD_RESERVES,
         MONEY_CAPACITY,
         SCIENCE_CAPACITY,
-        FOOD_RESERVES,
-        SAFETY_FACTOR,
-        AWARENESS_FACTOR,
-        RESOURCE_FACTOR
+        CUSTOM
     }
 }

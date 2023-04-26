@@ -16,6 +16,7 @@ public class PlayerData
 {
     public List<CTChange>[] user_changes;
     public List<CTChange>[] game_changes;
+    public List<CTChange>[] awareness_changes;
 }
 
 public class DataSaveLoadManager : MonoBehaviour
@@ -66,6 +67,7 @@ public class DataSaveLoadManager : MonoBehaviour
         playerData = new PlayerData();
         playerData.user_changes = gameManager.UserChanges;
         playerData.game_changes = gameManager.GameChanges;
+        playerData.awareness_changes = gameManager.AwarenessChanges;
         string s = JsonConvert.SerializeObject(playerData, settings);
         PlayerPrefs.SetString(playerDataKey, s);
         Debug.Log($"SAVING DATA : {s}");
@@ -78,7 +80,7 @@ public class DataSaveLoadManager : MonoBehaviour
     {
         playerData = await RetrieveSpecificData<PlayerData>(playerDataKey);
         Debug.Log("DATA LOADED FROM CLOUD");
-        gameManager.LoadData(playerData.user_changes, playerData.game_changes);
+        gameManager.LoadData(playerData.user_changes, playerData.game_changes, playerData.awareness_changes);
     }
 
     private async Task ForceSaveSingleData(string key, string value)
