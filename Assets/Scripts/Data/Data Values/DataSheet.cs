@@ -226,10 +226,10 @@ namespace CT.Lookup
             "Gain",
             "Boost",
             "Increase",
-            "Enhance",
+            "Enhancement",
             "Raise",
             "Windfall",
-            "Extra"
+            "Surge"
         };
 
         public static readonly string[] policy_nerf_suffixes = new string[]
@@ -253,14 +253,14 @@ namespace CT.Lookup
 
         public static readonly Dictionary<BuffsNerfsType, string> policy_type = new Dictionary<BuffsNerfsType, string>()
         {
-            [BuffsNerfsType.MONEY_GAIN]         = "Finance",
+            [BuffsNerfsType.MONEY_GAIN]         = "Wealth",
             [BuffsNerfsType.FOOD_GAIN]          = "Agriculture",
             [BuffsNerfsType.SCIENCE_GAIN]       = "Research",
-            [BuffsNerfsType.MONEY_UPKEEP]       = "Finance",
+            [BuffsNerfsType.MONEY_UPKEEP]       = "Wealth",
             [BuffsNerfsType.FOOD_UPKEEP]        = "Agriculture",
             [BuffsNerfsType.SCIENCE_UPKEEP]     = "Research",
             [BuffsNerfsType.SAFETY_FACTOR]      = "Security",
-            [BuffsNerfsType.MONEY_BOOST]        = "Finance",
+            [BuffsNerfsType.MONEY_BOOST]        = "Wealth",
             [BuffsNerfsType.SCIENCE_BOOST]      = "Research",
             [BuffsNerfsType.AWARENESS_FACTOR]   = "Stealth",
             [BuffsNerfsType.RESOURCE_FACTOR]    = "INVALID BUFF/NERF TYPE",

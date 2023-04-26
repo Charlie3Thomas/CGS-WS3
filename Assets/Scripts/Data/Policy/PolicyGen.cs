@@ -4,31 +4,20 @@ using System.Linq;
 using UnityEngine;
 using CT.Lookup;
 
-public class PolicyGen : MonoBehaviour
+public static class PolicyGen
 {
-    private CTPolicyCard policy = new CTPolicyCard();
-
-    private void Start()
+    public static void GeneratePolicy(CTPolicyCard _policy)
     {
-        GeneratePolicy();
+        _policy.ID = Guid.NewGuid().ToString();
+        _policy.SetCost(GenerateCost());
+        _policy.SetRequirements(GenerateRequirements());
+        _policy.SetBuffs(GenerateBuffs());
+        _policy.SetDebuffs(GenerateDebuffs());
+        _policy.SetDegrees(GenerateDegree(_policy));
+        _policy.SetName(GeneratePolicyTitle(_policy));
     }
 
-    private void Update()
-    {
-        GeneratePolicy();
-    }
-
-    private void GeneratePolicy()
-    {
-        policy.SetCost(GenerateCost());
-        policy.SetRequirements(GenerateRequirements());
-        policy.SetBuffs(GenerateBuffs());
-        policy.SetDebuffs(GenerateDebuffs());
-        policy.SetDegrees(GenerateDegree());
-        policy.SetName(GeneratePolicyTitle());
-    }
-
-    private CTCost GenerateCost()
+    private static CTCost GenerateCost()
     {
         bool[] t = RandomBools(4, 4);
 
@@ -39,7 +28,7 @@ public class PolicyGen : MonoBehaviour
             (UnityEngine.Random.Range(1, 21) * 250) * Convert.ToInt32(t[3]));
     }
 
-    private SetFactionDistribution GenerateRequirements()
+    private static SetFactionDistribution GenerateRequirements()
     {
         bool[] t = RandomBools(4, 4);
 
@@ -54,7 +43,7 @@ public class PolicyGen : MonoBehaviour
             spread.w * Convert.ToInt32(t[3]));  // planners
     }
 
-    private Dictionary<BuffsNerfsType, bool> GenerateBuffs()
+    private static Dictionary<BuffsNerfsType, bool> GenerateBuffs()
     {
         Dictionary<BuffsNerfsType, bool> buff_dict = new Dictionary<BuffsNerfsType, bool>();
 
@@ -74,7 +63,7 @@ public class PolicyGen : MonoBehaviour
         return buff_dict;
 
     }
-    private Dictionary<BuffsNerfsType, bool> GenerateDebuffs()
+    private static Dictionary<BuffsNerfsType, bool> GenerateDebuffs()
     {
         Dictionary<BuffsNerfsType, bool> debuff_dict = new Dictionary<BuffsNerfsType, bool>();
 
@@ -94,17 +83,17 @@ public class PolicyGen : MonoBehaviour
         return debuff_dict;
     }
 
-    private Dictionary<BuffsNerfsType, float> GenerateDegree()
+    private static Dictionary<BuffsNerfsType, float> GenerateDegree(CTPolicyCard _p)
     {
         Dictionary<BuffsNerfsType, float> degree = new Dictionary<BuffsNerfsType, float>();
 
-        foreach (KeyValuePair<BuffsNerfsType, bool> kvp in policy.buffs)
+        foreach (KeyValuePair<BuffsNerfsType, bool> kvp in _p.buffs)
         {
             if (!degree.ContainsKey(kvp.Key))
                 degree.Add(kvp.Key, UnityEngine.Random.Range(DataSheet.policy_card_min_scale, DataSheet.policy_card_max_scale));
         }
 
-        foreach (KeyValuePair<BuffsNerfsType, bool> kvp in policy.debuffs)
+        foreach (KeyValuePair<BuffsNerfsType, bool> kvp in _p.debuffs)
         {
             if (!degree.ContainsKey(kvp.Key))
                 degree.Add(kvp.Key, UnityEngine.Random.Range(DataSheet.policy_card_min_scale, DataSheet.policy_card_max_scale) * -1);
@@ -114,22 +103,24 @@ public class PolicyGen : MonoBehaviour
     }
 
 
-    private string GeneratePolicyTitle()
+    private static string GeneratePolicyTitle(CTPolicyCard _p)
     {
         string s = "";
 
-        if (policy.cost.population > 0)
+        if (_p.cost.population > 0)
         {
-            s = $"{s}Sacrifice!";
+            s = $"{s}Sacrifice!\n";
         }
 
+        s = $"{s}Buffs:\n";
+
         // Buff Mid
-        foreach (KeyValuePair<BuffsNerfsType, bool> kvp in policy.buffs)
+        foreach (KeyValuePair<BuffsNerfsType, bool> kvp in _p.buffs)
         {
             if (kvp.Value == true)
             {
                 // Buff Prefix
-                float degree = policy.buff_nerf_scale[kvp.Key] / DataSheet.policy_card_max_scale;
+                float degree = _p.buff_nerf_scale[kvp.Key] / DataSheet.policy_card_max_scale;
                 degree = Mathf.Abs(degree);
 
                 int index = -1;
@@ -143,41 +134,47 @@ public class PolicyGen : MonoBehaviour
                 else if (degree <= 1.0f)
                     index = 3;
 
-                s = $"{s} {DataSheet.policy_degree_prefixes[index]}";
+                s = $"{s}    {DataSheet.policy_degree_prefixes[index]}";
 
                 // Buff Mid
                 s = $"{s} {DataSheet.policy_type[kvp.Key]}";
+
+                // Buff suffix
+                s = $"{s} {DataSheet.policy_buff_suffixes[UnityEngine.Random.Range(0, DataSheet.policy_buff_suffixes.Length)]}\n";
             }
         }
 
-        // Buff suffix
-        s = $"{s} {DataSheet.policy_buff_suffixes[UnityEngine.Random.Range(0, DataSheet.policy_buff_suffixes.Length)]}";
+
 
         // String start new line
         s = $"{s}\n";
 
+        s = $"{s}Nerfs:\n";
+
         // Nerfs section of the string
-        foreach (KeyValuePair<BuffsNerfsType, bool> kvp in policy.debuffs)
+        foreach (KeyValuePair<BuffsNerfsType, bool> kvp in _p.debuffs)
         {
             if (kvp.Value == true)
             {
                 // Nerf Prefix
-                s = $"{s} {DataSheet.policy_degree_prefixes[1]}";
+                s = $"{s}    {DataSheet.policy_degree_prefixes[1]}";
 
                 // Nerf Mid
                 s = $"{s} {DataSheet.policy_type[kvp.Key]}";
+
+                // Nerf suffix
+                s = $"{s} {DataSheet.policy_nerf_suffixes[UnityEngine.Random.Range(0, DataSheet.policy_nerf_suffixes.Length)]}\n";
             }
         }
 
-        // Nerf suffix
-        s = $"{s} {DataSheet.policy_nerf_suffixes[UnityEngine.Random.Range(0, DataSheet.policy_nerf_suffixes.Length)]}";
+        s = $"{s}\nCosts:\n";
 
-        Debug.Log(s);
+        //Debug.Log(s);
 
         return s;
     }
 
-    private bool[] RandomBools(int _options, int _n)
+    private static bool[] RandomBools(int _options, int _n)
     {
         bool[] bools = new bool[_options];
 
@@ -203,7 +200,7 @@ public class PolicyGen : MonoBehaviour
         return bools;
     }
 
-    private Vector4 GeneratePopulationSpread()
+    private static Vector4 GeneratePopulationSpread()
     {
         System.Random rand = new System.Random();
 

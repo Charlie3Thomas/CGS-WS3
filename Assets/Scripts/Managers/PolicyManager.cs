@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using System;
 
 public class PolicyManager : MonoBehaviour
 {
@@ -12,8 +13,8 @@ public class PolicyManager : MonoBehaviour
     private int numOfPolicies = 7;
     public GameObject policyCardPrefab;
     public CTPolicyCard currentSelectedPolicy;
-    public List<CTPolicyCard> policyList = new List<CTPolicyCard>();
-    public List<CTPolicyCard> currentPolicies = new List<CTPolicyCard>();
+    public List<CTPolicyCard> policyList;
+    public List<CTPolicyCard> currentPolicies;
 
     private Vector2 scroll;
 
@@ -30,6 +31,14 @@ public class PolicyManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        policyList = new List<CTPolicyCard>();
+        currentPolicies = new List<CTPolicyCard>();
+
+        NewPolicySet();
+    }
+
     private void Update()
     {
         if (currentPolicies.Count > 0)
@@ -44,11 +53,9 @@ public class PolicyManager : MonoBehaviour
                 policyCardIndex--;
                 if (policyCardIndex < 0)
                     policyCardIndex = currentPolicies.Count - 1;
-
-                //        currentSelectedPolicy = currentPolicies[policyCardIndex];
-                //    }
-                //}
             }
+
+            currentSelectedPolicy = currentPolicies[policyCardIndex];
         }
     }
 
@@ -57,115 +64,66 @@ public class PolicyManager : MonoBehaviour
     /// </summary>
     public void NewPolicySet()
     {
-        //finalChoices.Clear();
-        //policyList.Clear();
-        //int policyCount = 0;
-        //while (policyCount < numOfPolicies)
-        //{
-        //    Policy pol = new Policy();
-        //    pol.finalTitle = titles[Random.Range(0, titles.Length)];
-        //    if (finalChoices.Contains(pol.finalTitle))
-        //    {
-        //        continue;
-        //    }
-        //    else
-        //    {
-        //        finalChoices.Add(pol.finalTitle);
-        //        //pol.year = YearData._INSTANCE.current_year;
+        policyList.Clear();
+        
+        // Generate policies and add to list
+        for (int i = 0; i < numOfPolicies; i++)
+        {
+            policyList.Add(ComputerController.Instance.policyCards[i].GetComponent<CTPolicyCard>());
+        }
 
-        //        for (int i = 0; i < Random.Range(1, 3); i++)
-        //        {
-        //            pol.buffs_nerfs.Add(new BuffsNerfs((BuffsNerfsType)Random.Range(0, System.Enum.GetValues(typeof(BuffsNerfsType)).Length),
-        //                Mathf.Round(Random.Range(-1f, 1f) * 100f) / 100f));
-        //        }
+        // Clear current cards from computer controller
+        int index = 0;
+        foreach (GameObject g in ComputerController.Instance.policyCards)
+        {
+            CTPolicyCard pc = g.GetComponent<CTPolicyCard>();
 
-        //        //pol.requiredFaction = (FactionEnum.type)Random.Range(0, 4);
-        //        pol.Requirement = Random.Range(0, 10000);
-        //        pol.cost.allocType = (AllocType)Random.Range(0, 3);
-        //        pol.cost.amount = Random.Range(0, 10000);
-        //        policyList.Add(pol);
-        //        policyList.Sort(SortByYear);
-        //        ComputerController.Instance.policyCards[policyCount].GetComponent<PolicyCard>().policy = pol;
-        //        string effect = "";
-        //        foreach (BuffsNerfs bns in pol.buffs_nerfs)
-        //        {
-        //            effect += ((bns.amount > 0) ? "Increase in " : "Decrease in ") + bns.type.ToString().ToLower() + " by " + (Mathf.Abs(bns.amount) * 100) + "%\n";
-        //        }
-        //        //ComputerController.Instance.pCardTexts[policyCount].text = pol.finalTitle + "\n" + effect + "Requirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
-        //        //"\nCost: " + pol.cost.amount + " " + pol.cost.allocType.ToString().ToLower() + "s";
-        //        policyCount++;
-        //    }
-        //}
+            pc = policyList[index];
+
+            UpdatePolicyCardText(index, pc);
+
+            index++;
+        }
     }
 
 
-    public void ReplacePolicyCard()
+    public void ReplacePolicyCard(string _ID)
     {
-        StartCoroutine(Replace());
+        StartCoroutine(Replace(_ID));
     }
 
 
-    private IEnumerator Replace()
+    private IEnumerator Replace(string _ID)
     {
-        //if (policyCardPrefab == null)
-        //    yield return null;
+        if (currentPolicies.Count > 2)
+            currentPolicies.Remove(currentSelectedPolicy);
 
-        //int missingPolicyCard = 1;
+        // Loop through all cards and find corresponding ID
+        for (int i = 0; i < numOfPolicies; i++)
+        {
+            if (_ID == policyList[i].ID)
+            {
+                currentPolicies.Add(policyList[i]);
 
-        //yield return new WaitForSeconds(0.2f);
+                PolicyGen.GeneratePolicy(policyList[i]);
 
-        //for (int i = 0; i < numOfPolicies; i++)
-        //{
-        //    if (GameObject.Find("CardHolder" + (i + 1)).transform.childCount == 0)
-        //    {
-        //        missingPolicyCard = i + 1;
-        //        Debug.Log("CardHolder" + missingPolicyCard);
-        //    }
-        //}
-
-        //GameObject pc = Instantiate(policyCardPrefab, Vector3.zero, Quaternion.Euler(-5f, 180, 0), GameObject.Find("CardHolder" + (missingPolicyCard).ToString()).transform);
-        //pc.name = policyCardPrefab.name + (missingPolicyCard).ToString();
-        //Policy pol = new Policy();
-
-        ////while (true)
-        ////{
-        ////    pol.finalTitle = titles[Random.Range(0, titles.Length)];
-        ////    if (!finalChoices.Contains(pol.finalTitle))
-        ////    {
-        ////        break;
-        ////    }
-        ////}
-
-        //finalChoices.Add(pol.finalTitle);
-        ////pol.year = YearData._INSTANCE.current_year;
-
-        //for (int i = 0; i < Random.Range(1, 3); i++)
-        //{
-        //    //pol.buffs_nerfs.Add(new BuffsNerfs((BuffsNerfsType)Random.Range(0, System.Enum.GetValues(typeof(BuffsNerfsType)).Length),
-        //    //    Mathf.Round(Random.Range(-1f, 1f) * 100f) / 100f));
-        //}
-
-        ////pol.requiredFaction = (FactionEnum.type)Random.Range(0, 4);
-        //pol.Requirement = Random.Range(0, 10000);
-        //pol.cost.allocType = (AllocType)Random.Range(0, 3);
-        //pol.cost.amount = Random.Range(0, 10000);
-        //policyList.Add(pol);
-        //ComputerController.Instance.policyCards[missingPolicyCard - 1] = pc;
-        //pc.GetComponent<CTPolicyCard>().policy = pol;
-        //ComputerController.Instance.pCardAnims[missingPolicyCard - 1] = pc.GetComponent<Animator>();
-        //ComputerController.Instance.pCardTexts[missingPolicyCard - 1] = pc.transform.GetChild(0).GetComponent<TMP_Text>();
-
-        //string effect = "";
-        //foreach (BuffsNerfs bns in pol.buffs_nerfs)
-        //{
-        //    effect += ((bns.amount > 0) ? "Increase in " : "Decrease in ")  + bns.type.ToString().ToLower() + " by " + (Mathf.Abs(bns.amount) * 100) + "%\n";
-        //}
-
-        //ComputerController.Instance.pCardTexts[missingPolicyCard - 1].text = pol.finalTitle + "\n" + effect + "Requirement: " + pol.Requirement + " " + pol.requiredFaction.ToString().ToLower() + "s" +
-        //"\nCost: " + pol.cost.amount + " " + pol.cost.allocType.ToString().ToLower() + "s";
+                UpdatePolicyCardText(i, policyList[i]);
+            }
+        }
 
         yield return null;
     }
+
+    private void UpdatePolicyCardText(int _index, CTPolicyCard _pc)
+    {
+        ComputerController.Instance.pCardTexts[_index].text = _pc.info_text;
+
+        ComputerController.Instance.pCardTexts[_index].text =
+                $"{ComputerController.Instance.pCardTexts[_index].text}" +
+                $"    {_pc.cost.GetString()}";
+    }
+
+    #region Input
 
     private void ScrollInput(InputAction.CallbackContext context)
     {
@@ -196,4 +154,6 @@ public class PolicyManager : MonoBehaviour
     {
         UnsubscribeInputs();
     }
+
+    #endregion
 }

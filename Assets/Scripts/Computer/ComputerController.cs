@@ -321,17 +321,7 @@ public class ComputerController : MonoBehaviour
     {
         // Select policy card
         if (isInteractingPressed && _hit.transform.CompareTag("PolicyCard"))
-        {
-            if (PolicyManager.instance.currentPolicies.Count > 2)
-                PolicyManager.instance.currentPolicies.Remove(PolicyManager.instance.currentSelectedPolicy);
-
-            //PolicyManager.instance.currentPolicies.Add(_hit.transform.GetComponent<PolicyCard>().policy);
-            //PolicyManager.instance.currentSelectedPolicy = _hit.transform.GetComponent<PolicyCard>().policy;
-            //PolicyManager.instance.finalChoices.Remove(_hit.transform.GetComponent<PolicyCard>().policy.finalTitle);
-            //PolicyManager.instance.policyList.Remove(_hit.transform.GetComponent<PolicyCard>().policy);
-            Destroy(_hit.transform.gameObject);
-            PolicyManager.instance.ReplacePolicyCard();
-        }
+            PolicyManager.instance.ReplacePolicyCard(_hit.transform.GetComponent<CTPolicyCard>().ID);
 
         // Policy cards hover
         for (int i = 0; i < 7; i++)
