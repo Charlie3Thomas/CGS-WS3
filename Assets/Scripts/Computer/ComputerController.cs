@@ -247,25 +247,25 @@ public class ComputerController : MonoBehaviour
         // Moving the year slider
         if (yearSliding)
         {
-            float remappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
-            float newRemappedValue = remappedValue + mouseDelta.x * 0.025f;
-            desiredYear = (int)RAUtility.Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
+            //float remappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+            //float newRemappedValue = remappedValue + mouseDelta.x * 0.025f;
+            //desiredYear = (int)RAUtility.Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
 
-            if (desiredYear % 5 != 0)
-            {
-                desiredYear = desiredYear - (desiredYear % 5);
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
-            }
+            //if (desiredYear % 5 != 0)
+            //{
+            //    desiredYear = desiredYear - (desiredYear % 5);
+            //    AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
+            //}
 
-            if (desiredYear < YearData._INSTANCE.earliest_year)
-                desiredYear = YearData._INSTANCE.earliest_year;
+            //if (desiredYear < YearData._INSTANCE.earliest_year)
+            //    desiredYear = YearData._INSTANCE.earliest_year;
 
-            if (desiredYear > YearData._INSTANCE.latest_year)
-                desiredYear = YearData._INSTANCE.latest_year;
+            //if (desiredYear > YearData._INSTANCE.latest_year)
+            //    desiredYear = YearData._INSTANCE.latest_year;
 
-            newRemappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
-            yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
-            UpdateSlider();
+            //newRemappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+            //yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
+            //UpdateSlider();
         }
 
         if (isInteractingPressed && _hit.transform.CompareTag("YearSlider"))
@@ -325,10 +325,10 @@ public class ComputerController : MonoBehaviour
             if (PolicyManager.instance.currentPolicies.Count > 2)
                 PolicyManager.instance.currentPolicies.Remove(PolicyManager.instance.currentSelectedPolicy);
 
-            PolicyManager.instance.currentPolicies.Add(_hit.transform.GetComponent<PolicyCard>().policy);
-            PolicyManager.instance.currentSelectedPolicy = _hit.transform.GetComponent<PolicyCard>().policy;
-            PolicyManager.instance.finalChoices.Remove(_hit.transform.GetComponent<PolicyCard>().policy.finalTitle);
-            PolicyManager.instance.policyList.Remove(_hit.transform.GetComponent<PolicyCard>().policy);
+            //PolicyManager.instance.currentPolicies.Add(_hit.transform.GetComponent<PolicyCard>().policy);
+            //PolicyManager.instance.currentSelectedPolicy = _hit.transform.GetComponent<PolicyCard>().policy;
+            //PolicyManager.instance.finalChoices.Remove(_hit.transform.GetComponent<PolicyCard>().policy.finalTitle);
+            //PolicyManager.instance.policyList.Remove(_hit.transform.GetComponent<PolicyCard>().policy);
             Destroy(_hit.transform.gameObject);
             PolicyManager.instance.ReplacePolicyCard();
         }
@@ -410,6 +410,7 @@ public class ComputerController : MonoBehaviour
         journal = GameObject.FindGameObjectWithTag("Journal");
         graph = GameObject.FindGameObjectWithTag("Graph");
         yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
+        mat_awareness = GameObject.Find("Liquid").GetComponent<Renderer>().material;
 
         // Texts
         yearText = GameObject.FindGameObjectWithTag("YearCounter").GetComponent<TMP_Text>();
@@ -443,7 +444,7 @@ public class ComputerController : MonoBehaviour
         graph.SetActive(false);
 
         // Set Values
-        desiredYear = YearData._INSTANCE.current_year;
+        //desiredYear = YearData._INSTANCE.current_year;
         showGraph = false;
 
         // Misc
@@ -452,10 +453,12 @@ public class ComputerController : MonoBehaviour
 
         UpdateSlider();
 
+    }
+
     public void UpdateSlider()
     {
-        float remappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
-        yearSlider.transform.localPosition = new Vector3(remappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
+        //float remappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+        //yearSlider.transform.localPosition = new Vector3(remappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
 
 
         //float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);

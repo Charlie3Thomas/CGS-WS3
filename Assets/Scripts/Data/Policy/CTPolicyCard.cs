@@ -16,6 +16,11 @@ public class CTPolicyCard : MonoBehaviour
         AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.policyCardShowEvent, null);
     }
 
+    public void PlayHideSound()
+    {
+
+    }
+
     public void SetName(string _name)
     {
         name = _name;
