@@ -33,7 +33,19 @@ public class DisasterManager : MonoBehaviour
         CreateDisasterList();
         WriteDisastersInJournal();
     }
+    private void Update()
+    {
+        //WriteSafetyInJournal();  // To implement - Display safety value in journal when show_safetyunlocked
+    }
 
+    //public void WriteSafetyInJournal()
+    //{
+
+    //    if (showSafety)
+    //    {
+            
+    //    }
+    //}
     // Call this to update the list visually whenever something new happens
     public void WriteDisastersInJournal()
     {
@@ -48,7 +60,7 @@ public class DisasterManager : MonoBehaviour
             ComputerController.Instance.disasterYearText.text += dis.year + "\n";
 
             if (showMagnitude)
-                ComputerController.Instance.disasterMagnitudeText.text += dis.intensity.ToString("F1") + "\n";
+                ComputerController.Instance.disasterMagnitudeText.text += dis.magnitude.ToString("F1") + "\n";
             else
                 ComputerController.Instance.disasterMagnitudeText.text += "???\n";
 

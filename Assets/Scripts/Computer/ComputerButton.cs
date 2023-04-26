@@ -8,7 +8,7 @@ public enum buttonType
 {
     GENERIC,
     RESET,
-    CONFIRM_ALLOCATION,
+    SHOW_GRAPH,
     CONFIRM_YEAR,
     JOURNAL_NOTEPAD
 }
@@ -30,16 +30,18 @@ public class ComputerButton : MonoBehaviour
                 // Reset
                 // Debug.Log("Reset");
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
-                break;
 
-            case buttonType.CONFIRM_ALLOCATION:
+                break;
+            case buttonType.SHOW_GRAPH:
                 // Confirm allocation
-                //Debug.Log("Confirm allocation");
+                Debug.Log("Show Graph");
                 // Allocates the populations/factions and registers turn in a list as well as sorts the list in resource manager
                 // Get index by name instead in future, im just super tired right now
-                //GameManager._INSTANCE.ConfirmTurn();
-
+                ComputerController.Instance.showGraph = !ComputerController.Instance.showGraph;
+                ComputerController.Instance.screen.SetActive(!ComputerController.Instance.showGraph);
+                ComputerController.Instance.graph.SetActive(ComputerController.Instance.showGraph);
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+
                 break;
 
             case buttonType.CONFIRM_YEAR:
@@ -61,6 +63,7 @@ public class ComputerButton : MonoBehaviour
                 ComputerController.Instance.notepad.SetActive(!ComputerController.Instance.notepad.activeSelf);
                 ComputerController.Instance.journal.SetActive(!ComputerController.Instance.journal.activeSelf);
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+
                 break;
         }
     }

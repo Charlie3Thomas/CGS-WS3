@@ -23,6 +23,8 @@ TagManager:
   - CurrencyCounter
   - RPCounter
   - PopCounter
+  - Screen
+  - Graph
   layers:
   - Default
   - TransparentFX

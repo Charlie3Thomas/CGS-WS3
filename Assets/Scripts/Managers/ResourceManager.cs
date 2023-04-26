@@ -95,11 +95,11 @@ public class ResourceManager : MonoBehaviour
     void Start()
     {
         //Testing values
-        current_total_population = Random.Range(1000, 10000);
-        current_currency = Random.Range(1000, 10000);
-        current_researchPoints = Random.Range(1000, 10000);
-        current_food = Random.Range(1000, 10000);
-        current_safety = Random.Range(1000, 10000);
+        current_total_population = 10000;
+        current_currency = 1000;
+        current_researchPoints = 1000;
+        current_food = 1000;
+        current_safety = 0;
 
         //Test turn
         NewTurn();
@@ -120,6 +120,8 @@ public class ResourceManager : MonoBehaviour
         turn.food = current_food;
         turn.safety = current_safety;
 
+        //Debug.Log(YearData._INSTANCE.current_year);
+
         current_turn = turn;
 
         //Update counters
@@ -137,10 +139,10 @@ public class ResourceManager : MonoBehaviour
             return;
         }
 
-        workerPopulation = Remap(workerPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-        scientistPopulation = Remap(scientistPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-        plannerPopulation = Remap(plannerPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-        farmerPopulation = Remap(farmerPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+        workerPopulation = RAUtility.Remap(workerPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+        scientistPopulation = RAUtility.Remap(scientistPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+        plannerPopulation = RAUtility.Remap(plannerPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+        farmerPopulation = RAUtility.Remap(farmerPopulation, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
 
         //Worker
         {
@@ -218,10 +220,5 @@ public class ResourceManager : MonoBehaviour
     private static int SortByYear(Turn bud1, Turn bud2)
     {
         return bud1.year.CompareTo(bud2.year);
-    }
-
-    public float Remap(float value, float from1, float to1, float from2, float to2)
-    {
-        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
 }
