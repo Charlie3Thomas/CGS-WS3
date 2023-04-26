@@ -6,7 +6,6 @@ namespace CT.Data
 {
     using Enumerations;
     using Lookup;
-    using Unity.VisualScripting;
 
     public class CTYearData
     {
@@ -31,6 +30,9 @@ namespace CT.Data
 
             set
             {
+                if (value == money)
+                    return;
+
                 //Debug.Log(value);
                 if (value < 0)
                 {
@@ -50,6 +52,8 @@ namespace CT.Data
 
             set
             {
+                if (value < science)
+                    return;
                 //Debug.Log(value);
                 if (value < 0)
                 {
@@ -102,6 +106,9 @@ namespace CT.Data
 
             set
             {
+                if (value < surplus_food)
+                    return;
+
                 Debug.Log(value);
                 if (value < 0)
                 {
@@ -120,6 +127,9 @@ namespace CT.Data
             get { return population; }
             set
             {
+                if (value == population) 
+                    return;
+
                 // If value is less than assigned population is it implicitly less than total population
                 // An error must be thrown if population is set to less than the assigned workers
                 // Could cause issues when killing population?
@@ -320,7 +330,10 @@ namespace CT.Data
                 return awareness;
             }
             set 
-            { 
+            {
+                if (value == awareness)
+                    return;
+
                 awareness = value;
             }
         }

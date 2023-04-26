@@ -38,11 +38,6 @@ namespace CT
         private int user_changes_in_turn;
         private Vector3 current_turn_resource_expenditure;
 
-        [SerializeField] private TextMeshProUGUI Planners;
-        [SerializeField] private TextMeshProUGUI Workers;
-        [SerializeField] private TextMeshProUGUI Farmers;
-        [SerializeField] private TextMeshProUGUI Scientists;
-
         private void Awake()
         {
             if (_INSTANCE != null)
@@ -203,10 +198,10 @@ namespace CT
             float farmers = (float)turn.Farmers / (float)turn.Population;
             float planners = (float)turn.Planners / (float)turn.Population;
 
-            Planners.text = planners.ToString();
-            Workers.text = workers.ToString();
-            Farmers.text = farmers.ToString();
-            Scientists.text = scientists.ToString();
+            //Planners.text = planners.ToString();
+            //Workers.text = workers.ToString();
+            //Farmers.text = farmers.ToString();
+            //Scientists.text = scientists.ToString();
 
             // This does not work as expected
             ComputerController.Instance.pointSelectors[0].pointValue = scientists; // Scientist

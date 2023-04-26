@@ -45,9 +45,11 @@ public class PolicyManager : MonoBehaviour
                 if (policyCardIndex < 0)
                     policyCardIndex = currentPolicies.Count - 1;
 
-        //        currentSelectedPolicy = currentPolicies[policyCardIndex];
-        //    }
-        //}
+                //        currentSelectedPolicy = currentPolicies[policyCardIndex];
+                //    }
+                //}
+            }
+        }
     }
 
     /// <summary>
@@ -96,10 +98,12 @@ public class PolicyManager : MonoBehaviour
         //}
     }
 
+
     public void ReplacePolicyCard()
     {
         StartCoroutine(Replace());
     }
+
 
     private IEnumerator Replace()
     {
@@ -163,10 +167,6 @@ public class PolicyManager : MonoBehaviour
         yield return null;
     }
 
-    private static int SortByYear(Policy pol1, Policy pol2)
-    {
-        return pol1.year.CompareTo(pol2.year);
-    }
     private void ScrollInput(InputAction.CallbackContext context)
     {
         scroll = context.ReadValue<Vector2>();

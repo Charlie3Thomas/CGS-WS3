@@ -59,10 +59,10 @@ public class DisasterManager : MonoBehaviour
             ComputerController.Instance.disasterNameText.text += dis.type.ToString() + "\n";
             ComputerController.Instance.disasterYearText.text += dis.year + "\n";
 
-            if (showMagnitude)
-                ComputerController.Instance.disasterMagnitudeText.text += dis.magnitude.ToString("F1") + "\n";
-            else
-                ComputerController.Instance.disasterMagnitudeText.text += "???\n";
+            //if (showMagnitude)
+            //    ComputerController.Instance.disasterMagnitudeText.text += dis.magnitude.ToString("F1") + "\n";
+            //else
+            //    ComputerController.Instance.disasterMagnitudeText.text += "???\n";
 
             // Random for now, change later when everything gets hooked up
             if (showDeathToll)
