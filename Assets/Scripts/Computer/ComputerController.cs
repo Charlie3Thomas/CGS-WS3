@@ -247,10 +247,11 @@ public class ComputerController : MonoBehaviour
                         if(PolicyManager.instance.currentPolicies.Count > 2)
                             PolicyManager.instance.currentPolicies.Remove(PolicyManager.instance.currentSelectedPolicy);
 
-                        PolicyManager.instance.currentPolicies.Add(hit.transform.GetComponent<PolicyCard>().policy);
-                        PolicyManager.instance.currentSelectedPolicy = hit.transform.GetComponent<PolicyCard>().policy;
-                        PolicyManager.instance.finalChoices.Remove(hit.transform.GetComponent<PolicyCard>().policy.finalTitle);
-                        PolicyManager.instance.policyList.Remove(hit.transform.GetComponent<PolicyCard>().policy);
+                        Debug.LogError("Commented code");
+                        //PolicyManager.instance.currentPolicies.Add(hit.transform.GetComponent<PolicyCard>().policy);
+                        //PolicyManager.instance.currentSelectedPolicy = hit.transform.GetComponent<PolicyCard>().policy;
+                        //PolicyManager.instance.finalChoices.Remove(hit.transform.GetComponent<PolicyCard>().policy.finalTitle);
+                        //PolicyManager.instance.policyList.Remove(hit.transform.GetComponent<PolicyCard>().policy);
                         Destroy(hit.transform.gameObject);
                         PolicyManager.instance.ReplacePolicyCard();
                     }

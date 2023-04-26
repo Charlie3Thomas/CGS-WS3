@@ -1,14 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing.Text;
 using System.Linq;
 using UnityEngine;
 using CT.Lookup;
-using System.Configuration;
-using FMOD.Studio;
-using CT;
-using Unity.VisualScripting;
 
 public class PolicyGen : MonoBehaviour
 {
@@ -263,45 +257,5 @@ public class PolicyGen : MonoBehaviour
 
         }
         return new Vector4(floats[0], floats[1], floats[2], floats[3]);
-    }
-}
-
-public class CTPolicyCard
-{
-    public string name = "";
-    public CTCost cost = new CTCost();
-    public SetFactionDistribution fdist = new SetFactionDistribution();
-    public Dictionary<BuffsNerfsType, float> buff_nerf_scale = new Dictionary<BuffsNerfsType, float>();
-    public Dictionary<BuffsNerfsType, bool> buffs = new Dictionary<BuffsNerfsType, bool>();
-    public Dictionary<BuffsNerfsType, bool> debuffs = new Dictionary<BuffsNerfsType, bool>();
-
-    public void SetName(string _name)
-    {
-        name = _name;
-    }
-
-    public void SetCost(CTCost _cost)
-    {
-        cost = _cost;
-    }
-
-    public void SetRequirements(SetFactionDistribution _fdist)
-    {
-        fdist = _fdist;
-    }
-
-    public void SetBuffs(Dictionary<BuffsNerfsType, bool> _buffs)
-    {
-        buffs = _buffs;
-    }
-
-    public void SetDebuffs(Dictionary<BuffsNerfsType, bool> _debuffs)
-    {
-        debuffs = _debuffs;
-    }
-
-    public void SetDegrees(Dictionary<BuffsNerfsType, float> _degree)
-    {
-        buff_nerf_scale = _degree;
     }
 }

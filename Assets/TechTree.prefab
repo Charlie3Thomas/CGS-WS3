@@ -96,7 +96,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723223950292072
 MonoBehaviour:
@@ -111,7 +111,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 58
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141597
   requiredScience:
@@ -121,8 +120,8 @@ MonoBehaviour:
   - {fileID: 8721723224036331914}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 0
-    amount: 1e+34
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -233,7 +232,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723223958544527
 MonoBehaviour:
@@ -248,7 +247,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 54
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141514
   requiredScience:
@@ -258,8 +256,8 @@ MonoBehaviour:
   - {fileID: 8721723224833442594}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 4
-    amount: 1
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -370,7 +368,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723223958827172
 MonoBehaviour:
@@ -385,7 +383,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 41
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141508
   requiredScience:
@@ -395,8 +392,8 @@ MonoBehaviour:
   - {fileID: 8721723224395489534}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 13
-    amount: -0.25
+  - type: 
+    amount: []
   Lit: {r: 0.54617023, g: 0, b: 1, a: 1}
   references:
     version: 2
@@ -507,7 +504,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723223976466491
 MonoBehaviour:
@@ -522,7 +519,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 24
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141589
   requiredScience:
@@ -532,10 +528,10 @@ MonoBehaviour:
   - {fileID: 8721723225275451048}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 0
-    amount: 3500
-  - type: 11
-    amount: 3500
+  - type: 
+    amount: []
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.4481132, b: 0.6806807, a: 1}
   references:
     version: 2
@@ -646,7 +642,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723223980657495
 MonoBehaviour:
@@ -661,7 +657,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 38
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141571
   requiredScience:
@@ -672,8 +667,8 @@ MonoBehaviour:
   - {fileID: 8721723224218844212}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 0
-    amount: 7500
+  - type: 
+    amount: []
   Lit: {r: 0.54617023, g: 0, b: 1, a: 1}
   references:
     version: 2
@@ -784,7 +779,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224036331914
 MonoBehaviour:
@@ -799,7 +794,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 56
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141506
   requiredScience:
@@ -810,8 +804,8 @@ MonoBehaviour:
   - {fileID: 8721723225317048343}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 13
-    amount: -1
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -922,7 +916,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224066472151
 MonoBehaviour:
@@ -937,7 +931,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 37
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141520
   requiredScience:
@@ -948,8 +941,8 @@ MonoBehaviour:
   - {fileID: 8721723224129590786}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 8
-    amount: 1250
+  - type: 
+    amount: []
   Lit: {r: 0.54617023, g: 0, b: 1, a: 1}
   references:
     version: 2
@@ -1060,7 +1053,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224074039429
 MonoBehaviour:
@@ -1075,7 +1068,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 40
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141567
   requiredScience:
@@ -1085,8 +1077,8 @@ MonoBehaviour:
   - {fileID: 8721723224395489534}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 13
-    amount: -0.25
+  - type: 
+    amount: []
   Lit: {r: 0.54617023, g: 0, b: 1, a: 1}
   references:
     version: 2
@@ -1197,7 +1189,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224079055460
 MonoBehaviour:
@@ -1212,7 +1204,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 33
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141542
   requiredScience:
@@ -1223,8 +1214,8 @@ MonoBehaviour:
   - {fileID: 8721723224798015220}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 13
-    amount: -0.25
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.4481132, b: 0.6806807, a: 1}
   references:
     version: 2
@@ -1335,7 +1326,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224095575931
 MonoBehaviour:
@@ -1350,7 +1341,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 12
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141530
   requiredScience:
@@ -1360,8 +1350,8 @@ MonoBehaviour:
   - {fileID: 8721723225505970982}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 11
-    amount: 2000
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.53792745, b: 0, a: 1}
   references:
     version: 2
@@ -1472,7 +1462,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224115262597
 MonoBehaviour:
@@ -1487,7 +1477,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 26
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141482
   requiredScience:
@@ -1497,8 +1486,8 @@ MonoBehaviour:
   - {fileID: 8721723225720498660}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 8
-    amount: 500
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.4481132, b: 0.6806807, a: 1}
   references:
     version: 2
@@ -1609,7 +1598,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224127844424
 MonoBehaviour:
@@ -1624,7 +1613,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 32
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141518
   requiredScience:
@@ -1635,8 +1623,8 @@ MonoBehaviour:
   - {fileID: 8721723225645298096}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 13
-    amount: -0.25
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.4481132, b: 0.6806807, a: 1}
   references:
     version: 2
@@ -1747,7 +1735,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224129590786
 MonoBehaviour:
@@ -1762,7 +1750,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 30
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141478
   requiredScience:
@@ -1773,8 +1760,8 @@ MonoBehaviour:
   - {fileID: 8721723224427590972}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 8
-    amount: 1000
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.4481132, b: 0.6806807, a: 1}
   references:
     version: 2
@@ -1885,7 +1872,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224154861726
 MonoBehaviour:
@@ -1900,7 +1887,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 35
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141577
   requiredScience:
@@ -1910,8 +1896,8 @@ MonoBehaviour:
   - {fileID: 8721723224384873644}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 11
-    amount: 5000
+  - type: 
+    amount: []
   Lit: {r: 0.54617023, g: 0, b: 1, a: 1}
   references:
     version: 2
@@ -2022,7 +2008,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224218844212
 MonoBehaviour:
@@ -2037,7 +2023,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 34
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141583
   requiredScience:
@@ -2047,8 +2032,8 @@ MonoBehaviour:
   - {fileID: 8721723224384873644}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 0
-    amount: 5000
+  - type: 
+    amount: []
   Lit: {r: 0.54617023, g: 0, b: 1, a: 1}
   references:
     version: 2
@@ -2159,7 +2144,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224304038446
 MonoBehaviour:
@@ -2174,7 +2159,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 0
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141498
   requiredScience:
@@ -2293,7 +2277,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224381371555
 MonoBehaviour:
@@ -2308,7 +2292,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 3
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141551
   requiredScience:
@@ -2427,7 +2410,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224384873644
 MonoBehaviour:
@@ -2442,7 +2425,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 27
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141579
   requiredScience:
@@ -2452,10 +2434,10 @@ MonoBehaviour:
   - {fileID: 8721723224743145326}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 1
-    amount: 750
-  - type: 12
-    amount: 750
+  - type: 
+    amount: []
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.4481132, b: 0.6806807, a: 1}
   references:
     version: 2
@@ -2566,7 +2548,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224390193428
 MonoBehaviour:
@@ -2581,7 +2563,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 55
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141494
   requiredScience:
@@ -2592,8 +2573,8 @@ MonoBehaviour:
   - {fileID: 8721723224833442594}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 7
-    amount: -2
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -2704,7 +2685,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224395489534
 MonoBehaviour:
@@ -2719,7 +2700,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 36
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141532
   requiredScience:
@@ -2731,8 +2711,8 @@ MonoBehaviour:
   - {fileID: 8721723224079055460}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 9
-    amount: 1.25
+  - type: 
+    amount: []
   Lit: {r: 0.54617023, g: 0, b: 1, a: 1}
   references:
     version: 2
@@ -2843,7 +2823,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224415245175
 MonoBehaviour:
@@ -2858,7 +2838,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 10
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141484
   requiredScience:
@@ -2868,8 +2847,8 @@ MonoBehaviour:
   - {fileID: 8721723225864581959}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 9
-    amount: 0.5
+  - type: 
+    amount: []
   Lit: {r: 0.092196584, g: 1, b: 0, a: 1}
   references:
     version: 2
@@ -2980,7 +2959,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224427590972
 MonoBehaviour:
@@ -2995,7 +2974,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 23
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141585
   requiredScience:
@@ -3115,7 +3093,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224428604063
 MonoBehaviour:
@@ -3130,7 +3108,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 2
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141474
   requiredScience:
@@ -3249,7 +3226,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224507484520
 MonoBehaviour:
@@ -3264,7 +3241,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 14
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141547
   requiredScience:
@@ -3275,8 +3251,8 @@ MonoBehaviour:
   - {fileID: 8721723224415245175}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 1
-    amount: 500
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.53792745, b: 0, a: 1}
   references:
     version: 2
@@ -3383,7 +3359,7 @@ Transform:
   - {fileID: 8721723224851196518}
   - {fileID: 8721723225376781651}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224515047487
 MonoBehaviour:
@@ -3460,7 +3436,7 @@ MonoBehaviour:
   - {fileID: 8721723225207016723}
   - {fileID: 8721723224851196522}
   - {fileID: 8721723225376781655}
-  uniqueBuffs: []
+  buffs: []
 --- !u!1 &8721723224534376040
 GameObject:
   m_ObjectHideFlags: 0
@@ -3557,7 +3533,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224534376019
 MonoBehaviour:
@@ -3572,7 +3548,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 53
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141502
   requiredScience:
@@ -3582,8 +3557,8 @@ MonoBehaviour:
   - {fileID: 8721723225317048343}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 10
-    amount: -7.5
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -3694,7 +3669,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224593487719
 MonoBehaviour:
@@ -3709,7 +3684,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 1
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141593
   requiredScience:
@@ -3828,7 +3802,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224607491279
 MonoBehaviour:
@@ -3843,7 +3817,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 48
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141561
   requiredScience:
@@ -3854,8 +3827,8 @@ MonoBehaviour:
   - {fileID: 8721723225116369638}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 0
-    amount: 10000
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -3966,7 +3939,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224702345780
 MonoBehaviour:
@@ -3981,7 +3954,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 16
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141549
   requiredScience:
@@ -3991,8 +3963,8 @@ MonoBehaviour:
   - {fileID: 8721723225058330327}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 8
-    amount: 250
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.53792745, b: 0, a: 1}
   references:
     version: 2
@@ -4103,7 +4075,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224743145326
 MonoBehaviour:
@@ -4118,7 +4090,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 21
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141504
   requiredScience:
@@ -4129,8 +4100,8 @@ MonoBehaviour:
   - {fileID: 8721723225606174802}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 9
-    amount: 1.1
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.53792745, b: 0, a: 1}
   references:
     version: 2
@@ -4241,7 +4212,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224798015220
 MonoBehaviour:
@@ -4256,7 +4227,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 29
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141486
   requiredScience:
@@ -4266,8 +4236,8 @@ MonoBehaviour:
   - {fileID: 8721723224115262597}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 13
-    amount: -0.2
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.4481132, b: 0.6806807, a: 1}
   references:
     version: 2
@@ -4378,7 +4348,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224802826318
 MonoBehaviour:
@@ -4393,7 +4363,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 57
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141496
   requiredScience:
@@ -4404,8 +4373,8 @@ MonoBehaviour:
   - {fileID: 8721723225657854785}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 2
-    amount: 1
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -4516,7 +4485,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224822972200
 MonoBehaviour:
@@ -4531,7 +4500,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 31
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141538
   requiredScience:
@@ -4541,8 +4509,8 @@ MonoBehaviour:
   - {fileID: 8721723223976466491}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 11
-    amount: 5000
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.4481132, b: 0.6806807, a: 1}
   references:
     version: 2
@@ -4653,7 +4621,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224833442594
 MonoBehaviour:
@@ -4668,7 +4636,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 52
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141524
   requiredScience:
@@ -4679,8 +4646,8 @@ MonoBehaviour:
   - {fileID: 8721723225116369638}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 12
-    amount: 3000
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -4791,7 +4758,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224851196522
 MonoBehaviour:
@@ -4806,7 +4773,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 60
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141587
   requiredScience:
@@ -4816,8 +4782,8 @@ MonoBehaviour:
   - {fileID: 8721723224036331914}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 8
-    amount: 10000
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -4928,7 +4894,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723224949511170
 MonoBehaviour:
@@ -4943,7 +4909,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 11
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141565
   requiredScience:
@@ -4954,8 +4919,8 @@ MonoBehaviour:
   - {fileID: 8721723225058330327}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 9
-    amount: 0.75
+  - type: 
+    amount: []
   Lit: {r: 0.092196584, g: 1, b: 0, a: 1}
   references:
     version: 2
@@ -5066,7 +5031,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225003833476
 MonoBehaviour:
@@ -5081,7 +5046,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 6
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141536
   requiredScience:
@@ -5091,8 +5055,8 @@ MonoBehaviour:
   - {fileID: 8721723224428604063}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 9
-    amount: 0.5
+  - type: 
+    amount: []
   Lit: {r: 0.092196584, g: 1, b: 0, a: 1}
   references:
     version: 2
@@ -5203,7 +5167,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225058330327
 MonoBehaviour:
@@ -5218,7 +5182,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 7
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141522
   requiredScience:
@@ -5228,8 +5191,8 @@ MonoBehaviour:
   - {fileID: 8721723224381371555}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 8
-    amount: 100
+  - type: 
+    amount: []
   Lit: {r: 0.092196584, g: 1, b: 0, a: 1}
   references:
     version: 2
@@ -5340,7 +5303,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225116369638
 MonoBehaviour:
@@ -5355,7 +5318,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 45
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141559
   requiredScience:
@@ -5475,7 +5437,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225162593499
 MonoBehaviour:
@@ -5490,7 +5452,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 9
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141534
   requiredScience:
@@ -5501,8 +5462,8 @@ MonoBehaviour:
   - {fileID: 8721723224428604063}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 1
-    amount: 250
+  - type: 
+    amount: []
   Lit: {r: 0.092196584, g: 1, b: 0, a: 1}
   references:
     version: 2
@@ -5613,7 +5574,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225207016723
 MonoBehaviour:
@@ -5628,7 +5589,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 59
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141488
   requiredScience:
@@ -5639,8 +5599,8 @@ MonoBehaviour:
   - {fileID: 8721723224390193428}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 1
-    amount: 1e+34
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -5751,7 +5711,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225257405033
 MonoBehaviour:
@@ -5766,7 +5726,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 15
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141500
   requiredScience:
@@ -5776,8 +5735,8 @@ MonoBehaviour:
   - {fileID: 8721723224949511170}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 9
-    amount: 1
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.53792745, b: 0, a: 1}
   references:
     version: 2
@@ -5888,7 +5847,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225275451048
 MonoBehaviour:
@@ -5903,7 +5862,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 17
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141528
   requiredScience:
@@ -5913,10 +5871,10 @@ MonoBehaviour:
   - {fileID: 8721723224095575931}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 0
-    amount: 2500
-  - type: 11
-    amount: 2500
+  - type: 
+    amount: []
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.53792745, b: 0, a: 1}
   references:
     version: 2
@@ -6027,7 +5985,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225317048343
 MonoBehaviour:
@@ -6042,7 +6000,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 50
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141563
   requiredScience:
@@ -6052,8 +6009,8 @@ MonoBehaviour:
   - {fileID: 8721723225116369638}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 9
-    amount: 2
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -6164,7 +6121,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225338414088
 MonoBehaviour:
@@ -6179,7 +6136,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 43
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141492
   requiredScience:
@@ -6190,8 +6146,8 @@ MonoBehaviour:
   - {fileID: 8721723224074039429}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 7
-    amount: -1
+  - type: 
+    amount: []
   Lit: {r: 0.54617023, g: 0, b: 1, a: 1}
   references:
     version: 2
@@ -6302,7 +6258,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225360421261
 MonoBehaviour:
@@ -6317,7 +6273,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 28
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141516
   requiredScience:
@@ -6327,8 +6282,8 @@ MonoBehaviour:
   - {fileID: 8721723225645298096}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 13
-    amount: -0.2
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.4481132, b: 0.6806807, a: 1}
   references:
     version: 2
@@ -6439,7 +6394,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225369975646
 MonoBehaviour:
@@ -6454,7 +6409,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 42
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141540
   requiredScience:
@@ -6464,8 +6418,8 @@ MonoBehaviour:
   - {fileID: 8721723224066472151}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 13
-    amount: -0.25
+  - type: 
+    amount: []
   Lit: {r: 0.54617023, g: 0, b: 1, a: 1}
   references:
     version: 2
@@ -6576,7 +6530,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225376781655
 MonoBehaviour:
@@ -6591,7 +6545,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 61
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141569
   requiredScience:
@@ -6711,7 +6664,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225448746661
 MonoBehaviour:
@@ -6726,7 +6679,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 13
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141595
   requiredScience:
@@ -6737,8 +6689,8 @@ MonoBehaviour:
   - {fileID: 8721723225162593499}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 0
-    amount: 1000
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.53792745, b: 0, a: 1}
   references:
     version: 2
@@ -6849,7 +6801,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225477603471
 MonoBehaviour:
@@ -6864,7 +6816,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 44
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141557
   requiredScience:
@@ -6875,8 +6826,8 @@ MonoBehaviour:
   - {fileID: 8721723225369975646}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 10
-    amount: -5
+  - type: 
+    amount: []
   Lit: {r: 0.54617023, g: 0, b: 1, a: 1}
   references:
     version: 2
@@ -6987,7 +6938,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225505970982
 MonoBehaviour:
@@ -7002,7 +6953,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 8
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141555
   requiredScience:
@@ -7012,8 +6962,8 @@ MonoBehaviour:
   - {fileID: 8721723224304038446}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 11
-    amount: 2500
+  - type: 
+    amount: []
   Lit: {r: 0.092196584, g: 1, b: 0, a: 1}
   references:
     version: 2
@@ -7124,7 +7074,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225606174802
 MonoBehaviour:
@@ -7139,7 +7089,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 19
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141480
   requiredScience:
@@ -7149,10 +7098,10 @@ MonoBehaviour:
   - {fileID: 8721723224702345780}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 1
-    amount: 500
-  - type: 12
-    amount: 500
+  - type: 
+    amount: []
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.53792745, b: 0, a: 1}
   references:
     version: 2
@@ -7263,7 +7212,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225645298096
 MonoBehaviour:
@@ -7278,7 +7227,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 25
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141490
   requiredScience:
@@ -7288,8 +7236,8 @@ MonoBehaviour:
   - {fileID: 8721723225720498660}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 13
-    amount: -0.1
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.4481132, b: 0.6806807, a: 1}
   references:
     version: 2
@@ -7400,7 +7348,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225657854785
 MonoBehaviour:
@@ -7415,7 +7363,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 49
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141575
   requiredScience:
@@ -7426,8 +7373,8 @@ MonoBehaviour:
   - {fileID: 8721723225830630335}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 1
-    amount: 5000
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -7538,7 +7485,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225674764471
 MonoBehaviour:
@@ -7553,7 +7500,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 4
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141591
   requiredScience:
@@ -7564,8 +7510,8 @@ MonoBehaviour:
   - {fileID: 8721723224593487719}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 0
-    amount: 500
+  - type: 
+    amount: []
   Lit: {r: 0.092196584, g: 1, b: 0, a: 1}
   references:
     version: 2
@@ -7676,7 +7622,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225720498660
 MonoBehaviour:
@@ -7691,7 +7637,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 22
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141512
   requiredScience:
@@ -7811,7 +7756,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225830630335
 MonoBehaviour:
@@ -7826,7 +7771,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 47
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141545
   requiredScience:
@@ -7946,7 +7890,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225864581959
 MonoBehaviour:
@@ -7961,7 +7905,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 5
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141476
   requiredScience:
@@ -7971,8 +7914,8 @@ MonoBehaviour:
   - {fileID: 8721723224428604063}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 9
-    amount: 0.5
+  - type: 
+    amount: []
   Lit: {r: 0.092196584, g: 1, b: 0, a: 1}
   references:
     version: 2
@@ -8083,7 +8026,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225902717845
 MonoBehaviour:
@@ -8098,7 +8041,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 18
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141510
   requiredScience:
@@ -8108,8 +8050,8 @@ MonoBehaviour:
   - {fileID: 8721723224507484520}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 9
-    amount: 1
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.53792745, b: 0, a: 1}
   references:
     version: 2
@@ -8220,7 +8162,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225929393899
 MonoBehaviour:
@@ -8235,7 +8177,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 39
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141573
   requiredScience:
@@ -8246,10 +8187,10 @@ MonoBehaviour:
   - {fileID: 8721723224154861726}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 1
-    amount: 1000
-  - type: 12
-    amount: 2000
+  - type: 
+    amount: []
+  - type: 
+    amount: []
   Lit: {r: 0.54617023, g: 0, b: 1, a: 1}
   references:
     version: 2
@@ -8360,7 +8301,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723225974997016
 MonoBehaviour:
@@ -8375,7 +8316,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 51
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141526
   requiredScience:
@@ -8385,8 +8325,8 @@ MonoBehaviour:
   - {fileID: 8721723224607491279}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 11
-    amount: 5000
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0, b: 0, a: 1}
   references:
     version: 2
@@ -8497,7 +8437,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723226029583777
 MonoBehaviour:
@@ -8512,7 +8452,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 20
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141553
   requiredScience:
@@ -8522,8 +8461,8 @@ MonoBehaviour:
   - {fileID: 8721723224702345780}
   lineMat: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   buffs:
-  - type: 8
-    amount: 300
+  - type: 
+    amount: []
   Lit: {r: 1, g: 0.53792745, b: 0, a: 1}
   references:
     version: 2
@@ -8634,7 +8573,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.15, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8721723226068650387
 MonoBehaviour:
@@ -8649,7 +8588,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: 46
-  tech_name: 
   requiredMoney:
     rid: 4635715109984141581
   requiredScience:
