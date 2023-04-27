@@ -4,6 +4,7 @@ using System;
 
 namespace CT.Data
 {
+    using CT.Data.Changes;
     using Enumerations;
     using Lookup;
 
@@ -17,8 +18,8 @@ namespace CT.Data
         public Dictionary<CTTechnologies, bool> active_technologues;
 
         // Policies
-        public List<CTPolicyCard> applied_policies;
-        public List<CTPolicyCard> revoked_policies;
+        public List<CTPolicyCard> applied_policies = new List<CTPolicyCard>();
+        public List<CTPolicyCard> revoked_policies = new List<CTPolicyCard>();
 
         public CTModifiers modifiers;
 
@@ -98,7 +99,7 @@ namespace CT.Data
                 if (value > Population)
                 {
                     Population += (int)(Population * DataSheet.food_surplus_population_gain);
-                    Debug.Log("Population growth!");
+                    //Debug.Log("Population growth!");
                 }
             }
         }
@@ -392,6 +393,29 @@ namespace CT.Data
             //Debug.Log("Pop " + _cost.population);
             Population -= _cost.population;
         }
+
+        public void OingoBoingo()
+        {
+            Debug.Log("CTYearData.OingoBoingo");
+
+            foreach (CTPolicyCard apc in applied_policies)
+            {
+                foreach (CTPolicyCard rpc in revoked_policies)
+                {
+                    // Debug log if there are matching IDs between applied and revoked policies
+                    if (apc.ID == rpc.ID)
+                    {
+                        Debug.Log($"Policy {apc.ID} is now inactive.");
+                        break;
+                    }
+
+                    
+                }
+                
+                Debug.Log($"Policy {apc.ID} is still active.");
+            }
+        }
+
         #endregion
 
 

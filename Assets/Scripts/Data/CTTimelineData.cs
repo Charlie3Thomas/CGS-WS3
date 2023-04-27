@@ -11,11 +11,16 @@ namespace CT.Data
     {
         public List<CTChange>[] user_changes;
         public List<CTChange>[] game_changes;
+
         CTYearData initial_year;
 
         private CTTimelineData() { }
 
-        public CTTimelineData(uint _start_year, uint _end_year, List<CTChange>[] _user_changes, List<CTChange>[] _game_changes)
+        public CTTimelineData(
+            uint _start_year, 
+            uint _end_year, 
+            List<CTChange>[] _user_changes, 
+            List<CTChange>[] _game_changes)
         {
             if (_start_year >= _end_year)
                 throw new ArgumentException("CTTimelineData.Initialise: Cannot assign the same start year and end year!");
@@ -56,11 +61,11 @@ namespace CT.Data
 
                 // Apply net resource worth of each assigned population member for each turn between zero and requested turn
                 CTCost net_total = new CTCost(0, 0, 0, 0);
-                net_total += (DataSheet.farmers_net     * ret.Farmers);
-                net_total += (DataSheet.worker_net      * ret.Workers);
-                net_total += (DataSheet.scientist_net   * ret.Scientists);
-                net_total += (DataSheet.planners_net    * ret.Planners);
-                net_total += (DataSheet.unemployed_net  * ret.UnassignedPopulation);
+                net_total += (DataSheet.farmers_net * ret.Farmers);
+                net_total += (DataSheet.worker_net * ret.Workers);
+                net_total += (DataSheet.scientist_net * ret.Scientists);
+                net_total += (DataSheet.planners_net * ret.Planners);
+                net_total += (DataSheet.unemployed_net * ret.UnassignedPopulation);
 
                 ret.ApplyCosts(net_total);
             }

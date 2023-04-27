@@ -28,9 +28,11 @@ namespace CT
     {
         public static GameManager _INSTANCE;
 
+        // Changes
         private List<CTChange>[] game_changes;
         private List<CTChange>[] user_changes;
         private List<CTChange>[] awareness_changes;
+
         private CTYearData turn = new CTYearData();
         private CTTimelineData prime_timeline;
 
@@ -215,7 +217,7 @@ namespace CT
             Vector4 b = CTVector4Round(current_ratios, 10);
             if (a == b)
             {
-                Debug.Log("Requested choice is identical to base distribution!");
+                //Debug.Log("Requested choice is identical to base distribution!");
                 return;
             }
             else

@@ -1,15 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CT.Lookup;
+using CT;
 
+[System.Serializable]
 public class CTPolicyContainer : MonoBehaviour
 {
+    public int index;
     [SerializeField] private CTPolicyCard current_policy;
-    [SerializeField] public List<CTPolicyCard> policies;
+    [SerializeField] public CTPolicyCard[] policies;
 
-    public void SetPolicyForCurrentTurn(uint _turn)
+    private void Start()
     {
-        current_policy = policies[(int)_turn];
+        current_policy = new CTPolicyCard();
+
+        policies = new CTPolicyCard[DataSheet.turns_number];
+        for (int i = 0; i < policies.Length; i++)
+        {
+            policies[i] = new CTPolicyCard();
+            PolicyGen.GeneratePolicy(policies[i]);
+        }
+
+        SetPolicyForTurn();
+    }
+
+    public void SetPolicyForTurn()
+    {
+        current_policy = policies[GameManager._INSTANCE.GetTurn().turn];
     }
 
     public CTPolicyCard GetCurrentPolicy()

@@ -13,6 +13,7 @@ namespace CT.Data.Changes
         public override void ApplyChange(ref CTYearData _year)
         {
             _year.applied_policies.Add(policy);
+            //_year.OingoBoingo();
         }
     }
 }

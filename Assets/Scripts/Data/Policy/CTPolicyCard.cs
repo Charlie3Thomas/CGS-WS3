@@ -74,5 +74,4 @@ public class CTPolicyCard
     {
         debuffs = _debuffs;
     }
-
 }

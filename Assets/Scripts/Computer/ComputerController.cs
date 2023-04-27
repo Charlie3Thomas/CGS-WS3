@@ -321,7 +321,11 @@ public class ComputerController : MonoBehaviour
     {
         // Select policy card
         if (isInteractingPressed && _hit.transform.CompareTag("PolicyCard"))
-            PolicyManager.instance.ReplacePolicyCard(_hit.transform.GetComponent<CTPolicyContainer>().GetCurrentPolicy().ID);
+        {
+            //PolicyManager.instance.ReplacePolicyCard(_hit.transform.GetComponent<CTPolicyContainer>().GetCurrentPolicy().ID);
+            CTPolicyContainer test = _hit.transform.GetComponent<CTPolicyContainer>();
+            PolicyManager.instance.SelectPolicy(test.GetCurrentPolicy().ID);
+        }
 
         // Policy cards hover
         for (int i = 0; i < 7; i++)
