@@ -910,7 +910,8 @@ PlayerSettings:
   XboxOneOverrideIdentityName: 
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Collab: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -924,11 +925,11 @@ PlayerSettings:
     m_VersionName: 
   apiCompatibilityLevel: 3
   activeInputHandler: 2
-  cloudProjectId: 
+  cloudProjectId: a2e889d7-036d-41ea-bce6-95b3f36a5ada
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: DisasterGame
+  organizationId: hirenkacha
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 

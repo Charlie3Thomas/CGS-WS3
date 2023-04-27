@@ -152,7 +152,7 @@ public class ComputerController : MonoBehaviour
 
     void Update()
     {
-        if (!cam)
+        if (!cam || PopupNotificationManager.Instance.IsActive)
             return;
 
         Ray ray = cam.ScreenPointToRay(mousePos);

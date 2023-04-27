@@ -13,6 +13,7 @@ public class PointSelector : MonoBehaviour
 {
     public GameObject pip;
     private Material pipMat;
+    private CustomCursor customCursor;
 
     //[HideInInspector]
     public float pointValue;
@@ -20,9 +21,10 @@ public class PointSelector : MonoBehaviour
 
     private void Awake()
     {
+        customCursor = FindObjectOfType<CustomCursor>();
         pipMat = pip.GetComponent<Renderer>().materials[1];
     }
-
+    
     public void AddPoints(float points)
     {
         if (pointValue < pointLimit)
