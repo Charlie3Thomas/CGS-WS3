@@ -53,6 +53,9 @@ public class ComputerButton : MonoBehaviour
 
                 GameManager._INSTANCE.OnClickCheckoutYearButton(turn);
 
+                // Refresh Policies
+                PolicyManager.instance.NewPolicySet();
+
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
 
                 break;

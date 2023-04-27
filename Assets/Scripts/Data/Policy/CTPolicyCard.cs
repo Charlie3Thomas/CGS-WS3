@@ -3,9 +3,24 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class CTPolicyCard : MonoBehaviour
+[System.Serializable]
+public class CTPolicyCard
 {
+
+    public CTPolicyCard() { }
+
+    public CTPolicyCard(CTPolicyCard _pc) 
+    { 
+        this.ID = _pc.ID;
+        this.info_text = _pc.info_text;
+        this.cost = _pc.cost;
+        this.fdist = _pc.fdist;
+        this.buff_nerf_scale = _pc.buff_nerf_scale;
+        this.buffs = _pc.buffs;
+        this.debuffs = _pc.debuffs;
+    }
+
+
     public string ID;
     public string info_text;
     public CTCost cost = new CTCost();
@@ -14,22 +29,23 @@ public class CTPolicyCard : MonoBehaviour
     public Dictionary<BuffsNerfsType, bool> buffs = new Dictionary<BuffsNerfsType, bool>();
     public Dictionary<BuffsNerfsType, bool> debuffs = new Dictionary<BuffsNerfsType, bool>();
 
-    private void Awake()
+    public void CopyPolicyCard(CTPolicyCard _pc)
     {
-        PolicyGen.GeneratePolicy(this);
+        _pc.ID = this.ID;
+        _pc.info_text = this.info_text;
+        _pc.cost = this.cost;
+        _pc.fdist = this.fdist;
+        _pc.buff_nerf_scale = this.buff_nerf_scale;
+        _pc.buffs = this.buffs;
+        _pc.debuffs = this.debuffs;
     }
 
-    public void PlayShowSound()
+    public void SetID(string _ID)
     {
-        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.policyCardShowEvent, null);
+        this.ID = _ID;
     }
 
-    public void PlayHideSound()
-    {
-
-    }
-
-    public void SetName(string _name)
+    public void SetText(string _name)
     {
         info_text = _name;
     }
@@ -44,6 +60,11 @@ public class CTPolicyCard : MonoBehaviour
         fdist = _fdist;
     }
 
+    public void SetDegrees(Dictionary<BuffsNerfsType, float> _degree)
+    {
+        buff_nerf_scale = _degree;
+    }
+
     public void SetBuffs(Dictionary<BuffsNerfsType, bool> _buffs)
     {
         buffs = _buffs;
@@ -54,8 +75,4 @@ public class CTPolicyCard : MonoBehaviour
         debuffs = _debuffs;
     }
 
-    public void SetDegrees(Dictionary<BuffsNerfsType, float> _degree)
-    {
-        buff_nerf_scale = _degree;
-    }
 }

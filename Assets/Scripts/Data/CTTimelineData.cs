@@ -56,19 +56,13 @@ namespace CT.Data
 
                 // Apply net resource worth of each assigned population member for each turn between zero and requested turn
                 CTCost net_total = new CTCost(0, 0, 0, 0);
-                net_total += (DataSheet.farmers_net * ret.Farmers);
-                net_total += (DataSheet.worker_net * ret.Workers);
-                net_total += (DataSheet.scientist_net * ret.Scientists);
-                net_total += (DataSheet.planners_net * ret.Planners);
-                net_total += (DataSheet.unemployed_net * ret.UnassignedPopulation);
+                net_total += (DataSheet.farmers_net     * ret.Farmers);
+                net_total += (DataSheet.worker_net      * ret.Workers);
+                net_total += (DataSheet.scientist_net   * ret.Scientists);
+                net_total += (DataSheet.planners_net    * ret.Planners);
+                net_total += (DataSheet.unemployed_net  * ret.UnassignedPopulation);
 
                 ret.ApplyCosts(net_total);
-
-                //ret.ApplyCosts(DataSheet.farmers_net * ret.Farmers);
-                //ret.ApplyCosts(DataSheet.worker_net * ret.Workers);
-                //ret.ApplyCosts(DataSheet.scientist_net * ret.Scientists);
-                //ret.ApplyCosts(DataSheet.planners_net * ret.Planners);
-                //ret.ApplyCosts(DataSheet.unemployed_net * ret.UnassignedPopulation);
             }
 
             return ret;
@@ -77,31 +71,6 @@ namespace CT.Data
 
         #region Actions
 
-        // Buy technology
-        public void BuyTech(int _year, CTTechnologies _tech)
-        {
-            if (_year < 0)
-                throw new ArgumentException("Year cannot be zero or lower!");
-
-            user_changes[_year].Add(new PurchaseTechnology(_tech));
-        }
-
-        // Set Policy
-        public void ApplyPolicy(int _year, CTPolicies _policy)
-        {
-            if (_year < 0)
-                throw new ArgumentException("Year cannot be zero or lower!");
-
-            user_changes[_year].Add(new SetPolicy(_policy));
-        }
-
-        public void RevokePolicy(int _year, CTPolicies _policy)
-        {
-            if (_year < 0)
-                throw new ArgumentException("Year cannot be zero or lower!");
-
-            user_changes[_year].Remove(new SetPolicy(_policy));
-        }
 
         // Set faction distribution
         /// <summary>
@@ -125,8 +94,6 @@ namespace CT.Data
         }
 
         #endregion
-
-
     }
 }
 
