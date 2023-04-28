@@ -316,16 +316,16 @@ namespace CT.Data
         public void ApplyCosts(CTCost _cost)
         {
             //Debug.Log("Money " + _cost.money);
-            Money -= _cost.money;
+            Money -= (int)_cost.money;
 
             //Debug.Log("Science " + _cost.science);
-            Science -= _cost.science;
+            Science -= (int)_cost.science;
 
             //Debug.Log("Food " + _cost.food);
-            Food -= _cost.food;
+            Food -= (int)_cost.food;
 
             //Debug.Log("Pop " + _cost.population);
-            Population -= _cost.population;
+            Population -= (int)_cost.population;
         }
 
         #endregion

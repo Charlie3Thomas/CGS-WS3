@@ -3,11 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Money, Science, Food, Population
+/// </summary>
 public class CTCost 
 {
     public CTCost() { }
 
-    public CTCost(int _money, int _science, int _food, int _population)
+    public CTCost(float _money, float _science, float _food, float _population)
     {
         money = _money;
         science = _science;
@@ -16,10 +20,10 @@ public class CTCost
     }
 
 
-    public int money;
-    public int science;
-    public int food;
-    public int population;
+    public float money;
+    public float science;
+    public float food;
+    public float population;
 
 
     #region Operator Overrides

@@ -30,6 +30,6 @@ public class ApplyDisaster : CTChange
     {
         // Look at all modifiers to disaster impact and apply them to the base disaster impact value
         // Apply final modified disaster impact
-        _year.ApplyCosts(DataSheet.GetDisasterImpact(disaster, in _year));
+        _year.ApplyCosts(DataSheet.GetDisasterImpact(disaster));
     }
 }

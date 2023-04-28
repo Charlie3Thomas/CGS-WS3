@@ -3,8 +3,6 @@ using System.Collections.Generic;
 namespace CT.Lookup
 {
     using Data;
-    using FMOD;
-    using System;
 
     public static class DataSheet
     {
@@ -13,27 +11,27 @@ namespace CT.Lookup
 
 
         #region Base Values
-        public static readonly uint turn_steps = 5;
-        public static readonly uint starting_year = 1900;
-        public static readonly uint end_year = 2100;
-        public static readonly uint turns_number = (end_year - starting_year) / turn_steps + 1;
-        public static readonly int starting_money = 10000;
-        public static readonly int starting_science = 10000;
-        public static readonly int starting_food = 1000;
-        public static readonly float year_change_awareness_rate = 0.05f;
-        public static readonly float year_override_awareness_rate = 0.15f;
+        public static readonly uint     turn_steps                      = 5;
+        public static readonly uint     starting_year                   = 1900;
+        public static readonly uint     end_year                        = 2100;
+        public static readonly uint     turns_number                    = (end_year - starting_year) / turn_steps + 1;
+        public static readonly int      starting_money                  = 10000;
+        public static readonly int      starting_science                = 10000;
+        public static readonly int      starting_food                   = 1000;
+        public static readonly float    year_change_awareness_rate      = 0.05f;
+        public static readonly float    year_override_awareness_rate    = 0.15f;
 
-        public static readonly int starting_population = 500; 
-        public static readonly float starvation_rate = 0.40f;
-        public static readonly float food_surplus_population_gain = 0.10f;
+        public static readonly int      starting_population             = 500; 
+        public static readonly float    starvation_rate                 = 0.40f;
+        public static readonly float    food_surplus_population_gain    = 0.10f;
 
-        public static readonly float starting_workers = 0.0f;
-        public static readonly float starting_scientists = 0.0f;
-        public static readonly float starting_farmers = 0.0f;
-        public static readonly float starting_planners = 0.0f;
+        public static readonly float    starting_workers                = 0.0f;
+        public static readonly float    starting_scientists             = 0.0f;
+        public static readonly float    starting_farmers                = 0.0f;
+        public static readonly float    starting_planners               = 0.0f;
 
-        public static readonly float policy_card_min_scale = 25.0f;
-        public static readonly float policy_card_max_scale = 500.0f;
+        public static readonly float    policy_card_min_scale           = 25.0f;
+        public static readonly float    policy_card_max_scale           = 500.0f;
         #endregion
 
 
@@ -41,14 +39,14 @@ namespace CT.Lookup
         // Positive numbers show the cost
         // Negative numbers show production
         // A negative cost is a boon
-        public static readonly CTCost worker_net     = new CTCost(-3, 0, 1, 0);
-        public static readonly CTCost scientist_net  = new CTCost(0, -1, 1, 0);
-        public static readonly CTCost planners_net   = new CTCost(0, 5, 1, 0);
-        public static readonly CTCost farmers_net    = new CTCost(0, 0, -1, 0);
-        public static readonly CTCost unemployed_net = new CTCost(1, 0, 1, 0);
+        public static readonly CTCost worker_net     = new CTCost(-3.0f,  0.0f,  1.0f, 0.0f);
+        public static readonly CTCost scientist_net  = new CTCost( 0.0f, -1.0f,  1.0f, 0.0f);
+        public static readonly CTCost planners_net   = new CTCost( 0.0f,  5.0f,  1.0f, 0.0f);
+        public static readonly CTCost farmers_net    = new CTCost( 0.0f,  0.0f, -3.5f, 0.0f);
+        public static readonly CTCost unemployed_net = new CTCost( 1.0f,  0.0f,  1.0f, 0.0f);
 
 
-        public static CTCost GetTechPrice(CTTechnologies _tech, in CTTurnData _year_data)
+        public static CTCost GetTechPrice(CTTechnologies _tech)
         {
             // Price scaling functionality?
 
@@ -56,7 +54,7 @@ namespace CT.Lookup
             //return new CTCost(500, 500, 0, 0); // Placeholder cost
         }
 
-        public static CTCost GetDisasterImpact(CTDisasters _disaster, in CTTurnData _year_data)
+        public static CTCost GetDisasterImpact(CTDisasters _disaster)
         {
             //return disaster_impact[_disaster];
             //UnityEngine.Debug.Log("Disaster");

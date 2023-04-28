@@ -18,12 +18,11 @@ namespace CT
 {
     using Data;
     using Data.Changes;
+    using Data.Resources;
     using Lookup;
     using Enumerations;
-    using Unity.VisualScripting;
-    using CT.Data.Resources;
-    using static UnityEngine.Rendering.DebugUI;
-    using System.Security.Policy;
+    using UnityEngine.UIElements;
+    using UnityEditor.Experimental.GraphView;
 
     public class GameManager : MonoBehaviour
     {
@@ -36,7 +35,7 @@ namespace CT
 
         private readonly CTTurnData initial_year = new CTTurnData();
 
-        private CTTurnData turn = new CTTurnData();
+        public CTTurnData turn = new CTTurnData();
         //private CTTimelineData prime_timeline;
 
         [SerializeField] private uint current_turn = 0;
@@ -213,6 +212,19 @@ namespace CT
                     // Add change to game_changes
                     game_changes[t].Add(new SetFactionDistribution(dist.x, dist.y, dist.z, dist.w));
 
+                // Get list of affordable technologies
+                List<TechNode> affordable_valid_techs = new List<TechNode>(GetAffordableTechnologiesForTurn(t));
+
+                if (affordable_valid_techs.Count > 0)
+                {
+                    // Randomly purchase an affordable valid technology and unlock it
+                    int avt_index = CTSeed.RandFromSeed(t, "tech").Next(affordable_valid_techs.Count);
+                    game_changes[t].Add(new PurchaseTechnology(affordable_valid_techs[avt_index].tech));
+                    affordable_valid_techs[avt_index].Unlock();
+                    Debug.Log($"AI Purchased Technology {affordable_valid_techs[avt_index]} at turn {t}");
+                }
+                    
+
                 // Get Year Data after changes
                 CTTurnData d = GetYearData(t);
 
@@ -223,6 +235,49 @@ namespace CT
                     return;
                 }
             }
+        }
+
+        private List<TechNode> GetAffordableTechnologiesForTurn(uint _turn)
+        {
+            CTTurnData data = GetYearData(_turn);
+
+            List<TechNode> affordable_technologies = new List<TechNode>();
+
+            TechTree tt = FindObjectOfType<TechTree>();
+
+            foreach (TechNode n in tt.nodes)
+            {
+                CTCost cost = DataSheet.GetTechPrice(n.tech);
+
+                // Check if node is affordable
+                if (cost.money      <= data.Money   &&
+                    cost.science    <= data.Science &&
+                    cost.food       <= data.Food    &&
+                    cost.population <= data.Population)
+
+                {
+                    bool prerequisites = true;
+
+                    // Check if prerequisites are owned
+                    foreach (TechNode p in n.requiredNodes)
+                    {
+                        if (!data.active_technologues[n.tech])
+                            prerequisites = false;
+                    }
+
+                    // If all prerequisites are owned and tech is not owned, add to list
+                    if (prerequisites && data.active_technologues[n.tech] == false)
+                        affordable_technologies.Add(n);
+
+                }
+            }
+
+            return affordable_technologies;
+        }
+
+        public bool IsTechnologyOwned(CTTechnologies _tech)
+        {
+            return true;
         }
 
 
