@@ -8,7 +8,7 @@ namespace CT.Data
     using Enumerations;
     using Lookup;
 
-    public class CTYearData
+    public class CTTurnData
     {
         // Debugging
         public uint turn;
@@ -163,55 +163,6 @@ namespace CT.Data
                     Scientists = (int)(Population * scientist_ratio);
 
                     Population -= UnassignedPopulation;
-
-                    /*
-                    while (value < AssignedPopulation)
-                    {
-                        int oingo = UnityEngine.Random.Range(1, 5);
-
-                        try
-                        {
-                            switch (oingo)
-                            {
-                                case 1:
-                                    if (Workers > 0)
-                                        Workers--;
-                                    else
-                                        continue;
-                                    break;
-
-                                case 2:
-                                    if (Scientists > 0)
-                                        Scientists--;
-                                    else
-                                        continue;
-                                    break;
-
-                                case 3:
-                                    if (Farmers > 0)
-                                        Farmers--;
-                                    else
-                                        continue;
-                                    break;
-
-                                case 4:
-                                    if (Planners > 0)
-                                        Planners--;
-                                    else
-                                        continue;
-                                    break;
-
-                                default:
-                                    break;
-                            }
-                        }
-                        catch 
-                        {
-                            continue;
-                        }
-                        population--;
-                    }
-                    */
                 }
                 else
                 {

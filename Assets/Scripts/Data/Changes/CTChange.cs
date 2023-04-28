@@ -7,6 +7,6 @@ namespace CT.Data.Changes
     abstract public class CTChange
     {
         public int Year { get; set; }
-        abstract public void ApplyChange(ref CTYearData _year);
+        abstract public void ApplyChange(ref CTTurnData _year);
     }
 }

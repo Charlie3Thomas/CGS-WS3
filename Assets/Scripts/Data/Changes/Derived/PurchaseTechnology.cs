@@ -17,7 +17,7 @@ namespace CT.Data.Changes
 
         public CTTechnologies tech;
 
-        public override void ApplyChange(ref CTYearData _year)
+        public override void ApplyChange(ref CTTurnData _year)
         {
             _year.active_technologues[tech] = true;
             _year.ApplyCosts(DataSheet.GetTechPrice(tech, _year));

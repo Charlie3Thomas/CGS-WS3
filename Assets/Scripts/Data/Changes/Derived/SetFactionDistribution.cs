@@ -36,13 +36,13 @@ public class SetFactionDistribution : CTChange
     public float farmer_percentage;
     public float planner_percentage;
 
-    public override void ApplyChange(ref CTYearData _year)
+    public override void ApplyChange(ref CTTurnData _year)
     {
         ResetDistribution(ref _year);
         AssignNewDistribution(ref _year);
     }
 
-    private void ResetDistribution(ref CTYearData _year)
+    private void ResetDistribution(ref CTTurnData _year)
     {
         // Reset distribution for year
         _year.Workers = 0;
@@ -51,7 +51,7 @@ public class SetFactionDistribution : CTChange
         _year.Planners = 0;
     }
 
-    private void AssignNewDistribution(ref CTYearData _year)
+    private void AssignNewDistribution(ref CTTurnData _year)
     {
         // Asign new distribution
         _year.Workers = (int)(_year.Population * worker_percentage);

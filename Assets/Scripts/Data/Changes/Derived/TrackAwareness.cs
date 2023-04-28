@@ -17,7 +17,7 @@ namespace CT.Data.Changes
 
         public float value;
 
-        public override void ApplyChange(ref CTYearData _year)
+        public override void ApplyChange(ref CTTurnData _year)
         {
             _year.Awareness = value;
         }

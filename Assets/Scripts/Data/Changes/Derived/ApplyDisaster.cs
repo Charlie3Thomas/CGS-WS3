@@ -26,7 +26,7 @@ public class ApplyDisaster : CTChange
     public int turn;
     public float intensity;
 
-    public override void ApplyChange(ref CTYearData _year)
+    public override void ApplyChange(ref CTTurnData _year)
     {
         // Look at all modifiers to disaster impact and apply them to the base disaster impact value
         // Apply final modified disaster impact

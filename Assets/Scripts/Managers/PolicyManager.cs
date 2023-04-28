@@ -24,6 +24,7 @@ public class PolicyManager : MonoBehaviour
 
     private Vector2 scroll;
 
+    #region UnityMethods
     void Awake()
     {
         if (instance == null)
@@ -37,7 +38,100 @@ public class PolicyManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        SubscribeInputs();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeInputs();
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeInputs();
+    }
+
+    private void Update()
+    {
+        SelectCurrentPolicyWithScroll();
+    }
+
     private void Start()
+    {
+        Initialise();
+    }
+    #endregion
+
+
+    #region Methods
+    /// <summary>
+    /// Generates seven policy cards
+    /// </summary>
+    public void LoadPoliciesForTurn()
+    {
+        policies_at_current_turn = new CTPolicyCard[policies_per_turn];
+
+        // Loop through all policy containers
+        for (int i = 0; i < policy_containers.Length; i++)
+        {
+            policy_containers[i].SetPolicyForTurn();
+            policies_at_current_turn[i] = policy_containers[i].GetCurrentPolicy();
+        }
+
+        for (int i = 0; i < policies_at_current_turn.Length; i++)
+        {
+            UpdatePolicyCardText(i, policies_at_current_turn[i]);
+        }
+    }
+
+    public void SelectPolicy(string _ID)
+    {
+        // For each selectable policy
+        for (int policy = 0; policy < policies_at_current_turn.Length; policy++)
+        {
+            // If the selected policy ID matches a selectable policy ID in the current turn
+            if (policies_at_current_turn[policy].ID == _ID)
+            {
+                // If selected ID is already owned
+                if (AlreadyHavePolicy(_ID))
+                    return;
+
+                // If there is a free slot in current policies
+                int free_slot = FindFreeSlot();
+                if (free_slot != -1)
+                {
+                    current_policies[free_slot] = policies_at_current_turn[policy];
+                    TrackApplyPolicy(current_policies[free_slot]);
+                    return;
+                }
+                // If there is no free slot in current policies
+                else
+                {
+                    int replace_slot = HandleNoFreeSlotCase();
+                    current_policies[replace_slot] = policies_at_current_turn[policy];
+                    TrackApplyPolicy(current_policies[replace_slot]);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void UpdatePolicyCardText(int _index, CTPolicyCard _pc)
+    {
+        ComputerController.Instance.pCardTexts[_index].text = _pc.info_text;
+
+        ComputerController.Instance.pCardTexts[_index].text =
+                $"{ComputerController.Instance.pCardTexts[_index].text}" +
+                $"    {_pc.cost.GetString()}";
+    }
+
+    #endregion
+
+
+    #region Utility
+    private void Initialise()
     {
         current_policies = new CTPolicyCard[3];
         for (int i = 0; i < current_policies.Length; i++)
@@ -61,122 +155,6 @@ public class PolicyManager : MonoBehaviour
         LoadPoliciesForTurn();
     }
 
-    private void Update()
-    {
-        SelectCurrentPolicyWithScroll();
-
-    }
-
-    private void SelectCurrentPolicyWithScroll()
-    {
-        if (current_policies.Length > 0)
-        {
-            if (scroll.y > 0f)
-            {
-                first_out_index = (first_out_index + 1) % current_policies.Length;
-                first_out_policy = current_policies[first_out_index];
-            }
-            else if (scroll.y < 0f)
-            {
-                first_out_index--;
-                if (first_out_index < 0)
-                    first_out_index = current_policies.Length - 1;
-            }
-
-            first_out_policy = current_policies[first_out_index];
-        }
-    }
-
-    /// <summary>
-    /// Generates seven policy cards
-    /// </summary>
-    public void LoadPoliciesForTurn()
-    {
-        policies_at_current_turn = new CTPolicyCard[policies_per_turn];
-
-        // Loop through all policy containers
-        for (int i = 0; i < policy_containers.Length; i++)
-        {
-            policies_at_current_turn[i] = policy_containers[i].GetCurrentPolicy();
-        }
-
-        for (int i = 0; i < policies_at_current_turn.Length; i++)
-        {
-            UpdatePolicyCardText(i, policies_at_current_turn[i]);
-        }
-
-        // Loop through all policy containers and initialise
-        //for (int i = 0; i < policy_containers.Length; i++)
-        //{
-        //    policy_containers[i].Initialise();
-        //    policy_containers[i].SetPolicyForTurn(GameManager._INSTANCE.GetTurn().turn);
-
-        //}
-
-        //for (int i = 0; i < policy_containers.Length; i++)
-        //{
-        //    policy_containers[i].InitialiseAtTurn(GameManager._INSTANCE.GetTurn().turn);
-        //    policies_at_current_turn[i] = policy_containers[i].GetCurrentPolicy();
-        //    UpdatePolicyCardText(i, policy_containers[i].GetCurrentPolicy());
-        //}
-
-        //for (int i = 0; i < all_policy_cards.Length; i++)
-        //{
-        //    for (int j = 0; j < all_policy_cards[i].Length; j++)
-        //    {
-        //        policy_containers[i].policies[j] = (all_policy_cards[i][j]);
-        //    }
-        //}
-
-    }
-
-    public void SelectPolicy(string _ID)
-    {
-        bool current_policies_has_free_slot = false;
-
-        for (int i = 0; i < policies_at_current_turn.Length; i++)
-        {
-            if (policies_at_current_turn[i].ID == _ID)
-            {
-                if (AlreadyHavePolicy(_ID))
-                    return;
-
-                for (int j = 0; j < current_policies.Length; j++)
-                {
-                    if (current_policies[j].ID == null)
-                    {
-                        current_policies[j] = policies_at_current_turn[i];
-                        TrackApplyPolicy(current_policies[j]);
-                        //ReplacePolicy(i);
-                        current_policies_has_free_slot = true;
-
-                        return;
-                    }
-
-                    if (!current_policies_has_free_slot)
-                    {
-                        for (int x = 0; x < current_policies.Length; x++)
-                        {
-                            if (current_policies[x].ID == null)
-                            {
-                                current_policies[x] = policies_at_current_turn[i];
-                                TrackApplyPolicy(current_policies[x]);
-
-                                return;
-                            }
-                        }
-
-                        current_policies[HandleNoFreeSlotCase()] = policies_at_current_turn[i];
-                        TrackApplyPolicy(current_policies[HandleNoFreeSlotCase()]);
-                        //ReplacePolicy(i);
-
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
     private bool AlreadyHavePolicy(string _ID)
     {
         for (int i = 0; i < current_policies.Length; i++)
@@ -188,6 +166,19 @@ public class PolicyManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    private int FindFreeSlot()
+    {
+        for (int slot = 0; slot < current_policies.Length; slot++)
+        {
+            if (current_policies[slot].ID == null)
+            {
+                return slot;
+            }
+        }
+
+        return -1;
     }
 
     private int HandleNoFreeSlotCase()
@@ -212,53 +203,21 @@ public class PolicyManager : MonoBehaviour
         UpdatePolicyCardText(_index, policies_at_current_turn[_index]);
     }
 
-    //public void ReplacePolicyCard(string _ID)
-    //{
-    //    StartCoroutine(Replace(_ID));
-    //}
-
-    //private IEnumerator Replace(string _ID)
-    //{
-    //    if (currentPolicies.Count > 2)
-    //    {
-    //        TrackRevokePolicy(currentSelectedPolicy);
-    //        currentPolicies.Remove(currentSelectedPolicy);
-    //    }
-
-    //    // Loop through each CTPolicyContainer
-    //    for (int i = 0; i < policyContainerList.Count; i++)
-    //    {
-    //        // Check if the current policy for the container matches the ID of the chosen card
-    //        if (policyContainerList[i].GetCurrentPolicy().ID == _ID)
-    //        {
-    //            // If there is a match, replace the policy in the container               
-
-    //            currentPolicies.Add(new CTPolicyCard(policyContainerList[i].GetCurrentPolicy()));
-
-    //            PolicyGen.GeneratePolicy(policyContainerList[i].policies[(int)GameManager._INSTANCE.GetTurn().turn]);
-
-    //            policyContainerList[i].SetPolicyForCurrentTurn(GameManager._INSTANCE.GetTurn().turn);
-
-    //            policyList[i] = policyContainerList[i].policies[(int)GameManager._INSTANCE.GetTurn().turn];
-
-    //            UpdatePolicyCardText(i, policyList[i]);
-    //        }
-    //    }
-
-    //    yield return null;
-    //}
-
-    public void UpdatePolicyCardText(int _index, CTPolicyCard _pc)
+    private void TrackApplyPolicy(CTPolicyCard _p)
     {
-        ComputerController.Instance.pCardTexts[_index].text = _pc.info_text;
-
-        ComputerController.Instance.pCardTexts[_index].text =
-                $"{ComputerController.Instance.pCardTexts[_index].text}" +
-                $"    {_pc.cost.GetString()}";
+        GameManager._INSTANCE.ApplyPolicy((int)GameManager._INSTANCE.GetTurn().turn, _p);
+        Debug.Log("PolicyManager.TrackApplyPolicy");
     }
 
-    #region Input
+    private void TrackRevokePolicy(CTPolicyCard _p)
+    {
+        GameManager._INSTANCE.RevokePolicy((int)GameManager._INSTANCE.GetTurn().turn, _p);
+    }
 
+    #endregion
+
+
+    #region Input
     private void ScrollInput(InputAction.CallbackContext context)
     {
         scroll = context.ReadValue<Vector2>();
@@ -274,31 +233,24 @@ public class PolicyManager : MonoBehaviour
         InputManager.onScroll -= ScrollInput;
     }
 
-    private void OnEnable()
+    private void SelectCurrentPolicyWithScroll()
     {
-        SubscribeInputs();
-    }
+        if (current_policies.Length > 0)
+        {
+            if (scroll.y > 0f)
+            {
+                first_out_index = (first_out_index + 1) % current_policies.Length;
+                first_out_policy = current_policies[first_out_index];
+            }
+            else if (scroll.y < 0f)
+            {
+                first_out_index--;
+                if (first_out_index < 0)
+                    first_out_index = current_policies.Length - 1;
+            }
 
-    private void OnDisable()
-    {
-        UnsubscribeInputs();
+            first_out_policy = current_policies[first_out_index];
+        }
     }
-
-    private void OnDestroy()
-    {
-        UnsubscribeInputs();
-    }
-
-    private void TrackApplyPolicy(CTPolicyCard _p)
-    {
-        GameManager._INSTANCE.ApplyPolicy((int)GameManager._INSTANCE.GetTurn().turn, _p);
-        Debug.Log("PolicyManager.TrackApplyPolicy");
-    }
-
-    private void TrackRevokePolicy(CTPolicyCard _p)
-    {
-        GameManager._INSTANCE.RevokePolicy((int)GameManager._INSTANCE.GetTurn().turn, _p);
-    }
-
     #endregion
 }

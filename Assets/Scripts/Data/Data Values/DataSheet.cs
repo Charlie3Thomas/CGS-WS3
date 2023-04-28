@@ -48,7 +48,7 @@ namespace CT.Lookup
         public static readonly CTCost unemployed_net = new CTCost(1, 0, 1, 0);
 
 
-        public static CTCost GetTechPrice(CTTechnologies _tech, in CTYearData _year_data)
+        public static CTCost GetTechPrice(CTTechnologies _tech, in CTTurnData _year_data)
         {
             // Price scaling functionality?
 
@@ -56,7 +56,7 @@ namespace CT.Lookup
             //return new CTCost(500, 500, 0, 0); // Placeholder cost
         }
 
-        public static CTCost GetDisasterImpact(CTDisasters _disaster, in CTYearData _year_data)
+        public static CTCost GetDisasterImpact(CTDisasters _disaster, in CTTurnData _year_data)
         {
             //return disaster_impact[_disaster];
             //UnityEngine.Debug.Log("Disaster");

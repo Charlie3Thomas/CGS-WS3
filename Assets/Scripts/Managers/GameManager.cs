@@ -33,7 +33,7 @@ namespace CT
         private List<CTChange>[] user_changes;
         private List<CTChange>[] awareness_changes;
 
-        private CTYearData turn = new CTYearData();
+        private CTTurnData turn = new CTTurnData();
         private CTTimelineData prime_timeline;
 
         [SerializeField] private uint current_turn = 0;
@@ -160,6 +160,8 @@ namespace CT
             //    //    $"Farmers: {change.farmer_percentage}, " +
             //    //    $"Scientists: {change.scientist_percentage}");
             //}
+
+            turn.OingoBoingo();
 
             CheckForTimelineConflicts();
 
@@ -348,7 +350,7 @@ namespace CT
             ComputerController.Instance.pointSelectors[2].SetPoints(GetFactionDistribtion(CTFaction.Worker, turn) * 10);
         }
 
-        private float GetFactionDistribtion(CTFaction _faction, CTYearData _turn)
+        private float GetFactionDistribtion(CTFaction _faction, CTTurnData _turn)
         {
             switch (_faction)
             {
@@ -441,7 +443,7 @@ namespace CT
             return new Vector4(floats[0], floats[1], floats[2], floats[3]);
         }
 
-        public CTYearData GetTurn()
+        public CTTurnData GetTurn()
         {
             return turn;
         }

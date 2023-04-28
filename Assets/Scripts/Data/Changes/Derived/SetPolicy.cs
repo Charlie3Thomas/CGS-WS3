@@ -10,10 +10,9 @@ namespace CT.Data.Changes
 
         public CTPolicyCard policy;
 
-        public override void ApplyChange(ref CTYearData _year)
+        public override void ApplyChange(ref CTTurnData _year)
         {
             _year.applied_policies.Add(policy);
-            //_year.OingoBoingo();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace CT.Data
         public List<CTChange>[] user_changes;
         public List<CTChange>[] game_changes;
 
-        CTYearData initial_year;
+        CTTurnData initial_year;
 
         private CTTimelineData() { }
 
@@ -31,7 +31,7 @@ namespace CT.Data
             game_changes = _game_changes;
 
             // Set initial year with base DataSheet values
-            initial_year = new CTYearData();
+            initial_year = new CTTurnData();
 
             initial_year.Initialise(
                 DataSheet.starting_money,
@@ -40,9 +40,9 @@ namespace CT.Data
                 DataSheet.starting_population);
         }
 
-        public CTYearData GetYearData(uint _year)
+        public CTTurnData GetYearData(uint _year)
         {
-            CTYearData ret = initial_year;
+            CTTurnData ret = initial_year;
 
             ret.turn = _year;
 
