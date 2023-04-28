@@ -100,11 +100,11 @@ namespace CT
                 awareness_changes[year] = new List<CTChange>();
         }
 
-        public CTTurnData GetYearData(uint _year)
+        private CTTurnData GetYearData(uint _year)
         {
             CTTurnData ret = new CTTurnData(initial_year);
 
-            ret.turn = _year;
+            //ret.turn = _year;
 
             for (int i = 0; i <= _year; i++)
             {
@@ -118,35 +118,72 @@ namespace CT
 
                 // Apply net resource worth of each assigned population member for each turn between zero and requested turn
                 CTCost net_total = new CTCost(0, 0, 0, 0);
-                net_total += (DataSheet.worker_net      * ret.Workers);
-                net_total += (DataSheet.scientist_net   * ret.Scientists);
-                net_total += (DataSheet.farmers_net     * ret.Farmers);
-                net_total += (DataSheet.planners_net    * ret.Planners);
-                net_total += (DataSheet.unemployed_net  * ret.UnassignedPopulation);
+                net_total += (DataSheet.worker_net * ret.Workers);
+                net_total += (DataSheet.scientist_net * ret.Scientists);
+                net_total += (DataSheet.farmers_net * ret.Farmers);
+                net_total += (DataSheet.planners_net * ret.Planners);
+                net_total += (DataSheet.unemployed_net * ret.UnassignedPopulation);
 
                 ret.ApplyCosts(net_total);
             }
 
+            //for (int i = 0; i <= _year; i++)
+            //{
+            //    ret = GetNextTurnData(ret);
+            //}
+
             return ret;
         }
 
-        public void OnClickCheckoutYearButton(uint _year)
+        private CTTurnData GetNextTurnData(CTTurnData _current_turn)
+        {
+            CTTurnData ret = new CTTurnData(_current_turn);
+
+            // Disaster instances for year
+            foreach (CTChange change in game_changes[_current_turn.turn + 1])
+                change.ApplyChange(ref ret);
+
+            // Technology changes for year
+            foreach (CTChange change in user_changes[_current_turn.turn + 1])
+                change.ApplyChange(ref ret);
+
+            // Apply net resource worth of each assigned population member for each turn between zero and requested turn
+            CTCost net_total = new CTCost(0, 0, 0, 0);
+            net_total += (DataSheet.worker_net * ret.Workers);
+            net_total += (DataSheet.scientist_net * ret.Scientists);
+            net_total += (DataSheet.farmers_net * ret.Farmers);
+            net_total += (DataSheet.planners_net * ret.Planners);
+            net_total += (DataSheet.unemployed_net * ret.UnassignedPopulation);
+
+            ret.ApplyCosts(net_total);
+
+            return ret;
+        }
+
+        public void OnClickCheckoutYearButton(uint _requested_turn)
         {
             //Debug.Log("GameManager.OnClickCheckoutYearButton" + _year);
 
             // Don't allow user to checkout year if the requested turn is the current turn
-            if (_year == current_turn)
+            if (_requested_turn == current_turn)
                 return;
 
             // Lock in changes to faction distribution
             SetFactionDistribution();
 
+            // If player made changes to a turn
             if (WereChangesMadeInTurn())
+            {
+                // Adjust awareness
                 awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_change_awareness_rate));
 
-            current_turn = _year;
+                // Recalculate AI turns
+                AIPlayFromTurn(_requested_turn);
+            }
+
+            current_turn = _requested_turn;
             GetChangesAtTurn();
-            turn = GetYearData(_year);
+            turn = GetYearData(_requested_turn);
             current_turn_resource_expenditure = new Vector3(0, 0, 0);
             UpdateResourceCounters();
             UpdateFactionDistributionPips();
@@ -171,8 +208,10 @@ namespace CT
                 // Generate a faction dist game change
                 Vector4 dist = GetRandomFactionSpread(t);
 
-                // Add change to game_changes
-                game_changes[t].Add(new SetFactionDistribution(dist.x, dist.y, dist.z, dist.w));
+                // If game_changes[t] does not contain a CTChange of type SetFactionDistribution
+                if (!game_changes[t].Exists(x => x.GetType() == typeof(SetFactionDistribution)))
+                    // Add change to game_changes
+                    game_changes[t].Add(new SetFactionDistribution(dist.x, dist.y, dist.z, dist.w));
 
                 // Get Year Data after changes
                 CTTurnData d = GetYearData(t);
@@ -183,10 +222,6 @@ namespace CT
                     Debug.LogError($"Failed turn bozo {t}");
                     return;
                 }
-
-                // if turn failed
-                //break
-
             }
         }
 
