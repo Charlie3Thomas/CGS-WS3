@@ -364,7 +364,7 @@ public class ComputerController : MonoBehaviour
                 {
                     if (camHit.transform.CompareTag("TechNode"))
                     {
-                        camHit.transform.GetComponent<TechNode>().Unlock(GameManager._INSTANCE.CurrentTurn);
+                        camHit.transform.GetComponent<TechNode>().Unlock();
                     }
                         
                 }

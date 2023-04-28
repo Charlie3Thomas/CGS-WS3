@@ -14,7 +14,7 @@ namespace CT.Lookup
         public static readonly uint     turn_steps                      = 5;
         public static readonly uint     starting_year                   = 1900;
         public static readonly uint     end_year                        = 2100;
-        public static readonly uint     turns_number                    = (end_year - starting_year) / turn_steps + 1;
+        public static readonly uint     turns_number                    = (end_year - starting_year) / turn_steps;
         public static readonly int      starting_money                  = 1000000;
         public static readonly int      starting_science                = 1000000;
         public static readonly int      starting_food                   = 1000000;

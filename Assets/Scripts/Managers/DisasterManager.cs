@@ -88,10 +88,10 @@ public class DisasterManager : MonoBehaviour
 
             //dis.turn = Random.Range(4,  (int)CT.Lookup.DataSheet.turns_number);
             dis.turn = CTSeed.RandFromSeed((uint)i, "dis.turn").Next(4, (int)CT.Lookup.DataSheet.turns_number);
-            while (!uniqueTurns.Add(dis.turn))
-            {
-                dis.turn = CTSeed.RandFromSeed((uint)i, "dis.turn").Next((int)CT.Lookup.DataSheet.turns_number);
-            }
+            //while (!uniqueTurns.Add(dis.turn))
+            //{
+            //    dis.turn = CTSeed.RandFromSeed((uint)i, "dis.turn").Next((int)CT.Lookup.DataSheet.turns_number);
+            //}
 
             dis.year = (int)(dis.turn * CT.Lookup.DataSheet.turn_steps + CT.Lookup.DataSheet.starting_year) + CTSeed.RandFromSeed((uint)i, "dis.year").Next(5);/*Random.Range(0, 5)*/;
 

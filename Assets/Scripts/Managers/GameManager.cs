@@ -35,7 +35,7 @@ namespace CT
 
         private readonly CTTurnData initial_year = new CTTurnData();
 
-        public CTTurnData turn = new CTTurnData();
+        public CTTurnData turn_data = new CTTurnData();
         //private CTTimelineData prime_timeline;
 
         private uint current_turn = 0;
@@ -62,7 +62,7 @@ namespace CT
             Initialise();
             //SetBaseFactionSpreadPerTurn();
 
-            turn = GetYearData(0);
+            turn_data = GetYearData(0);
 
             AIPlayFromTurn(0);
 
@@ -73,6 +73,10 @@ namespace CT
             UpdateFactionDistributionPips();
 
             UpdatePipsWithCurrentTurnData();
+
+            FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
+
+            FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
 
         }
 
@@ -105,7 +109,7 @@ namespace CT
         {
             CTTurnData ret = new CTTurnData(initial_year);
 
-            //ret.turn = _year;
+            ret.turn = _year;
 
             for (int i = 0; i <= _year; i++)
             {
@@ -140,12 +144,14 @@ namespace CT
         {
             CTTurnData ret = new CTTurnData(_current_turn);
 
+            ret.turn++;
+
             // Disaster instances for year
-            foreach (CTChange change in game_changes[_current_turn.turn + 1])
+            foreach (CTChange change in game_changes[ret.turn])
                 change.ApplyChange(ref ret);
 
             // Technology changes for year
-            foreach (CTChange change in user_changes[_current_turn.turn + 1])
+            foreach (CTChange change in user_changes[ret.turn])
                 change.ApplyChange(ref ret);
 
             // Apply net resource worth of each assigned population member for each turn between zero and requested turn
@@ -184,7 +190,7 @@ namespace CT
 
             current_turn = _requested_turn;
             GetChangesAtTurn();
-            turn = GetYearData(_requested_turn);
+            turn_data = GetYearData(_requested_turn);
             current_turn_resource_expenditure = new Vector3(0, 0, 0);
             UpdateResourceCounters();
             UpdateFactionDistributionPips();
@@ -204,7 +210,7 @@ namespace CT
         public void AIPlayFromTurn(uint _turn)
         {
             // Get Year Data after changes
-            CTTurnData d = GetYearData(_turn);
+            CTTurnData data = GetYearData(_turn);
 
             // For each turn
             for (uint t = _turn; t < DataSheet.turns_number; t++)
@@ -217,22 +223,52 @@ namespace CT
                     // Add change to game_changes
                     game_changes[t].Add(new SetFactionDistribution(dist.x, dist.y, dist.z, dist.w));
 
-                // Get list of affordable technologies
-                List<TechNode> affordable_valid_techs = GetAffordableTechnologiesForTurn(t, d);
 
-                if (affordable_valid_techs.Count > 0)
+                List<CTTechnologies> available_techs = new List<CTTechnologies>();
+                TechTree tt = FindObjectOfType<TechTree>().GetComponent<TechTree>();
+                for (int i = tt.nodes.Count - 1; i >= 0; i--)
                 {
-                    // Randomly purchase an affordable valid technology and unlock it
-                    int avt_index = CTSeed.RandFromSeed(t, "tech").Next(affordable_valid_techs.Count);
-                    //game_changes[t].Add(new PurchaseTechnology(affordable_valid_techs[avt_index].tech));
-                    affordable_valid_techs[avt_index].Unlock(t);
-                    Debug.Log($"AI Purchased Technology {affordable_valid_techs[avt_index].tech} at turn {t}");
+                    // Try to buy tech
+
+                    // Do we have pre-req?
+                    List<TechNode> req = tt.nodes[i].GetRequiredTechs();
+
+                    if (req.Count == 0 && data.active_technologues[tt.nodes[i].tech] == false)
+                    {
+                        available_techs.Add(tt.nodes[i].tech);
+                        //Debug.Log($"WE CAN BUY {tt.nodes[i].tech}!");
+
+                    }
+
+                    int total = 0;
+                    foreach (TechNode n in req)
+                    {
+                        // If do not own the required node
+                        if (data.active_technologues[n.tech] == false)
+                            break;
+                        else
+                            total++;
+                    }
+
+                    if (total == req.Count)
+                    {
+                        if (data.active_technologues[tt.nodes[i].tech] == false)
+                        {
+                            available_techs.Add(tt.nodes[i].tech);
+                            //Debug.Log($"WE CAN BUY {tt.nodes[i].tech}!");
+                        }
+                    }
+                    // Can we afford it?
                 }
 
-                d = GetNextTurnData(d);
+                int avt_index = CTSeed.RandFromSeed(t, "tech").Next(available_techs.Count);
+                game_changes[t].Add(new PurchaseTechnology(available_techs[avt_index]));
+                //FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
+
+                data = GetYearData(data.turn + 1);
 
                 // Check if turn failed
-                if (d.failed_turn)
+                if (data.failed_turn)
                 {
                     Debug.LogError($"Failed turn bozo {t}");
                     return;
@@ -240,58 +276,33 @@ namespace CT
             }
         }
 
-        private List<TechNode> GetAffordableTechnologiesForTurn(uint _turn, CTTurnData _data)
-        {
-            CTTurnData current_turn_data = new CTTurnData(_data);
+        //private List<TechNode> GetAffordableTechnologiesForTurn(uint _turn, CTTurnData _data)
+        //{
+        //    CTTurnData current_turn_data = new CTTurnData(_data);
 
-            List<TechNode> affordable_valid_technologies = new List<TechNode>();
-            List<TechNode> remove_nodes = new List<TechNode>(); 
+        //    List<TechNode> affordable_valid_technologies = new List<TechNode>();
 
-            TechTree all_nodes = FindObjectOfType<TechTree>();
+        //    TechTree all_nodes = FindObjectOfType<TechTree>();
 
-            foreach (TechNode current_node in all_nodes.nodes)
-            {
-                CTCost cost = DataSheet.GetTechPrice(current_node.tech);
+        //    foreach (TechNode current_node in all_nodes.nodes)
+        //    {
+        //        CTCost cost = DataSheet.GetTechPrice(current_node.tech);
 
-                // Check if node is affordable
-                if (cost.money      <= current_turn_data.Money   &&
-                    cost.science    <= current_turn_data.Science &&
-                    cost.food       <= current_turn_data.Food    &&
-                    cost.population <= current_turn_data.Population)
+        //        // Check if node is affordable
+        //        if (cost.money      <= current_turn_data.Money   &&
+        //            cost.science    <= current_turn_data.Science &&
+        //            cost.food       <= current_turn_data.Food    &&
+        //            cost.population <= current_turn_data.Population)
 
-                {
-                    affordable_valid_technologies.Add(current_node);
+        //        {
+        //            affordable_valid_technologies.Add(current_node);
+        //        }
+        //    }
 
-                    for (int i = 0; i < affordable_valid_technologies.Count; i++)
-                    {
-                        // Check if affordable_tech_index has prereqs
-                        if (affordable_valid_technologies[i].requiredNodes.Length > 0)
-                        {
-                            // If it does, check each of them for ownership
-                            for (int j = 0; j < affordable_valid_technologies[i].requiredNodes.Length; j++)
-                            {
-                                // If any prereqs fail ownership check
-                                if (current_turn_data.active_technologues[affordable_valid_technologies[i].requiredNodes[j].tech] == false)
-                                {
-                                    // Remove from list
-                                    remove_nodes.Add(affordable_valid_technologies[i]);
-                                    //affordable_valid_technologies.Remove(affordable_valid_technologies[affordable_tech_index]);
-                                }
-                            }
-                        }
-                    }
+        //    //Debug.Log($"GameManager.GetAffordableTechnologiesForTurn data {current_turn_data.turn} vs {_turn}");
 
-                    foreach (TechNode remove in remove_nodes)
-                    {
-                        affordable_valid_technologies.Remove(remove);
-                    }
-                }
-            }
-
-            Debug.Log($"GameManager.GetAffordableTechnologiesForTurn data {current_turn_data.turn} vs {_turn}");
-
-            return affordable_valid_technologies;
-        }
+        //    return affordable_valid_technologies;
+        //}
 
         public bool IsTechnologyOwned(CTTechnologies _tech)
         {
@@ -335,7 +346,7 @@ namespace CT
             //float current_plan_ratio = (float)turn.Planners / (float)turn.Population;
             //float current_farm_ratio = (float)turn.Farmers / (float)turn.Population;
             //float current_work_ratio = (float)turn.Workers / (float)turn.Population;
-            Vector4 current_ratios = turn.faction_distribution;
+            Vector4 current_ratios = turn_data.faction_distribution;
 
             //Should make sure that faction spread is not the same as the start of the turn before applying it as a "Change"
             Vector4 a = CTVector4Round(requested_ratios, 10);
@@ -400,10 +411,10 @@ namespace CT
 
         private void UpdateFactionDistributionPips()
         {
-            float workers       = turn.faction_distribution.x;
-            float scientists    = turn.faction_distribution.y;
-            float farmers       = turn.faction_distribution.z;
-            float planners      = turn.faction_distribution.w;
+            float workers       = turn_data.faction_distribution.x;
+            float scientists    = turn_data.faction_distribution.y;
+            float farmers       = turn_data.faction_distribution.z;
+            float planners      = turn_data.faction_distribution.w;
 
             // This does not work as expected
             ComputerController.Instance.pointSelectors[0].pointValue = scientists; // Scientist
@@ -414,10 +425,10 @@ namespace CT
 
         private void UpdateResourceCounters()
         {
-            ComputerController.Instance.currencyText.text = (turn.Money - (int)current_turn_resource_expenditure.x).ToString();
-            ComputerController.Instance.rpText.text = (turn.Science - (int)current_turn_resource_expenditure.y).ToString();
-            ComputerController.Instance.foodText.text = (turn.Food - (int)current_turn_resource_expenditure.z).ToString();
-            ComputerController.Instance.populationText.text = turn.Population.ToString();
+            ComputerController.Instance.currencyText.text = (turn_data.Money - (int)current_turn_resource_expenditure.x).ToString();
+            ComputerController.Instance.rpText.text = (turn_data.Science - (int)current_turn_resource_expenditure.y).ToString();
+            ComputerController.Instance.foodText.text = (turn_data.Food - (int)current_turn_resource_expenditure.z).ToString();
+            ComputerController.Instance.populationText.text = turn_data.Population.ToString();
 
             GetTimelineAwareness();
         }
@@ -425,13 +436,13 @@ namespace CT
         private void UpdatePipsWithCurrentTurnData()
         {
             // Sci
-            ComputerController.Instance.pointSelectors[0].SetPoints(GetFactionDistribtion(CTFaction.Scientist, turn) * 10);
+            ComputerController.Instance.pointSelectors[0].SetPoints(GetFactionDistribtion(CTFaction.Scientist, turn_data) * 10);
             // Plan
-            ComputerController.Instance.pointSelectors[1].SetPoints(GetFactionDistribtion(CTFaction.Planner, turn) * 10);
+            ComputerController.Instance.pointSelectors[1].SetPoints(GetFactionDistribtion(CTFaction.Planner, turn_data) * 10);
             // Farmer
-            ComputerController.Instance.pointSelectors[3].SetPoints(GetFactionDistribtion(CTFaction.Farmer, turn) * 10);
+            ComputerController.Instance.pointSelectors[3].SetPoints(GetFactionDistribtion(CTFaction.Farmer, turn_data) * 10);
             // Worker
-            ComputerController.Instance.pointSelectors[2].SetPoints(GetFactionDistribtion(CTFaction.Worker, turn) * 10);
+            ComputerController.Instance.pointSelectors[2].SetPoints(GetFactionDistribtion(CTFaction.Worker, turn_data) * 10);
         }
 
         private void UpdateUI()
@@ -444,16 +455,16 @@ namespace CT
             switch (_faction)
             {
                 case CTFaction.Scientist:
-                    return (turn.faction_distribution.y);
+                    return (turn_data.faction_distribution.y);
 
                 case CTFaction.Planner:
-                    return (turn.faction_distribution.w);
+                    return (turn_data.faction_distribution.w);
 
                 case CTFaction.Farmer:
-                    return (turn.faction_distribution.z);
+                    return (turn_data.faction_distribution.z);
 
                 case CTFaction.Worker:
-                    return (turn.faction_distribution.x);
+                    return (turn_data.faction_distribution.x);
 
                 // Default at impossible error value
                 default:
@@ -533,33 +544,33 @@ namespace CT
 
         public CTTurnData GetTurn()
         {
-            return turn;
+            return turn_data;
         }
 
         private CTResourceTotals GetResourceTotals()
         {
             return new CTResourceTotals(
-                turn.Money - (int)current_turn_resource_expenditure.x, 
-                turn.Science - (int)current_turn_resource_expenditure.y, 
-                turn.Food - (int)current_turn_resource_expenditure.z, 
-                turn.Population);
+                turn_data.Money - (int)current_turn_resource_expenditure.x, 
+                turn_data.Science - (int)current_turn_resource_expenditure.y, 
+                turn_data.Food - (int)current_turn_resource_expenditure.z, 
+                turn_data.Population);
         }
 
         public List<CTTechnologies> GetUnlockedTechnologiesInTurn()
         {
             List<CTTechnologies> ret = new List<CTTechnologies>();
 
-            for (int i = 0; i <= current_turn; i++)
+            //Debug.Log($"{}");
+
+            foreach (KeyValuePair<CTTechnologies, bool> kvp in turn_data.active_technologues)
             {
-                foreach (CTChange c in user_changes[i])
+                if (turn_data.active_technologues[kvp.Key] == true)
                 {
-                    if (c.GetType() == typeof(PurchaseTechnology))
-                    {
-                        PurchaseTechnology p = (PurchaseTechnology)c;
-                        ret.Add(p.tech);
-                    }
+                    ret.Add(kvp.Key);
                 }
             }
+
+            //Debug.Log($"{ret.Count} {turn_data.turn}");
 
             return ret;
         }

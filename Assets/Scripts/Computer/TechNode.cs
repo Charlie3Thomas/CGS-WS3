@@ -64,7 +64,7 @@ public class TechNode : MonoBehaviour
         }
     }
 
-    public void Unlock(uint _turn) 
+    public void Unlock()
     {
         if (tree == null)
         {
@@ -77,7 +77,7 @@ public class TechNode : MonoBehaviour
         if (unlocked)
         {
             AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "AlreadyUnlocked"));
-            
+
             return;
         }
 
@@ -96,7 +96,7 @@ public class TechNode : MonoBehaviour
 
         if (allRequiredNodesUnlocked)
         {
-            if (GameManager._INSTANCE.PurchaseTechnology(tech, _turn))
+            if (GameManager._INSTANCE.PurchaseTechnology(tech, GameManager._INSTANCE.turn_data.turn))
             {
                 unlocked = true;
                 //mat.SetVector("_Color", Lit * 8);
@@ -161,7 +161,7 @@ public class TechNode : MonoBehaviour
 
     public void UpdateTechNodes()
     {
-        unlocked = false;
+        this.unlocked = false;
         List<CTTechnologies> active_techs = GameManager._INSTANCE.GetUnlockedTechnologiesInTurn();
 
         //Debug.Log($"TechNode:UpdateTechNodes:active_techs = {active_techs.Count}");
@@ -170,12 +170,25 @@ public class TechNode : MonoBehaviour
         {
             if (t == this.tech)
             {
+                //Debug.Log($"{this.gameObject.name} is unlocked");
                 this.unlocked = true;
                 tree.LookupBuffs(t);
                 break;
             }
         }
 
-        this.mat.SetVector("_Color", unlocked ? Lit * 8 : faded);
+        this.mat.SetVector("_Color", this.unlocked ? Lit * 8 : faded);
+    }
+
+    public List<TechNode> GetRequiredTechs()
+    {
+        List<TechNode> ret = new List<TechNode>();
+
+        for(int i = 0; i < requiredNodes.Length; i++)
+        {
+            ret.Add(requiredNodes[i]);
+        }
+
+        return ret;
     }
 }
