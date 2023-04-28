@@ -38,25 +38,26 @@ public class SetFactionDistribution : CTChange
 
     public override void ApplyChange(ref CTTurnData _year)
     {
-        ResetDistribution(ref _year);
-        AssignNewDistribution(ref _year);
+        _year.faction_distribution = new Vector4(worker_percentage, scientist_percentage, farmer_percentage, planner_percentage);
+        //ResetDistribution(ref _year);
+        //AssignNewDistribution(ref _year);
     }
 
-    private void ResetDistribution(ref CTTurnData _year)
-    {
-        // Reset distribution for year
-        _year.Workers = 0;
-        _year.Scientists = 0;
-        _year.Farmers = 0;
-        _year.Planners = 0;
-    }
+    //private void ResetDistribution(ref CTTurnData _year)
+    //{
+    //    // Reset distribution for year
+    //    _year.Workers = 0;
+    //    _year.Scientists = 0;
+    //    _year.Farmers = 0;
+    //    _year.Planners = 0;
+    //}
 
-    private void AssignNewDistribution(ref CTTurnData _year)
-    {
-        // Asign new distribution
-        _year.Workers = (int)(_year.Population * worker_percentage);
-        _year.Scientists = (int)(_year.Population * scientist_percentage);
-        _year.Farmers = (int)(_year.Population * farmer_percentage);
-        _year.Planners = (int)(_year.Population * planner_percentage);
-    }
+    //private void AssignNewDistribution(ref CTTurnData _year)
+    //{
+    //    // Asign new distribution
+    //    _year.Workers = (int)(_year.Population * worker_percentage);
+    //    _year.Scientists = (int)(_year.Population * scientist_percentage);
+    //    _year.Farmers = (int)(_year.Population * farmer_percentage);
+    //    _year.Planners = (int)(_year.Population * planner_percentage);
+    //}
 }

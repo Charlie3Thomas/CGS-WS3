@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Seed : MonoBehaviour
 {
+    public string gameSeed = "";
     public bool forceDefaultSeed = false;
     const string chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-    private string gameSeed = "";
     private int currentSeed = 0;
     private int seedLength = 8;
 
@@ -20,9 +19,9 @@ public class Seed : MonoBehaviour
         }
         else
         {
-            for(int i = 0; i < seedLength; i++)
+            for (int i = 0; i < seedLength; i++)
             {
-                seed += chars[Random.Range(0, chars.Length)];
+                seed += chars[UnityEngine.Random.Range(0, chars.Length)];
             }
         }
 
@@ -34,7 +33,7 @@ public class Seed : MonoBehaviour
         // May be needed at some point idk
         gameSeed = _seed;
         currentSeed = gameSeed.GetHashCode();
-        Random.InitState(currentSeed);
+        UnityEngine.Random.InitState(currentSeed);
     }
 
     public string GetSeed()

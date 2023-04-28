@@ -23,6 +23,7 @@ namespace CT
     using Unity.VisualScripting;
     using CT.Data.Resources;
     using static UnityEngine.Rendering.DebugUI;
+    using System.Security.Policy;
 
     public class GameManager : MonoBehaviour
     {
@@ -33,8 +34,10 @@ namespace CT
         private List<CTChange>[] user_changes;
         private List<CTChange>[] awareness_changes;
 
+        private readonly CTTurnData initial_year = new CTTurnData();
+
         private CTTurnData turn = new CTTurnData();
-        private CTTimelineData prime_timeline;
+        //private CTTimelineData prime_timeline;
 
         [SerializeField] private uint current_turn = 0;
         private int user_changes_in_turn;
@@ -57,61 +60,82 @@ namespace CT
         private void Start()
         {
             Initialise();
-            SetBaseFactionSpreadPerTurn();
-        }
+            //SetBaseFactionSpreadPerTurn();
+            AIPlayFromTurn(0);
 
-        private void FixedUpdate()
-        {
-            UpdateResourceCounters();
-        }
-
-        private void Initialise()
-        {
-            // Initialise user changes list
-            user_changes = new List<CTChange>[DataSheet.turns_number];
-            for (uint year = 0; year < DataSheet.turns_number; year++)
-            {
-                user_changes[year] = new List<CTChange>();
-            }
-
-            // Initialise game changes list
-            game_changes = new List<CTChange>[DataSheet.turns_number];
-            for (uint year = 0; year < DataSheet.turns_number; year++)
-            {
-                game_changes[year] = new List<CTChange>();
-            }
-
-            // Initialise awareness changes list
-            awareness_changes = new List<CTChange>[DataSheet.turns_number];
-            for(uint year = 0; year < DataSheet.turns_number; year++)
-            {
-                awareness_changes[year] = new List<CTChange>();
-            }
-
-            // Initialise prime timeline
-            prime_timeline = new CTTimelineData(0, DataSheet.turns_number, user_changes, game_changes);
-
-            turn = prime_timeline.GetYearData(0);
+            turn = GetYearData(0);
 
             current_turn_resource_expenditure = new Vector3(0, 0, 0);
 
             UpdateResourceCounters();
-            UpdateFactionDistributionPips();
 
-            user_changes = prime_timeline.user_changes;
-            game_changes = prime_timeline.game_changes;
+            UpdateFactionDistributionPips();
 
             UpdatePipsWithCurrentTurnData();
 
-            //ApplyPopulationGrowthChange(0, GetPopulationGrowth());
-
-            //ResetAwareness();
         }
 
-        public void OnClickCheckoutYearButton(uint _turn)
+        private void FixedUpdate()
         {
+            //UpdateResourceCounters();
+        }
+
+        private void Initialise()
+        {
+            initial_year.Initialise(DataSheet.starting_money, DataSheet.starting_science, DataSheet.starting_food, DataSheet.starting_population);
+
+            // Initialise user changes list
+            user_changes = new List<CTChange>[DataSheet.turns_number];
+            for (uint year = 0; year < user_changes.Length; year++)
+                user_changes[year] = new List<CTChange>();
+
+            // Initialise game changes list
+            game_changes = new List<CTChange>[DataSheet.turns_number];
+            for (uint year = 0; year < game_changes.Length; year++)
+                game_changes[year] = new List<CTChange>();
+
+            // Initialise awareness changes list
+            awareness_changes = new List<CTChange>[DataSheet.turns_number];
+            for(uint year = 0; year < awareness_changes.Length; year++)
+                awareness_changes[year] = new List<CTChange>();
+        }
+
+        public CTTurnData GetYearData(uint _year)
+        {
+            CTTurnData ret = new CTTurnData(initial_year);
+
+            ret.turn = _year;
+
+            for (int i = 0; i <= _year; i++)
+            {
+                // Disaster instances for year
+                foreach (CTChange change in game_changes[i])
+                    change.ApplyChange(ref ret);
+
+                // Technology changes for year
+                foreach (CTChange change in user_changes[i])
+                    change.ApplyChange(ref ret);
+
+                // Apply net resource worth of each assigned population member for each turn between zero and requested turn
+                CTCost net_total = new CTCost(0, 0, 0, 0);
+                net_total += (DataSheet.worker_net      * ret.Workers);
+                net_total += (DataSheet.scientist_net   * ret.Scientists);
+                net_total += (DataSheet.farmers_net     * ret.Farmers);
+                net_total += (DataSheet.planners_net    * ret.Planners);
+                net_total += (DataSheet.unemployed_net  * ret.UnassignedPopulation);
+
+                ret.ApplyCosts(net_total);
+            }
+
+            return ret;
+        }
+
+        public void OnClickCheckoutYearButton(uint _year)
+        {
+            //Debug.Log("GameManager.OnClickCheckoutYearButton" + _year);
+
             // Don't allow user to checkout year if the requested turn is the current turn
-            if (_turn == current_turn)
+            if (_year == current_turn)
                 return;
 
             // Lock in changes to faction distribution
@@ -120,53 +144,15 @@ namespace CT
             if (WereChangesMadeInTurn())
                 awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_change_awareness_rate));
 
-            current_turn = _turn;
-
+            current_turn = _year;
             GetChangesAtTurn();
-
-            // Construct new timeline using stored changes
-            prime_timeline = new CTTimelineData(_turn, DataSheet.turns_number, user_changes, game_changes);
-
-            // store timeline turn data
-            turn = prime_timeline.GetYearData(_turn);
-
+            turn = GetYearData(_year);
             current_turn_resource_expenditure = new Vector3(0, 0, 0);
-
-            // Set resource counters to values at turn
             UpdateResourceCounters();
-
-            // Set faction distribution sliders to values at turn
             UpdateFactionDistributionPips();
-
-            // Draw pips with turn data
             UpdatePipsWithCurrentTurnData();
-
-            // Propogate population changes to all future turns
-            //ApplyPopulationGrowthChange(_turn, GetPopulationGrowth());
-            game_changes[_turn].Add(new SetFactionDistribution(
-                DataSheet.starting_workers,
-                DataSheet.starting_scientists,
-                DataSheet.starting_farmers,
-                DataSheet.starting_planners));
-
-            //if (game_changes[_turn][0].GetType() == typeof(SetFactionDistribution))
-            //{
-            //    // Get variables from game_changes[_turn][0] if of type SetFactionDistribution
-            //    //SetFactionDistribution change = (SetFactionDistribution)game_changes[_turn][0];
-
-            //    //Debug.Log(
-            //    //    $"Planners: {change.planner_percentage},  " +
-            //    //    $"Workers: {change.worker_percentage}, " +
-            //    //    $"Farmers: {change.farmer_percentage}, " +
-            //    //    $"Scientists: {change.scientist_percentage}");
-            //}
-
-            turn.OingoBoingo();
-
             CheckForTimelineConflicts();
-
             GetTimelineAwareness();
-
             FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
         }
@@ -176,6 +162,34 @@ namespace CT
             // Take generated disasters from the disaster manager and insert them into the game changes list
             game_changes[_disaster.turn].Add(new ApplyDisaster(_disaster));            
         }
+
+        public void AIPlayFromTurn(uint _turn)
+        {
+            // For each turn
+            for (uint t = _turn; t < DataSheet.turns_number; t++)
+            {
+                // Generate a faction dist game change
+                Vector4 dist = GetRandomFactionSpread(t);
+
+                // Add change to game_changes
+                game_changes[t].Add(new SetFactionDistribution(dist.x, dist.y, dist.z, dist.w));
+
+                // Get Year Data after changes
+                CTTurnData d = GetYearData(t);
+
+                // Check if turn failed
+                if (d.failed_turn)
+                {
+                    Debug.LogError($"Failed turn bozo {t}");
+                    return;
+                }
+
+                // if turn failed
+                //break
+
+            }
+        }
+
 
         #region Actions
         // Set Policy
@@ -197,22 +211,23 @@ namespace CT
 
         private void SetFactionDistribution()
         {
-            float sci_abs = ComputerController.Instance.pointSelectors[0].pointValue; // Scientist
-            float plan_abs = ComputerController.Instance.pointSelectors[1].pointValue; // Planner
-            float work_abs = ComputerController.Instance.pointSelectors[2].pointValue; // Worker
-            float farm_abs = ComputerController.Instance.pointSelectors[3].pointValue; // Farmer
+            float work_abs  = ComputerController.Instance.pointSelectors[2].pointValue; // Worker
+            float sci_abs   = ComputerController.Instance.pointSelectors[0].pointValue; // Scientist
+            float farm_abs  = ComputerController.Instance.pointSelectors[3].pointValue; // Farmer
+            float plan_abs  = ComputerController.Instance.pointSelectors[1].pointValue; // Planner
 
-            float req_sci_ratio = RAUtility.Remap(sci_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float req_plan_ratio = RAUtility.Remap(plan_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float req_farm_ratio = RAUtility.Remap(farm_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float req_work_ratio = RAUtility.Remap(work_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            Vector4 requested_ratios = new Vector4(req_sci_ratio, req_plan_ratio, req_farm_ratio, req_work_ratio);
+            float req_work_ratio    = RAUtility.Remap(work_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_sci_ratio     = RAUtility.Remap(sci_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_farm_ratio    = RAUtility.Remap(farm_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_plan_ratio    = RAUtility.Remap(plan_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            //Vector4 requested_ratios = new Vector4(req_sci_ratio, req_plan_ratio, req_farm_ratio, req_work_ratio);
+            Vector4 requested_ratios = new Vector4(req_work_ratio, req_sci_ratio, req_farm_ratio, req_plan_ratio);
 
-            float current_sci_ratio = (float)turn.Scientists / (float)turn.Population;
-            float current_plan_ratio = (float)turn.Planners / (float)turn.Population;
-            float current_farm_ratio = (float)turn.Farmers / (float)turn.Population;
-            float current_work_ratio = (float)turn.Workers / (float)turn.Population;
-            Vector4 current_ratios = new Vector4(current_sci_ratio, current_plan_ratio, current_farm_ratio, current_work_ratio);
+            //float current_sci_ratio = (float)turn.Scientists / (float)turn.Population;
+            //float current_plan_ratio = (float)turn.Planners / (float)turn.Population;
+            //float current_farm_ratio = (float)turn.Farmers / (float)turn.Population;
+            //float current_work_ratio = (float)turn.Workers / (float)turn.Population;
+            Vector4 current_ratios = turn.faction_distribution;
 
             //Should make sure that faction spread is not the same as the start of the turn before applying it as a "Change"
             Vector4 a = CTVector4Round(requested_ratios, 10);
@@ -224,7 +239,8 @@ namespace CT
             }
             else
             {
-                prime_timeline.ChangePopulationDistribution(current_turn, req_work_ratio, req_sci_ratio, req_farm_ratio, req_plan_ratio);
+                user_changes[current_turn].Add(new SetFactionDistribution(req_work_ratio, req_sci_ratio, req_farm_ratio, req_plan_ratio));
+                //prime_timeline.ChangePopulationDistribution();
                 awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_change_awareness_rate));
                 Debug.Log("Choices for faction distribution locked in!");
             }
@@ -276,16 +292,10 @@ namespace CT
 
         private void UpdateFactionDistributionPips()
         {
-            // Values here are correct
-            float workers = (float)turn.Workers / (float)turn.Population;
-            float scientists = (float)turn.Scientists / (float)turn.Population;
-            float farmers = (float)turn.Farmers / (float)turn.Population;
-            float planners = (float)turn.Planners / (float)turn.Population;
-
-            //Planners.text = planners.ToString();
-            //Workers.text = workers.ToString();
-            //Farmers.text = farmers.ToString();
-            //Scientists.text = scientists.ToString();
+            float workers       = turn.faction_distribution.x;
+            float scientists    = turn.faction_distribution.y;
+            float farmers       = turn.faction_distribution.z;
+            float planners      = turn.faction_distribution.w;
 
             // This does not work as expected
             ComputerController.Instance.pointSelectors[0].pointValue = scientists; // Scientist
@@ -296,11 +306,6 @@ namespace CT
 
         private void UpdateResourceCounters()
         {
-            //ComputerController.Instance.foodText.text = turn.Food.ToString();
-            //ComputerController.Instance.rpText.text = turn.Science.ToString();
-            //ComputerController.Instance.currencyText.text = turn.Money.ToString();
-            //ComputerController.Instance.populationText.text = turn.Population.ToString();
-
             ComputerController.Instance.currencyText.text = (turn.Money - (int)current_turn_resource_expenditure.x).ToString();
             ComputerController.Instance.rpText.text = (turn.Science - (int)current_turn_resource_expenditure.y).ToString();
             ComputerController.Instance.foodText.text = (turn.Food - (int)current_turn_resource_expenditure.z).ToString();
@@ -309,37 +314,8 @@ namespace CT
             GetTimelineAwareness();
         }
 
-        private void SetBaseFactionSpreadPerTurn()
-        {
-            // for each turn between zero and max turns
-            // generate a new faction distribution for each turn
-            // add to list of turns in index of for loop
-
-            for (int i = 1; i < DataSheet.turns_number; i++)
-            {
-                Vector4 spread = GetRandomFactionSpread();
-                game_changes[i].Add(new SetFactionDistribution(spread[0], spread[1], spread[2], spread[3]));
-            }
-        }
-
-        private uint GetPopulationGrowth()
-        {
-            return 100;
-
-            throw new NotImplementedException();
-        }
-
         private void UpdatePipsWithCurrentTurnData()
         {
-            //// Sci
-            //ComputerController.Instance.pointSelectors[0].SetPoints(GetFactionDistribtion(CTFaction.Scientist, turn) * 10);
-            //// Plan
-            //ComputerController.Instance.pointSelectors[1].SetPoints(GetFactionDistribtion(CTFaction.Planner, turn) * 10);
-            //// Farmer
-            //ComputerController.Instance.pointSelectors[2].SetPoints(GetFactionDistribtion(CTFaction.Farmer, turn) * 10);
-            //// Worker
-            //ComputerController.Instance.pointSelectors[3].SetPoints(GetFactionDistribtion(CTFaction.Worker, turn) * 10);
-
             // Sci
             ComputerController.Instance.pointSelectors[0].SetPoints(GetFactionDistribtion(CTFaction.Scientist, turn) * 10);
             // Plan
@@ -350,21 +326,26 @@ namespace CT
             ComputerController.Instance.pointSelectors[2].SetPoints(GetFactionDistribtion(CTFaction.Worker, turn) * 10);
         }
 
+        private void UpdateUI()
+        {
+
+        }
+
         private float GetFactionDistribtion(CTFaction _faction, CTTurnData _turn)
         {
             switch (_faction)
             {
                 case CTFaction.Scientist:
-                    return ((float)_turn.Scientists / (float)_turn.Population);
+                    return (turn.faction_distribution.y);
 
                 case CTFaction.Planner:
-                    return ((float)_turn.Planners / (float)_turn.Population);
+                    return (turn.faction_distribution.w);
 
                 case CTFaction.Farmer:
-                    return ((float)_turn.Farmers / (float)_turn.Population);
+                    return (turn.faction_distribution.z);
 
                 case CTFaction.Worker:
-                    return ((float)_turn.Workers / (float)_turn.Population);
+                    return (turn.faction_distribution.x);
 
                 // Default at impossible error value
                 default:
@@ -372,7 +353,6 @@ namespace CT
                     return -1.0f;
             }
         }
-
 
         private void DebugDisasterChanges()
         {
@@ -387,16 +367,16 @@ namespace CT
             }
         }
 
-        private Vector4 GetRandomFactionSpread()
+        private Vector4 GetRandomFactionSpread(uint _turn)
         {
             System.Random rand = new System.Random();
 
             float[] floats = { 0, 0, 0, 0 };
 
-            floats[0] = (float)rand.NextDouble();
-            floats[1] = (float)rand.NextDouble();
-            floats[2] = (float)rand.NextDouble();
-            floats[3] = (float)rand.NextDouble();
+            floats[0] = (float)CTSeed.RandFromSeed(_turn, "0").NextDouble();
+            floats[1] = (float)CTSeed.RandFromSeed(_turn, "1").NextDouble();
+            floats[2] = (float)CTSeed.RandFromSeed(_turn, "2").NextDouble();
+            floats[3] = (float)CTSeed.RandFromSeed(_turn, "3").NextDouble();
 
             float sum = floats[0] + floats[1] + floats[2] + floats[3];
 
@@ -513,6 +493,7 @@ namespace CT
 
         private void GetChangesAtTurn()
         {
+            if (current_turn == 40) { return; }
             user_changes_in_turn = user_changes[current_turn].Count();
         }
 
@@ -552,8 +533,6 @@ namespace CT
 
             ComputerController.Instance.mat_awareness.SetFloat("_FillAmount", ret);
         }
-
-
         #endregion
     }
 }

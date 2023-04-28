@@ -4,15 +4,35 @@ using System;
 
 namespace CT.Data
 {
-    using CT.Data.Changes;
+    using Changes;
     using Enumerations;
     using Lookup;
 
     public class CTTurnData
     {
+
+        public CTTurnData() { }
+
+        public CTTurnData(CTTurnData _data) 
+        { 
+            turn                    = _data.turn;
+            active_technologues     = _data.active_technologues;
+            applied_policies        = _data.applied_policies;
+            revoked_policies        = _data.revoked_policies;
+            modifiers               = _data.modifiers;
+            Money                   = _data.Money;
+            Science                 = _data.Science;
+            Food                    = _data.Food;
+            faction_distribution    = _data.faction_distribution;
+            Population              = _data.Population;
+            Awareness               = _data.Awareness;
+        }
+        
         // Debugging
         public uint turn;
-        public bool year_changed_by_player = false;
+        public bool failed_turn { get { return (Population <= 0); } }
+
+        public Vector4 faction_distribution;
 
         // Technologies
         public Dictionary<CTTechnologies, bool> active_technologues;
@@ -28,72 +48,59 @@ namespace CT.Data
 
         #region Consumables
         // Money
-        private int money;
+        private float data_money;
         public int Money
         {
-            get { return money; }
+            get { return (int)data_money; }
 
             set
             {
-                if (value == money)
+                if (value == data_money)
                     return;
 
                 //Debug.Log(value);
                 if (value < 0)
                 {
-                    money = 0;
+                    data_money = 0;
                     //throw new ArgumentException("Money cannot go below zero!");
                 }
 
-                money = value;
+                data_money = value;
             }
         }
 
         // Science
-        private int science;
+        private float data_science;
         public int Science
         {
-            get { return science; }
+            get { return (int)data_science; }
 
             set
             {
-                if (value < science)
+                if (value < data_science)
                     return;
                 //Debug.Log(value);
                 if (value < 0)
                 {
-                    science = 0;
+                    data_science = 0;
                     //throw new ArgumentException("Science cannot go below zero!");
                 }
                 else
-                    science = value;
+                    data_science = value;
 
             }
         }
 
         // Food
-        private int food;
+        private float data_food;
         public int Food
         {
-            get { return food; }
+            get { return (int)data_food; }
 
             set
             {
-                if (value == food)
+                if (value == data_food)
                     return;
-                // Starvation
-                if (value < 0)
-                {
-                    food = 0;
-                    float adjusted = ScalePopulationStarvation(value, Population);
-                    Population -= (int)(Population * (DataSheet.starvation_rate *  adjusted));
-                    Debug.Log("Population is starving!");
-                    //throw new ArgumentException("Food cannot go below zero!");
-                }
-                else
-                {
-                    food = value;
-                }
 
                 // Growth
                 if (value > Population)
@@ -101,91 +108,74 @@ namespace CT.Data
                     Population += (int)(Population * DataSheet.food_surplus_population_gain);
                     //Debug.Log("Population growth!");
                 }
-            }
-        }
 
-        private int surplus_food;
-        public int SurplusFood
-        {
-            get { return surplus_food; }
-
-            set
-            {
-                if (value < surplus_food)
-                    return;
-
-                Debug.Log(value);
-                if (value < 0)
+                // Decay
+                if (value <= 0)
                 {
-                    surplus_food = 0;
-                    throw new ArgumentException("Food cannot go below zero!");
+                    if (value == 0)
+                    { // If set to exactly zero, there was JUST enough food
+                        data_food = value;
+                        return;
+                    }
+                    else
+                    { // If set to less than zero, there was not enough food
+                        data_food = 0;
+
+                        // Calculate delta in required vs available food
+                        float delta_scale = ScalePopulationStarvation(value, Population);
+
+                        Population -= (int)(Population * (DataSheet.starvation_rate * delta_scale) + 1);
+
+                        return;
+                    }                    
                 }
 
-                food = value;
+                data_food = value;
             }
         }
 
         // Population 
-        private int population = DataSheet.starting_population;
+        private float data_population = DataSheet.starting_population;
         public int Population
         {
-            get { return population; }
+            get { return (int)data_population; }
             set
             {
-                if (value == population) 
+                if (value == data_population) 
                     return;
 
                 // If value is less than assigned population is it implicitly less than total population
                 // An error must be thrown if population is set to less than the assigned workers
                 // Could cause issues when killing population?
+                if (value <= 0)
+                {
+                    data_population = 0;
+                    return;
+                    //throw new ArgumentException("CTPopulation.resource_total.set: Total population cannot be negative!");
+                }
+
+                data_population = value;
+            }
+        }
+
+        private float data_surplus_food;
+        public int SurplusFood
+        {
+            get { return (int)data_surplus_food; }
+
+            set
+            {
+                if (value < data_surplus_food)
+                    return;
+
+                Debug.Log(value);
                 if (value < 0)
                 {
-                    throw new ArgumentException("CTPopulation.resource_total.set: Total population cannot be negative!");
+                    data_surplus_food = 0;
+                    throw new ArgumentException("Food cannot go below zero!");
                 }
 
-                if (value < AssignedPopulation)
-                {
-                    float planner_ratio = GetFactionRatio(CTFaction.Planner);
-                    float farmer_ratio = GetFactionRatio(CTFaction.Farmer);
-                    float worker_ratio = GetFactionRatio(CTFaction.Worker);
-                    float scientist_ratio = GetFactionRatio(CTFaction.Scientist);
-
-                    Planners = 0;
-                    Farmers = 0;
-                    Workers = 0;
-                    Scientists = 0;
-
-                    Population = value;
-
-                    Planners = (int)(Population * planner_ratio);
-                    Farmers = (int)(Population * farmer_ratio);
-                    Workers = (int)(Population * worker_ratio);
-                    Scientists = (int)(Population * scientist_ratio);
-
-                    Population -= UnassignedPopulation;
-                }
-                else
-                {
-                    if (value == 0)
-                        return;
-
-                    float planner_ratio = GetFactionRatio(CTFaction.Planner);
-                    float farmer_ratio = GetFactionRatio(CTFaction.Farmer);
-                    float worker_ratio = GetFactionRatio(CTFaction.Worker);
-                    float scientist_ratio = GetFactionRatio(CTFaction.Scientist);
-
-                    Planners = 0;
-                    Farmers = 0;
-                    Workers = 0;
-                    Scientists = 0;
-
-                    this.population = value;
-
-                    Planners = (int)(Population * planner_ratio);
-                    Farmers = (int)(Population * farmer_ratio);
-                    Workers = (int)(Population * worker_ratio);
-                    Scientists = (int)(Population * scientist_ratio);
-                }
+                data_food = value;
             }
         }
         #endregion
@@ -193,7 +183,7 @@ namespace CT.Data
 
         #region Population Budget Readonly
         // Read only variables
-        public int AssignedPopulation
+        public float AssignedPopulation
         {
             get
             {
@@ -206,75 +196,75 @@ namespace CT.Data
         }
         public int UnassignedPopulation
         {
-            get { return population - AssignedPopulation; }
+            get { return (int)(Population - AssignedPopulation); }
 
         }
         #endregion
 
 
         #region Types of Population
-        private int assigned_workers;
+        private float assigned_workers;
         public int Workers
         {
-            get { return assigned_workers; }
-            set
-            {
-                // If the increase in assigned is greater than the unassigned throw exception
-                if (value > UnassignedPopulation + assigned_workers)
-                {
-                    Debug.Log($"Value is {value}, Total available is is {UnassignedPopulation + assigned_workers}");
-                    throw new ArgumentException("CTPopulation.assigned_workers.set: Assigned workers cannot be greater than unassigned population!");
-                }
-                assigned_workers = value;
-            }
+            get { return (int)(Population * faction_distribution.x); }
+            //set
+            //{
+            //    // If the increase in assigned is greater than the unassigned throw exception
+            //    if (value > UnassignedPopulation + assigned_workers)
+            //    {
+            //        Debug.Log($"Value is {value}, Total available is is {UnassignedPopulation + assigned_workers} in turn {turn}");
+            //        throw new ArgumentException("CTPopulation.assigned_workers.set: Assigned workers cannot be greater than unassigned population!");
+            //    }
+            //    assigned_workers = value;
+            //}
         }
 
-        private int assigned_farmers;
-        public int Farmers
-        {
-            get { return assigned_farmers; }
-            set
-            {
-                // If the increase in assigned is greater than the unassigned throw exception
-                if (value > UnassignedPopulation + assigned_farmers)
-                {
-                    Debug.Log($"Value is {value}, Total available is is {UnassignedPopulation + assigned_farmers}");
-                    throw new ArgumentException("CTPopulation.assigned_farmers.set: Assigned farmers cannot be greater than unassigned population!");
-                }
-                assigned_farmers = value;
-            }
-        }
-
-        private int assigned_scientists;
+        private float assigned_scientists;
         public int Scientists
         {
-            get { return assigned_scientists; }
-            set
-            {
-                // If the increase in assigned is greater than the unassigned throw exception
-                if (value > UnassignedPopulation + assigned_scientists)
-                {
-                    Debug.Log($"Value is {value}, Total available is is {UnassignedPopulation + assigned_scientists}");
-                    throw new ArgumentException("CTPopulation.assigned_scientists.set: Assigned scientists cannot be greater than unassigned population!");
-                }
-                assigned_scientists = value;
-            }
+            get { return (int)(Population * faction_distribution.y); }
+            //set
+            //{
+            //    // If the increase in assigned is greater than the unassigned throw exception
+            //    if (value > UnassignedPopulation + assigned_scientists)
+            //    {
+            //        Debug.Log($"Value is {value}, Total available is is {UnassignedPopulation + assigned_scientists} in turn {turn}");
+            //        throw new ArgumentException("CTPopulation.assigned_scientists.set: Assigned scientists cannot be greater than unassigned population!");
+            //    }
+            //    assigned_scientists = value;
+            //}
         }
 
-        private int assigned_emergency;
+        private float assigned_farmers;
+        public int Farmers
+        {
+            get { return (int)(Population * faction_distribution.z); }
+            //set
+            //{
+            //    // If the increase in assigned is greater than the unassigned throw exception
+            //    if (value > UnassignedPopulation + assigned_farmers)
+            //    {
+            //        Debug.Log($"Value is {value}, Total available is is {UnassignedPopulation + assigned_farmers}");
+            //        throw new ArgumentException("CTPopulation.assigned_farmers.set: Assigned farmers cannot be greater than unassigned population!");
+            //    }
+            //    assigned_farmers = value;
+            //}
+        }
+
+        private float assigned_emergency;
         public int Planners
         {
-            get { return assigned_emergency; }
-            set
-            {
-                // If the increase in assigned is greater than the unassigned throw exception
-                if (value > UnassignedPopulation + assigned_emergency)
-                {
-                    Debug.Log($"Value is {value}, Total available is is {UnassignedPopulation + assigned_emergency}");
-                    throw new ArgumentException("CTPopulation.assigned_emergency.set: Assigned emergency cannot be greater than unassigned population!");
-                }
-                assigned_emergency = value;
-            }
+            get { return (int)(Population * faction_distribution.w); }
+            //set
+            //{
+            //    // If the increase in assigned is greater than the unassigned throw exception
+            //    if (value > UnassignedPopulation + assigned_emergency)
+            //    {
+            //        Debug.Log($"Value is {value}, Total available is is {UnassignedPopulation + assigned_emergency}");
+            //        throw new ArgumentException("CTPopulation.assigned_emergency.set: Assigned emergency cannot be greater than unassigned population!");
+            //    }
+            //    assigned_emergency = value;
+            //}
         }
         #endregion
 
@@ -305,17 +295,10 @@ namespace CT.Data
             Food = _food;
             Population = _pop;
 
-            if (turn == 0)
-            {
-                //Debug.Log($"Setting base faction distribution for turn {turn}");
-                Workers = (int)(_pop * DataSheet.starting_workers);
-                Scientists = (int)(_pop * DataSheet.starting_scientists);
-                Farmers = (int)(_pop * DataSheet.starting_farmers);
-                Planners = (int)(_pop * DataSheet.starting_planners);
-            }
-
-
-            //Debug.Log(Population);
+            //Workers     = (int)(Population * faction_distribution.x);
+            //Scientists  = (int)(Population * faction_distribution.y);
+            //Farmers     = (int)(Population * faction_distribution.z);
+            //Planners    = (int)(Population * faction_distribution.w);
 
             // Initialise active_technologues and assign Keys for each Enum type in CTTechnologies
             active_technologues = new Dictionary<CTTechnologies, bool>();
@@ -345,48 +328,26 @@ namespace CT.Data
             Population -= _cost.population;
         }
 
-        public void OingoBoingo()
-        {
-            Debug.Log("CTYearData.OingoBoingo");
-
-            foreach (CTPolicyCard apc in applied_policies)
-            {
-                foreach (CTPolicyCard rpc in revoked_policies)
-                {
-                    // Debug log if there are matching IDs between applied and revoked policies
-                    if (apc.ID == rpc.ID)
-                    {
-                        Debug.Log($"Policy {apc.ID} is now inactive.");
-                        break;
-                    }
-
-                    
-                }
-                
-                Debug.Log($"Policy {apc.ID} is still active.");
-            }
-        }
-
         #endregion
 
 
         #region Utility
-        private float GetFactionRatio(CTFaction _type)
-        {
-            switch (_type)
-            {
-                case CTFaction.Scientist:
-                    return (float)Scientists / (float)Population;
-                case CTFaction.Worker:
-                    return (float)Workers / (float)Population;
-                case CTFaction.Planner:
-                    return (float)Planners / (float)Population;
-                case CTFaction.Farmer:
-                    return (float)Farmers / (float)Population;
-                default:
-                    return -1.0f;
-            }
-        }
+        //private float GetFactionRatio(CTFaction _type)
+        //{
+        //    switch (_type)
+        //    {
+        //        case CTFaction.Scientist:
+        //            return (float)Scientists / (float)Population;
+        //        case CTFaction.Worker:
+        //            return (float)Workers / (float)Population;
+        //        case CTFaction.Planner:
+        //            return (float)Planners / (float)Population;
+        //        case CTFaction.Farmer:
+        //            return (float)Farmers / (float)Population;
+        //        default:
+        //            return -1.0f;
+        //    }
+        //}
 
         private float ScalePopulationStarvation(float _v, float _p)
         {
