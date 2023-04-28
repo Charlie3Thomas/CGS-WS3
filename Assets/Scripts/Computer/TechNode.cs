@@ -64,7 +64,7 @@ public class TechNode : MonoBehaviour
         }
     }
 
-    public void Unlock()
+    public void Unlock(uint _turn) 
     {
         if (tree == null)
         {
@@ -88,7 +88,7 @@ public class TechNode : MonoBehaviour
             if (!requiredNode.unlocked)
             {
                 allRequiredNodesUnlocked = false;
-                Debug.Log("Can't unlock as the required nodes are not unlocked yet");
+                Debug.Log($"Can't unlock {this.tech} as the required nodes are not unlocked yet {requiredNode.tech}");
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
                 break;
             }
@@ -96,7 +96,7 @@ public class TechNode : MonoBehaviour
 
         if (allRequiredNodesUnlocked)
         {
-            if (GameManager._INSTANCE.PurchaseTechnology(tech))
+            if (GameManager._INSTANCE.PurchaseTechnology(tech, _turn))
             {
                 unlocked = true;
                 //mat.SetVector("_Color", Lit * 8);

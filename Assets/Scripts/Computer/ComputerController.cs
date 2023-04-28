@@ -5,6 +5,7 @@ using TMPro;
 using Cinemachine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using CT;
 
 public enum ComputerState
 {
@@ -363,7 +364,7 @@ public class ComputerController : MonoBehaviour
                 {
                     if (camHit.transform.CompareTag("TechNode"))
                     {
-                        camHit.transform.GetComponent<TechNode>().Unlock();
+                        camHit.transform.GetComponent<TechNode>().Unlock(GameManager._INSTANCE.CurrentTurn);
                     }
                         
                 }

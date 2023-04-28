@@ -78,23 +78,24 @@ public class DisasterManager : MonoBehaviour
         for (int i = 0; i < numOfDisasters; i++)
         {
             Disaster dis = new Disaster();
-            dis.type = (CTDisasters)Random.Range(0, System.Enum.GetValues(typeof(CTDisasters)).Length);
+            //dis.type = (CTDisasters)Random.Range(0, System.Enum.GetValues(typeof(CTDisasters)).Length);
+            dis.type = (CTDisasters)CTSeed.RandFromSeed((uint)i, "dis.type").Next(System.Enum.GetValues(typeof(CTDisasters)).Length);
             //dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
             //while (!uniqueYears.Add(dis.year))
             //{
             //    //dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
             //}
 
-            dis.turn = Random.Range(4,  (int)CT.Lookup.DataSheet.turns_number);
-
+            //dis.turn = Random.Range(4,  (int)CT.Lookup.DataSheet.turns_number);
+            dis.turn = CTSeed.RandFromSeed((uint)i, "dis.turn").Next(4, (int)CT.Lookup.DataSheet.turns_number);
             while (!uniqueTurns.Add(dis.turn))
             {
-                dis.turn = Random.Range(0, (int)CT.Lookup.DataSheet.turns_number);
+                dis.turn = CTSeed.RandFromSeed((uint)i, "dis.turn").Next((int)CT.Lookup.DataSheet.turns_number);
             }
 
-            dis.year = (int)(dis.turn * CT.Lookup.DataSheet.turn_steps + CT.Lookup.DataSheet.starting_year) + Random.Range(0, 5);
+            dis.year = (int)(dis.turn * CT.Lookup.DataSheet.turn_steps + CT.Lookup.DataSheet.starting_year) + CTSeed.RandFromSeed((uint)i, "dis.year").Next(5);/*Random.Range(0, 5)*/;
 
-            dis.intensity = Random.Range(1f, 10f);
+            dis.intensity = CTSeed.RandFromSeed((uint)i, "dis.intensity").Next(1, 10);        /*Random.Range(1f, 10f);*/;
 
             disasterList.Add(dis);
         }

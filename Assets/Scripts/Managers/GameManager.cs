@@ -38,7 +38,8 @@ namespace CT
         public CTTurnData turn = new CTTurnData();
         //private CTTimelineData prime_timeline;
 
-        [SerializeField] private uint current_turn = 0;
+        private uint current_turn = 0;
+        public uint CurrentTurn { get { return current_turn; } }
         private int user_changes_in_turn;
         private Vector3 current_turn_resource_expenditure;
 
@@ -60,9 +61,10 @@ namespace CT
         {
             Initialise();
             //SetBaseFactionSpreadPerTurn();
-            AIPlayFromTurn(0);
 
             turn = GetYearData(0);
+
+            AIPlayFromTurn(0);
 
             current_turn_resource_expenditure = new Vector3(0, 0, 0);
 
@@ -124,7 +126,7 @@ namespace CT
                 net_total += (DataSheet.unemployed_net * ret.UnassignedPopulation);
 
                 ret.ApplyCosts(net_total);
-            }
+            }            
 
             //for (int i = 0; i <= _year; i++)
             //{
@@ -187,7 +189,7 @@ namespace CT
             UpdateResourceCounters();
             UpdateFactionDistributionPips();
             UpdatePipsWithCurrentTurnData();
-            CheckForTimelineConflicts();
+            //CheckForTimelineConflicts();
             GetTimelineAwareness();
             FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
@@ -201,6 +203,9 @@ namespace CT
 
         public void AIPlayFromTurn(uint _turn)
         {
+            // Get Year Data after changes
+            CTTurnData d = GetYearData(_turn);
+
             // For each turn
             for (uint t = _turn; t < DataSheet.turns_number; t++)
             {
@@ -213,20 +218,18 @@ namespace CT
                     game_changes[t].Add(new SetFactionDistribution(dist.x, dist.y, dist.z, dist.w));
 
                 // Get list of affordable technologies
-                List<TechNode> affordable_valid_techs = new List<TechNode>(GetAffordableTechnologiesForTurn(t));
+                List<TechNode> affordable_valid_techs = GetAffordableTechnologiesForTurn(t, d);
 
                 if (affordable_valid_techs.Count > 0)
                 {
                     // Randomly purchase an affordable valid technology and unlock it
                     int avt_index = CTSeed.RandFromSeed(t, "tech").Next(affordable_valid_techs.Count);
-                    game_changes[t].Add(new PurchaseTechnology(affordable_valid_techs[avt_index].tech));
-                    affordable_valid_techs[avt_index].Unlock();
-                    Debug.Log($"AI Purchased Technology {affordable_valid_techs[avt_index]} at turn {t}");
+                    //game_changes[t].Add(new PurchaseTechnology(affordable_valid_techs[avt_index].tech));
+                    affordable_valid_techs[avt_index].Unlock(t);
+                    Debug.Log($"AI Purchased Technology {affordable_valid_techs[avt_index].tech} at turn {t}");
                 }
-                    
 
-                // Get Year Data after changes
-                CTTurnData d = GetYearData(t);
+                d = GetNextTurnData(d);
 
                 // Check if turn failed
                 if (d.failed_turn)
@@ -237,42 +240,57 @@ namespace CT
             }
         }
 
-        private List<TechNode> GetAffordableTechnologiesForTurn(uint _turn)
+        private List<TechNode> GetAffordableTechnologiesForTurn(uint _turn, CTTurnData _data)
         {
-            CTTurnData data = GetYearData(_turn);
+            CTTurnData current_turn_data = new CTTurnData(_data);
 
-            List<TechNode> affordable_technologies = new List<TechNode>();
+            List<TechNode> affordable_valid_technologies = new List<TechNode>();
+            List<TechNode> remove_nodes = new List<TechNode>(); 
 
-            TechTree tt = FindObjectOfType<TechTree>();
+            TechTree all_nodes = FindObjectOfType<TechTree>();
 
-            foreach (TechNode n in tt.nodes)
+            foreach (TechNode current_node in all_nodes.nodes)
             {
-                CTCost cost = DataSheet.GetTechPrice(n.tech);
+                CTCost cost = DataSheet.GetTechPrice(current_node.tech);
 
                 // Check if node is affordable
-                if (cost.money      <= data.Money   &&
-                    cost.science    <= data.Science &&
-                    cost.food       <= data.Food    &&
-                    cost.population <= data.Population)
+                if (cost.money      <= current_turn_data.Money   &&
+                    cost.science    <= current_turn_data.Science &&
+                    cost.food       <= current_turn_data.Food    &&
+                    cost.population <= current_turn_data.Population)
 
                 {
-                    bool prerequisites = true;
+                    affordable_valid_technologies.Add(current_node);
 
-                    // Check if prerequisites are owned
-                    foreach (TechNode p in n.requiredNodes)
+                    for (int i = 0; i < affordable_valid_technologies.Count; i++)
                     {
-                        if (!data.active_technologues[n.tech])
-                            prerequisites = false;
+                        // Check if affordable_tech_index has prereqs
+                        if (affordable_valid_technologies[i].requiredNodes.Length > 0)
+                        {
+                            // If it does, check each of them for ownership
+                            for (int j = 0; j < affordable_valid_technologies[i].requiredNodes.Length; j++)
+                            {
+                                // If any prereqs fail ownership check
+                                if (current_turn_data.active_technologues[affordable_valid_technologies[i].requiredNodes[j].tech] == false)
+                                {
+                                    // Remove from list
+                                    remove_nodes.Add(affordable_valid_technologies[i]);
+                                    //affordable_valid_technologies.Remove(affordable_valid_technologies[affordable_tech_index]);
+                                }
+                            }
+                        }
                     }
 
-                    // If all prerequisites are owned and tech is not owned, add to list
-                    if (prerequisites && data.active_technologues[n.tech] == false)
-                        affordable_technologies.Add(n);
-
+                    foreach (TechNode remove in remove_nodes)
+                    {
+                        affordable_valid_technologies.Remove(remove);
+                    }
                 }
             }
 
-            return affordable_technologies;
+            Debug.Log($"GameManager.GetAffordableTechnologiesForTurn data {current_turn_data.turn} vs {_turn}");
+
+            return affordable_valid_technologies;
         }
 
         public bool IsTechnologyOwned(CTTechnologies _tech)
@@ -336,12 +354,12 @@ namespace CT
             }
         }
 
-        public bool PurchaseTechnology(CTTechnologies _t)
+        public bool PurchaseTechnology(CTTechnologies _t, uint _turn)
         {
             // Check if you can afford tech
             if (DataSheet.technology_price[_t] <= GetResourceTotals())
             {
-                user_changes[current_turn].Add(new PurchaseTechnology(_t));
+                user_changes[_turn].Add(new PurchaseTechnology(_t));
                 current_turn_resource_expenditure += new Vector3(
                     DataSheet.technology_price[_t].money,   // x
                     DataSheet.technology_price[_t].science, // y
@@ -550,36 +568,36 @@ namespace CT
         /// Look at the change being made, and if the same change is made in the future, remove the change from the timeline
         /// This specifically applies to technology purchaes for now
         /// </summary>
-        private void CheckForTimelineConflicts()
-        {
-            Dictionary<CTTechnologies, Vector2> changes = new Dictionary<CTTechnologies, Vector2>();
+        //private void CheckForTimelineConflicts()
+        //{
+        //    Dictionary<CTTechnologies, Vector2> changes = new Dictionary<CTTechnologies, Vector2>();
 
-            // Backwards from the end of the timeline
-            for (int t = user_changes.Count() - 1; t >= 1; t--)
-            {   // Look through every change in the list
-                for (int c = 1; c < user_changes[t].Count(); c++)
-                {   // If the change in the list is of type PurchaseTechnology
-                    if (user_changes[t][c].GetType() == typeof(PurchaseTechnology))
-                    {
-                        Debug.Log("Found type of purchase technology");
-                        // Copy the change
-                        PurchaseTechnology p = (PurchaseTechnology)user_changes[t][c];
+        //    // Backwards from the end of the timeline
+        //    for (int t = user_changes.Count() - 1; t >= 1; t--)
+        //    {   // Look through every change in the list
+        //        for (int c = 1; c < user_changes[t].Count(); c++)
+        //        {   // If the change in the list is of type PurchaseTechnology
+        //            if (user_changes[t][c].GetType() == typeof(PurchaseTechnology))
+        //            {
+        //                Debug.Log("Found type of purchase technology");
+        //                // Copy the change
+        //                PurchaseTechnology p = (PurchaseTechnology)user_changes[t][c];
                         
-                        // Add the change to the dictionary
-                        if (!changes.ContainsKey(p.tech))
-                        {
-                            changes.Add(p.tech, new Vector2(t, c));
-                        }
-                        else
-                        {
-                            Debug.Log($"The cost of the technology {p.tech} {DataSheet.technology_price[p.tech]} was refunded in the year {(int)changes[p.tech].x}");                            
-                            user_changes[(int)changes[p.tech].x].RemoveAt((int)changes[p.tech].y);
-                            awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_override_awareness_rate));
-                        }
-                    }
-                }
-            }
-        }
+        //                // Add the change to the dictionary
+        //                if (!changes.ContainsKey(p.tech))
+        //                {
+        //                    changes.Add(p.tech, new Vector2(t, c));
+        //                }
+        //                else
+        //                {
+        //                    Debug.Log($"The cost of the technology {p.tech} {DataSheet.technology_price[p.tech]} was refunded in the year {(int)changes[p.tech].x}");                            
+        //                    user_changes[(int)changes[p.tech].x].RemoveAt((int)changes[p.tech].y);
+        //                    awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_override_awareness_rate));
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         private void GetChangesAtTurn()
         {
