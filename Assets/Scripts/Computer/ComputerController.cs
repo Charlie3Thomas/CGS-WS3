@@ -6,6 +6,7 @@ using Cinemachine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using CT;
+using CT.Lookup;
 
 public enum ComputerState
 {
@@ -248,25 +249,25 @@ public class ComputerController : MonoBehaviour
         // Moving the year slider
         if (yearSliding)
         {
-            //float remappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
-            //float newRemappedValue = remappedValue + mouseDelta.x * 0.025f;
-            //desiredYear = (int)RAUtility.Remap(newRemappedValue, minYearSlider, maxYearSlider, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year);
+            float remappedValue = RAUtility.Remap(desiredYear, DataSheet.starting_year, DataSheet.end_year, minYearSlider, maxYearSlider);
+            float newRemappedValue = remappedValue + mouseDelta.x * 0.025f;
+            desiredYear = (int)RAUtility.Remap(newRemappedValue, minYearSlider, maxYearSlider, DataSheet.starting_year, DataSheet.end_year);
 
-            //if (desiredYear % 5 != 0)
-            //{
-            //    desiredYear = desiredYear - (desiredYear % 5);
-            //    AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
-            //}
+            if (desiredYear % 5 != 0)
+            {
+                desiredYear = desiredYear - (desiredYear % 5);
+                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
+            }
 
-            //if (desiredYear < YearData._INSTANCE.earliest_year)
-            //    desiredYear = YearData._INSTANCE.earliest_year;
+            if (desiredYear < DataSheet.starting_year)
+                desiredYear = (int)DataSheet.starting_year;
 
-            //if (desiredYear > YearData._INSTANCE.latest_year)
-            //    desiredYear = YearData._INSTANCE.latest_year;
+            if (desiredYear > DataSheet.end_year)
+                desiredYear = (int)DataSheet.end_year;
 
-            //newRemappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
-            //yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
-            //UpdateSlider();
+            newRemappedValue = RAUtility.Remap(desiredYear, DataSheet.starting_year, DataSheet.end_year, minYearSlider, maxYearSlider);
+            yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
+            UpdateSlider();
         }
 
         if (isInteractingPressed && _hit.transform.CompareTag("YearSlider"))
