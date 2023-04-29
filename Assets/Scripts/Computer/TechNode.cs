@@ -162,19 +162,26 @@ public class TechNode : MonoBehaviour
     public void UpdateTechNodes()
     {
         this.unlocked = false;
-        List<CTTechnologies> active_techs = GameManager._INSTANCE.GetUnlockedTechnologiesInTurn();
+        Dictionary<CTTechnologies, bool> techs = GameManager._INSTANCE.GetUnlockedTechnologiesInTurn();
 
         //Debug.Log($"TechNode:UpdateTechNodes:active_techs = {active_techs.Count}");
 
-        foreach (CTTechnologies t in active_techs)
+        foreach (KeyValuePair<CTTechnologies, bool> kvp in techs)
         {
-            if (t == this.tech)
+            if (kvp.Key == this.tech)
             {
-                //Debug.Log($"{this.gameObject.name} is unlocked");
-                this.unlocked = true;
-                tree.LookupBuffs(t);
-                break;
+                if (kvp.Value)
+                {
+                    //Debug.Log($"{this.gameObject.name} is unlocked");
+                    this.unlocked = true;
+                    tree.LookupBuffs(this.tech);
+                    break;
+                }
             }
+            ////Debug.Log($"{this.gameObject.name} is unlocked");
+            //this.unlocked = true;
+            //tree.LookupBuffs(t);
+            //break;
         }
 
         this.mat.SetVector("_Color", this.unlocked ? Lit * 8 : faded);

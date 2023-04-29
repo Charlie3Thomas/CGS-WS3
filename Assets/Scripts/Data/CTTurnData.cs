@@ -16,7 +16,7 @@ namespace CT.Data
         public CTTurnData(CTTurnData _data) 
         { 
             turn                    = _data.turn;
-            active_technologues     = _data.active_technologues;
+            active_technologues     =  new Dictionary<CTTechnologies, bool>(_data.active_technologues);
             applied_policies        = _data.applied_policies;
             revoked_policies        = _data.revoked_policies;
             Money                   = _data.Money;
@@ -31,10 +31,10 @@ namespace CT.Data
         public uint turn;
         public bool failed_turn { get { return (Population <= 0); } }
 
-        public Vector4 faction_distribution;
+        public Vector4 faction_distribution = new Vector4();
 
         // Technologies
-        public Dictionary<CTTechnologies, bool> active_technologues;
+        public Dictionary<CTTechnologies, bool> active_technologues = new Dictionary<CTTechnologies, bool>();
 
         // Policies
         public List<CTPolicyCard> applied_policies = new List<CTPolicyCard>();
@@ -73,7 +73,7 @@ namespace CT.Data
 
             set
             {
-                if (value < data_science)
+                if (value == data_science)
                     return;
                 //Debug.Log(value);
                 if (value < 0)
@@ -81,9 +81,8 @@ namespace CT.Data
                     data_science = 0;
                     //throw new ArgumentException("Science cannot go below zero!");
                 }
-                else
-                    data_science = value;
 
+                data_science = value;
             }
         }
 
@@ -275,6 +274,11 @@ namespace CT.Data
 
             //Debug.Log("Pop " + _cost.population);
             Population -= (int)_cost.population;
+        }
+
+        public void ApplyTechnology(CTTechnologies _tech)
+        {
+            active_technologues[_tech] = true;
         }
 
         #endregion
