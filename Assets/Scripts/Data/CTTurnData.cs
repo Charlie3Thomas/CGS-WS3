@@ -7,6 +7,8 @@ namespace CT.Data
     using Changes;
     using Enumerations;
     using Lookup;
+    using Newtonsoft.Json.Schema;
+    using static UnityEngine.Rendering.DebugUI;
 
     public class CTTurnData
     {
@@ -14,7 +16,7 @@ namespace CT.Data
         public CTTurnData() { }
 
         public CTTurnData(CTTurnData _data) 
-        { 
+        {
             turn                    = _data.turn;
             active_technologues     =  new Dictionary<CTTechnologies, bool>(_data.active_technologues);
             applied_policies        = _data.applied_policies;
@@ -40,6 +42,8 @@ namespace CT.Data
         public List<CTPolicyCard> applied_policies = new List<CTPolicyCard>();
         public List<CTPolicyCard> revoked_policies = new List<CTPolicyCard>();
 
+        private float food_delta = 0;
+
         #region Resources
 
         #region Consumables
@@ -54,14 +58,10 @@ namespace CT.Data
                 if (value == data_money)
                     return;
 
-                //Debug.Log(value);
                 if (value < 0)
-                {
                     data_money = 0;
-                    //throw new ArgumentException("Money cannot go below zero!");
-                }
-
-                data_money = value;
+                else
+                    data_money = value;
             }
         }
 
@@ -75,14 +75,11 @@ namespace CT.Data
             {
                 if (value == data_science)
                     return;
-                //Debug.Log(value);
-                if (value < 0)
-                {
-                    data_science = 0;
-                    //throw new ArgumentException("Science cannot go below zero!");
-                }
 
-                data_science = value;
+                if (value < 0)
+                    data_science = 0;
+                else
+                    data_science = value;
             }
         }
 
@@ -97,37 +94,13 @@ namespace CT.Data
                 if (value == data_food)
                     return;
 
-                // Growth
-                if (value > Population)
+                if (value < 0)
                 {
-                    Population += (int)(Population * DataSheet.food_surplus_population_gain);
+                    food_delta = value;
+                    data_food = 0;
+                }
+                else
                     data_food = value;
-                    return;
-                    //Debug.Log("Population growth!");
-                }
-
-                // Decay
-                if (value <= 0)
-                {
-                    if (value == 0)
-                    { // If set to exactly zero, there was JUST enough food
-                        data_food = value;
-                        return;
-                    }
-                    else
-                    { // If set to less than zero, there was not enough food
-                        data_food = 0;
-
-                        // Calculate delta in required vs available food
-                        float delta_scale = ScalePopulationStarvation(value, Population);
-
-                        Population -= (int)(Population * (DataSheet.starvation_rate * delta_scale) + 1);
-
-                        return;
-                    }                    
-                }
-
-                data_food = value;
             }
         }
 
@@ -147,6 +120,7 @@ namespace CT.Data
                 if (value <= 0)
                 {
                     data_population = 0;
+                    faction_distribution = new Vector4(0,0,0,0);
                     return;
                     //throw new ArgumentException("CTPopulation.resource_total.set: Total population cannot be negative!");
                 }
@@ -292,6 +266,25 @@ namespace CT.Data
             if (ret > 1.0f)
                 ret = 1.0f;
             return ret;
+        }
+
+        public void GrowPopulation(int _i)
+        {
+            if (_i == 0)
+                return;
+
+            Population += (int)(Population * DataSheet.food_surplus_population_gain);
+            return;
+        }
+
+        public void DecayPopulation()
+        {
+            // Calculate delta in required vs available food
+            float delta_scale = ScalePopulationStarvation(food_delta, Population);
+
+            Population -= (int)(Population * (DataSheet.starvation_rate * delta_scale) + 1);
+
+            return;
         }
 
         #endregion

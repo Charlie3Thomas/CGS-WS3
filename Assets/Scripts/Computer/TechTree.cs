@@ -36,4 +36,19 @@ public class TechTree : MonoBehaviour
     {
         buffs.Clear();
     }
+
+    public TechNode GetNodeOfType(CTTechnologies _type)
+    {
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            if (nodes[i].tech == _type)
+            {
+                return nodes[i];
+            }
+        }
+
+        Debug.LogError($"TechTree.GetNodeOfType: Could not get node of type {_type}");
+        return new TechNode();
+    }
+
 }

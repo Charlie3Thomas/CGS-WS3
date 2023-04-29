@@ -4,6 +4,7 @@ using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
 //Nodes 23, 24, 46, 47, 48, 62 are unique and need their own implementations
@@ -111,7 +112,6 @@ public class TechNode : MonoBehaviour
 
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
             }
-
         }
     }
 
@@ -162,26 +162,18 @@ public class TechNode : MonoBehaviour
     public void UpdateTechNodes()
     {
         this.unlocked = false;
-        Dictionary<CTTechnologies, bool> techs = GameManager._INSTANCE.GetUnlockedTechnologiesInTurn();
+        List<CTTechnologies> techs = GameManager._INSTANCE.GetUnlockedTechnologiesInTurn();
 
         //Debug.Log($"TechNode:UpdateTechNodes:active_techs = {active_techs.Count}");
 
-        foreach (KeyValuePair<CTTechnologies, bool> kvp in techs)
+        foreach (CTTechnologies t in techs)
         {
-            if (kvp.Key == this.tech)
+            if (t == this.tech)
             {
-                if (kvp.Value)
-                {
-                    //Debug.Log($"{this.gameObject.name} is unlocked");
-                    this.unlocked = true;
-                    tree.LookupBuffs(this.tech);
-                    break;
-                }
+                this.unlocked = true;
+                tree.LookupBuffs(t);
+                break;
             }
-            ////Debug.Log($"{this.gameObject.name} is unlocked");
-            //this.unlocked = true;
-            //tree.LookupBuffs(t);
-            //break;
         }
 
         this.mat.SetVector("_Color", this.unlocked ? Lit * 8 : faded);
