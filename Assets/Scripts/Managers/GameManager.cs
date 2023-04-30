@@ -61,7 +61,6 @@ namespace CT
         private void Start()
         {
             Initialise();
-            //SetBaseFactionSpreadPerTurn();
 
             AIPlayFromTurn(0);
 
@@ -90,17 +89,17 @@ namespace CT
             initial_year.Initialise(DataSheet.starting_money, DataSheet.starting_science, DataSheet.starting_food, DataSheet.starting_population);
 
             // Initialise user changes list
-            user_changes = new List<CTChange>[DataSheet.turns_number];
+            user_changes = new List<CTChange>[DataSheet.turns_number + 1];
             for (uint year = 0; year < user_changes.Length; year++)
                 user_changes[year] = new List<CTChange>();
 
             // Initialise game changes list
-            game_changes = new List<CTChange>[DataSheet.turns_number];
+            game_changes = new List<CTChange>[DataSheet.turns_number + 1];
             for (uint year = 0; year < game_changes.Length; year++)
                 game_changes[year] = new List<CTChange>();
 
             // Initialise awareness changes list
-            awareness_changes = new List<CTChange>[DataSheet.turns_number];
+            awareness_changes = new List<CTChange>[DataSheet.turns_number + 1];
             for(uint year = 0; year < awareness_changes.Length; year++)
                 awareness_changes[year] = new List<CTChange>();
 
@@ -121,6 +120,9 @@ namespace CT
                 // Technology changes for year
                 foreach (CTChange change in user_changes[i])
                     change.ApplyChange(ref ret);
+
+                // Get Total Modifiers for turn
+                ret.ApplyModifiers();
 
                 // Apply net resource worth of each assigned population member for each turn between zero and requested turn
                 CTCost net_total = new CTCost(0, 0, 0, 0);
@@ -234,7 +236,7 @@ namespace CT
 
                             foreach(TechNode n in required_nodes)
                             {
-                                if (data.active_technologues[n.tech] == false)
+                                if (data.technologies[n.tech] == false)
                                 {
                                     // PurchaseTechnology is invalid
                                     user_changes[t].Remove(user_changes[t][i]);
@@ -291,7 +293,7 @@ namespace CT
                     List<TechNode> req = tt.nodes[i].GetRequiredTechs();
 
                     // All The nodes we don't already own
-                    if (req.Count == 0 && data.active_technologues[tt.nodes[i].tech] == false)
+                    if (req.Count == 0 && data.technologies[tt.nodes[i].tech] == false)
                     {
                         available_techs.Add(tt.nodes[i].tech);
                         //Debug.Log($"WE CAN BUY {tt.nodes[i].tech}!");
@@ -303,7 +305,7 @@ namespace CT
                     foreach (TechNode n in req)
                     {
                         // If do not own the required node
-                        if (data.active_technologues[n.tech] == false)
+                        if (data.technologies[n.tech] == false)
                             break;
                         else
                             total++;
@@ -312,7 +314,7 @@ namespace CT
                     // All the nodes for which we already own all prereqs
                     if (total == req.Count)
                     {
-                        if (data.active_technologues[tt.nodes[i].tech] == false)
+                        if (data.technologies[tt.nodes[i].tech] == false)
                         {
                             available_techs.Add(tt.nodes[i].tech);
                             //Debug.Log($"WE CAN BUY {tt.nodes[i].tech}!");
@@ -418,7 +420,7 @@ namespace CT
             // Check if you can afford tech
             if (DataSheet.technology_price[_t] <= GetResourceTotals())
             {
-                turn_data.active_technologues[_t] = true;
+                turn_data.technologies[_t] = true;
                 user_changes[_turn].Add(new PurchaseTechnology(_t));
                 current_turn_resource_expenditure += new Vector3(
                     DataSheet.technology_price[_t].money,   // x
@@ -606,9 +608,9 @@ namespace CT
 
             //Debug.Log($"{}");
 
-            foreach (KeyValuePair<CTTechnologies, bool> kvp in turn_data.active_technologues)
+            foreach (KeyValuePair<CTTechnologies, bool> kvp in turn_data.technologies)
             {
-                if (turn_data.active_technologues[kvp.Key] == true)
+                if (turn_data.technologies[kvp.Key] == true)
                 {
                     ret.Add(kvp.Key);
                 }

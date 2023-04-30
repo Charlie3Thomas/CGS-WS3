@@ -15,20 +15,15 @@ namespace CT.Lookup
         public static readonly uint     starting_year                   = 1900;
         public static readonly uint     end_year                        = 2100;
         public static readonly uint     turns_number                    = (end_year - starting_year) / turn_steps;
-        public static readonly int      starting_money                  = 100000;
-        public static readonly int      starting_science                = 100000;
-        public static readonly int      starting_food                   = 100000;
+        public static readonly int      starting_money                  = 10000;
+        public static readonly int      starting_science                = 10000;
+        public static readonly int      starting_food                   = 10000;
         public static readonly float    year_change_awareness_rate      = 0.05f;
         public static readonly float    year_override_awareness_rate    = 0.15f;
 
-        public static readonly int      starting_population             = 5000; 
+        public static readonly int      starting_population             = 500; 
         public static readonly float    starvation_rate                 = 0.40f;
         public static readonly float    food_surplus_population_gain    = 0.10f;
-
-        public static readonly float    starting_workers                = 0.0f;
-        public static readonly float    starting_scientists             = 0.0f;
-        public static readonly float    starting_farmers                = 0.0f;
-        public static readonly float    starting_planners               = 0.0f;
 
         public static readonly float    policy_card_min_scale           = 25.0f;
         public static readonly float    policy_card_max_scale           = 500.0f;
@@ -214,7 +209,7 @@ namespace CT.Lookup
             [CTTechnologies.AlienMastery]           = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_CAPACITY },                                  new List<float>() { float.MaxValue }),
             [CTTechnologies.AlienSuperiority]       = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.SCIENCE_CAPACITY },                                new List<float>() { float.MaxValue }),
             [CTTechnologies.AlienDomination]        = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.FOOD_RESERVES },                                   new List<float>() { 10000.0f }),
-            [CTTechnologies.MemoryFlash]            = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.CUSTOM },                                          new List<float>() { 0.0f }),
+            [CTTechnologies.MemoryFlash]            = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.CUSTOM },                                          new List<float>() { 0.0f })
         };
 
         public static readonly string[] policy_buff_suffixes = new string[]
@@ -254,13 +249,17 @@ namespace CT.Lookup
             [BuffsNerfsType.MONEY_GAIN]         = "Wealth",
             [BuffsNerfsType.FOOD_GAIN]          = "Agriculture",
             [BuffsNerfsType.SCIENCE_GAIN]       = "Research",
+
             [BuffsNerfsType.MONEY_UPKEEP]       = "Wealth",
             [BuffsNerfsType.FOOD_UPKEEP]        = "Agriculture",
             [BuffsNerfsType.SCIENCE_UPKEEP]     = "Research",
+
             [BuffsNerfsType.SAFETY_FACTOR]      = "Security",
+
             [BuffsNerfsType.MONEY_BONUS]        = "Wealth",
             [BuffsNerfsType.SCIENCE_BONUS]      = "Research",
             [BuffsNerfsType.AWARENESS_FACTOR]   = "Stealth",
+
             [BuffsNerfsType.RESOURCE_FACTOR]    = "INVALID BUFF/NERF TYPE",
             [BuffsNerfsType.FOOD_RESERVES]      = "INVALID BUFF/NERF TYPE",
             [BuffsNerfsType.MONEY_CAPACITY]     = "INVALID BUFF/NERF TYPE",
@@ -374,5 +373,15 @@ namespace CT.Lookup
         SCIENCE_CAPACITY,   // ??? 
 
         CUSTOM              // NOTHING
+    }
+
+    public enum CTModifierType
+    {
+        Money,
+        Science,
+        Food, 
+        Population,
+        Awareness,
+        Safety
     }
 }

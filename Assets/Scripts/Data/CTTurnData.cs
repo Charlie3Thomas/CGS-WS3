@@ -18,9 +18,9 @@ namespace CT.Data
         public CTTurnData(CTTurnData _data) 
         {
             turn                    = _data.turn;
-            active_technologues     =  new Dictionary<CTTechnologies, bool>(_data.active_technologues);
-            applied_policies        = _data.applied_policies;
-            revoked_policies        = _data.revoked_policies;
+            technologies     =  new Dictionary<CTTechnologies, bool>(_data.technologies);
+            applied_policies        =  new List<CTPolicyCard>(_data.applied_policies);
+            revoked_policies        =  new List<CTPolicyCard>(_data.revoked_policies);
             Money                   = _data.Money;
             Science                 = _data.Science;
             Food                    = _data.Food;
@@ -36,11 +36,13 @@ namespace CT.Data
         public Vector4 faction_distribution = new Vector4();
 
         // Technologies
-        public Dictionary<CTTechnologies, bool> active_technologues = new Dictionary<CTTechnologies, bool>();
+        public Dictionary<CTTechnologies, bool> technologies = new Dictionary<CTTechnologies, bool>();
 
         // Policies
         public List<CTPolicyCard> applied_policies = new List<CTPolicyCard>();
         public List<CTPolicyCard> revoked_policies = new List<CTPolicyCard>();
+
+        private Vector4 cost_modifier_totals = new Vector4(0, 0, 0, 0);
 
         private float food_delta = 0;
 
@@ -223,11 +225,11 @@ namespace CT.Data
             Population = _pop;
 
             // Initialise active_technologues and assign Keys for each Enum type in CTTechnologies
-            active_technologues = new Dictionary<CTTechnologies, bool>();
+            technologies = new Dictionary<CTTechnologies, bool>();
             foreach (CTTechnologies tech in (CTTechnologies[])System.Enum.GetValues(typeof(CTTechnologies)))
             {
                 // Default each technology to false (not owned)
-                active_technologues[tech] = false;
+                technologies[tech] = false;
             }
         }
 
@@ -237,23 +239,150 @@ namespace CT.Data
         #region Actions
         public void ApplyCosts(CTCost _cost)
         {
-            //Debug.Log("Money " + _cost.money);
-            Money -= (int)_cost.money;
+            if (Population == 0) return;
 
-            //Debug.Log("Science " + _cost.science);
-            Science -= (int)_cost.science;
-
-            //Debug.Log("Food " + _cost.food);
-            Food -= (int)_cost.food;
-
-            //Debug.Log("Pop " + _cost.population);
-            Population -= (int)_cost.population;
+            Money       -= (int)(_cost.money        * (1 + cost_modifier_totals.x));
+            Science     -= (int)(_cost.science      * (1 + cost_modifier_totals.y));
+            Food        -= (int)(_cost.food         * (1 + cost_modifier_totals.z));
+            Population  -= (int)(_cost.population   * (1 + cost_modifier_totals.w));
         }
 
         public void ApplyTechnology(CTTechnologies _tech)
         {
-            active_technologues[_tech] = true;
+            technologies[_tech] = true;
         }
+
+        public void ApplyModifiers()
+        {
+            // Technologies
+            foreach (KeyValuePair<CTTechnologies, bool> kvp in technologies)
+            {
+                if (kvp.Value) // If you have the technology this turn
+                {
+                    // Get the buff/nerf associated with the technology
+                    BuffsNerfs bn = DataSheet.technology_buffs[kvp.Key];
+                    
+                    // Loop through buff/nerf type
+                    for (int bnt = 0; bnt < bn.type.Count; bnt++)
+                    {
+                        OingoBoingo(bn.type[bnt], bn.amount[bnt]);
+                    }
+                }
+            }
+
+            // Policies
+
+        }
+
+        private void OingoBoingo(BuffsNerfsType _t, float _degree)
+        {
+            switch (_t)
+            {
+                case BuffsNerfsType.MONEY_GAIN:
+                    ApplyCTCostModifer(CTModifierType.Money, _degree);
+                    break;
+
+                case BuffsNerfsType.FOOD_GAIN:
+                    ApplyCTCostModifer(CTModifierType.Food, _degree);
+                    break;
+
+                case BuffsNerfsType.SCIENCE_GAIN:
+                    ApplyCTCostModifer(CTModifierType.Science, _degree);
+                    break;   
+                    
+                case BuffsNerfsType.MONEY_UPKEEP:
+                    ApplyCTCostModifer(CTModifierType.Money, _degree);
+                    break;    
+                    
+                case BuffsNerfsType.FOOD_UPKEEP:
+                    ApplyCTCostModifer(CTModifierType.Food, _degree);
+                    break;    
+                    
+                case BuffsNerfsType.SCIENCE_UPKEEP:
+                    ApplyCTCostModifer(CTModifierType.Science, _degree);
+                    break;   
+                    
+                case BuffsNerfsType.SAFETY_FACTOR:
+                    break;  
+                    
+                case BuffsNerfsType.MONEY_BONUS:
+                    ApplyFlatValue(CTModifierType.Money, _degree);
+                    break; 
+                    
+                case BuffsNerfsType.SCIENCE_BONUS:
+                    ApplyFlatValue(CTModifierType.Science, _degree);
+                    break; 
+                    
+                case BuffsNerfsType.AWARENESS_FACTOR:
+                    break;
+            }
+        }
+
+        // Apply flat value
+        private void ApplyFlatValue(CTModifierType _t, float _value)
+        {
+            if (Population == 0) return;
+
+            switch (_t)
+            {
+                case CTModifierType.Money:
+                    Money += (int)_value;
+                    break;
+
+                case CTModifierType.Science:
+                    Science += (int)_value;
+                    break;
+
+                case CTModifierType.Food:
+                    Food += (int)_value;
+                    break;
+
+                case CTModifierType.Population:
+                    Population += (int)_value;
+                    break;
+
+                case CTModifierType.Awareness:
+                    throw new NotImplementedException();
+
+                case CTModifierType.Safety:
+                    throw new NotImplementedException();
+
+                default:
+                    Debug.LogError($"CTTurnData.ApplyFlatValue({_t}, {_value}) is not an implemented flat value modifier type!");
+                    break;
+            }
+        }
+
+        // Apply modifier to costs
+        private void ApplyCTCostModifer(CTModifierType _t, float _value)
+        {
+            switch (_t)
+            {
+                case CTModifierType.Money:
+                    cost_modifier_totals.x += _value;
+                    break;
+
+                case CTModifierType.Science:
+                    cost_modifier_totals.y += _value;
+                    break;
+
+                case CTModifierType.Food:
+                    cost_modifier_totals.z += _value;
+                    break;
+
+                case CTModifierType.Population:
+                    cost_modifier_totals.w += _value;
+                    break;
+
+                default:
+                    Debug.LogError($"CTTurnData.ApplyFlatValue({_t}, {_value}) is not an implemented CTCost modifier type!");
+                    break;
+            }
+        }
+
+        // Modify disaster impact
+
+        // Modify awareness
 
         #endregion
 

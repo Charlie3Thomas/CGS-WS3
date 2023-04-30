@@ -110,6 +110,7 @@ public class PolicyManager : MonoBehaviour
                 else
                 {
                     int replace_slot = HandleNoFreeSlotCase();
+                    TrackRevokePolicy(current_policies[replace_slot]);
                     current_policies[replace_slot] = policies_at_current_turn[policy];
                     TrackApplyPolicy(current_policies[replace_slot]);
                     return;
@@ -205,12 +206,14 @@ public class PolicyManager : MonoBehaviour
 
     private void TrackApplyPolicy(CTPolicyCard _p)
     {
+        Debug.Log(_p.ID);
         GameManager._INSTANCE.ApplyPolicy((int)GameManager._INSTANCE.GetTurn().turn, _p);
-        Debug.Log("PolicyManager.TrackApplyPolicy");
+        //Debug.Log("PolicyManager.TrackApplyPolicy");
     }
 
     private void TrackRevokePolicy(CTPolicyCard _p)
     {
+        Debug.Log(_p.ID);
         GameManager._INSTANCE.RevokePolicy((int)GameManager._INSTANCE.GetTurn().turn, _p);
     }
 

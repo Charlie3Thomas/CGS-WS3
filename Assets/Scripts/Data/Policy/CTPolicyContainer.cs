@@ -15,7 +15,7 @@ public class CTPolicyContainer : MonoBehaviour
     {
         current_policy = new CTPolicyCard();
 
-        policies = new CTPolicyCard[DataSheet.turns_number];
+        policies = new CTPolicyCard[DataSheet.turns_number + 1];
         for (int i = 0; i < policies.Length; i++)
         {
             policies[i] = new CTPolicyCard();
