@@ -40,7 +40,7 @@ public class UIHoverManager : MonoBehaviour
         HideTip();
     }
 
-    public void ShowTip(string tip, Vector2 mousePos)
+    public void ShowTip(string tip, Vector2 mousePos) //Public incase you wanna do a sneaky singleton ref call of this function to display tip without hovertip script
     {
         tipText.text = tip;
 
@@ -56,5 +56,17 @@ public class UIHoverManager : MonoBehaviour
         tipText.text = default;
         tipWindow.gameObject.SetActive(false);
     }
+
+    public void ManuallyHideToolTip()
+    {
+        StartCoroutine("ManualStopToolTipTime");
+    }
+
+    private IEnumerator ManualStopToolTipTime()
+    {
+        yield return new WaitForSeconds(3.5f);
+        HideTip();
+    }
+
     
 }

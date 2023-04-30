@@ -72,8 +72,9 @@ public class TechNode : MonoBehaviour
 
         if (unlocked)
         {
+            UIHoverManager.instance.ShowTip("Node Unlocked!", Input.mousePosition);
             AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "AlreadyUnlocked"));
-            
+            UIHoverManager.instance.ManuallyHideToolTip();
             return;
         }
 
@@ -85,7 +86,9 @@ public class TechNode : MonoBehaviour
             {
                 allRequiredNodesUnlocked = false;
                 Debug.Log("Can't unlock as the required nodes are not unlocked yet");
+                UIHoverManager.instance.ShowTip("Can't unlock as the required nodes are not unlocked yet!", Input.mousePosition);
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
+                
                 break;
             }
         }
@@ -100,13 +103,16 @@ public class TechNode : MonoBehaviour
                 tree.money.amount -= requiredMoney.amount;
                 tree.UpdateBuffs(buffs);
                 SpecialCase();
+                UIHoverManager.instance.ShowTip("Node Unlocked!", Input.mousePosition);
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "Unlocked"));
+                UIHoverManager.instance.ManuallyHideToolTip();
             }
             else
             {
                 Debug.Log("Not enough points");
-
+                UIHoverManager.instance.ShowTip("Can't unlock, not enough points!", Input.mousePosition);
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
+                UIHoverManager.instance.ManuallyHideToolTip();
             }
         }
     }
