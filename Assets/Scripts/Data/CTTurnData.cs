@@ -261,7 +261,7 @@ namespace CT.Data
                 {
                     // Get the buff/nerf associated with the technology
                     BuffsNerfs bn = DataSheet.technology_buffs[kvp.Key];
-                    
+
                     // Loop through buff/nerf type
                     for (int bnt = 0; bnt < bn.type.Count; bnt++)
                     {
@@ -271,7 +271,44 @@ namespace CT.Data
             }
 
             // Policies
+            foreach (CTPolicyCard pc_app in applied_policies)
+            {
+                bool pc_app_active = true;
+                foreach (CTPolicyCard pc_rev in revoked_policies)
+                {
+                    // Check if IDs match, and if so don't apply buffs
+                    if (pc_app.ID ==  pc_rev.ID)
+                    {
+                        pc_app_active = false;
+                        break;
+                    }
+                }
 
+                SetFactionDistribution current = new SetFactionDistribution(faction_distribution.x,
+                                                                            faction_distribution.y,
+                                                                            faction_distribution.z,
+                                                                            faction_distribution.w);
+
+                if (!(current >= pc_app.fdist))
+                    return;
+
+                if (pc_app_active)
+                {
+                    // For each buff
+                    foreach (KeyValuePair<BuffsNerfsType, bool> kvp in  pc_app.buffs)
+                    {
+                        if (kvp.Value)
+                            OingoBoingo(kvp.Key, pc_app.buff_nerf_scale[kvp.Key]);
+                    }
+
+                    // For each nerf
+                    foreach (KeyValuePair<BuffsNerfsType, bool> kvp in pc_app.debuffs)
+                    {
+                        if (kvp.Value)
+                            OingoBoingo(kvp.Key, pc_app.buff_nerf_scale[kvp.Key]);
+                    }
+                }
+            }
         }
 
         private void OingoBoingo(BuffsNerfsType _t, float _degree)

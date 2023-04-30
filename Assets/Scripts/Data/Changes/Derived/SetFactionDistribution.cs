@@ -43,6 +43,55 @@ public class SetFactionDistribution : CTChange
         //AssignNewDistribution(ref _year);
     }
 
+    public static bool operator== (SetFactionDistribution lhs, SetFactionDistribution rhs)
+    {
+        return (lhs.worker_percentage       == rhs.worker_percentage    &&
+                lhs.scientist_percentage    == rhs.scientist_percentage &&
+                lhs.farmer_percentage       == rhs.farmer_percentage    &&
+                lhs.planner_percentage      == rhs.planner_percentage);
+    }
+
+    public static bool operator!= (SetFactionDistribution lhs, SetFactionDistribution rhs)
+    {
+        return (lhs.worker_percentage       != rhs.worker_percentage    &&
+                lhs.scientist_percentage    != rhs.scientist_percentage &&
+                lhs.farmer_percentage       != rhs.farmer_percentage    &&
+                lhs.planner_percentage      != rhs.planner_percentage);
+    }
+
+    public static bool operator<= (SetFactionDistribution lhs, SetFactionDistribution rhs)
+    {
+        return (lhs.worker_percentage       <= rhs.worker_percentage    &&
+                lhs.scientist_percentage    <= rhs.scientist_percentage &&
+                lhs.farmer_percentage       <= rhs.farmer_percentage    &&
+                lhs.planner_percentage      <= rhs.planner_percentage);
+    }
+
+    public static bool operator>= (SetFactionDistribution lhs, SetFactionDistribution rhs)
+    {
+        return (lhs.worker_percentage       >= rhs.worker_percentage    &&
+                lhs.scientist_percentage    >= rhs.scientist_percentage &&
+                lhs.farmer_percentage       >= rhs.farmer_percentage    &&
+                lhs.planner_percentage      >= rhs.planner_percentage);
+    }
+
+    public static bool operator< (SetFactionDistribution lhs, SetFactionDistribution rhs)
+    {
+        return (lhs.worker_percentage       < rhs.worker_percentage     &&
+                lhs.scientist_percentage    < rhs.scientist_percentage  &&
+                lhs.farmer_percentage       < rhs.farmer_percentage     &&
+                lhs.planner_percentage      < rhs.planner_percentage);
+    }
+
+    public static bool operator> (SetFactionDistribution lhs, SetFactionDistribution rhs)
+    {
+        return (lhs.worker_percentage       > rhs.worker_percentage     &&
+                lhs.scientist_percentage    > rhs.scientist_percentage  &&
+                lhs.farmer_percentage       > rhs.farmer_percentage     &&
+                lhs.planner_percentage      > rhs.planner_percentage);
+    }
+
+
     //private void ResetDistribution(ref CTTurnData _year)
     //{
     //    // Reset distribution for year
