@@ -88,7 +88,7 @@ public class TechNode : MonoBehaviour
                 Debug.Log("Can't unlock as the required nodes are not unlocked yet");
                 UIHoverManager.instance.ShowTip("Can't unlock as the required nodes are not unlocked yet!", Input.mousePosition);
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
-                
+                UIHoverManager.instance.ManuallyHideToolTip();
                 break;
             }
         }
