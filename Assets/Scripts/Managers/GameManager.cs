@@ -188,6 +188,9 @@ namespace CT
             }
 
             current_turn = _requested_turn;
+
+            CheckAllUserTechPurchasesValid();
+
             //GetChangesAtTurn();
             turn_data = GetYearData(_requested_turn);
             current_turn_resource_expenditure = new Vector3(0, 0, 0);

@@ -15,13 +15,13 @@ namespace CT.Lookup
         public static readonly uint     starting_year                   = 1900;
         public static readonly uint     end_year                        = 2100;
         public static readonly uint     turns_number                    = (end_year - starting_year) / turn_steps;
-        public static readonly int      starting_money                  = 10000;
-        public static readonly int      starting_science                = 10000;
-        public static readonly int      starting_food                   = 1000;
+        public static readonly int      starting_money                  = 100000;
+        public static readonly int      starting_science                = 100000;
+        public static readonly int      starting_food                   = 100000;
         public static readonly float    year_change_awareness_rate      = 0.05f;
         public static readonly float    year_override_awareness_rate    = 0.15f;
 
-        public static readonly int      starting_population             = 500; 
+        public static readonly int      starting_population             = 5000; 
         public static readonly float    starvation_rate                 = 0.40f;
         public static readonly float    food_surplus_population_gain    = 0.10f;
 
