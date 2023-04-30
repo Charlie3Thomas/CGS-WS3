@@ -13,13 +13,14 @@ public class CTPolicyContainer : MonoBehaviour
 
     private void Start()
     {
+        string s = this.gameObject.name;
         current_policy = new CTPolicyCard();
 
         policies = new CTPolicyCard[DataSheet.turns_number + 1];
         for (int i = 0; i < policies.Length; i++)
         {
             policies[i] = new CTPolicyCard();
-            PolicyGen.GeneratePolicy(policies[i]);
+            PolicyGen.GeneratePolicy(policies[i], this.gameObject.name, i);
         }
 
         SetPolicyForTurn();

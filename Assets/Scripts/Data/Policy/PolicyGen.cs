@@ -3,12 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using CT.Lookup;
+using System.Runtime.InteropServices;
 
 public static class PolicyGen
 {
-    public static void GeneratePolicy(CTPolicyCard _pc)
+    private static uint seed = 0;
+    private static double scramble = 0;
+    private static string id = "";
+
+    public static void GeneratePolicy(CTPolicyCard _pc, string _name, int _i)
     {
+        float x = _i;
+        x *= (Mathf.PI * 7000);
         _pc.ID = Guid.NewGuid().ToString();
+        seed = (uint)CTSeed.RandFromSeed((uint)_i * (uint)x, _name).Next();
+        scramble = CTSeed.RandFromSeed(1, _name).NextDouble();
+        id = _name;
+
         _pc.SetCost(GenerateCost());
         _pc.SetRequirements(GenerateRequirements());
         _pc.SetBuffs(GenerateBuffs());
@@ -21,11 +32,17 @@ public static class PolicyGen
     {
         bool[] t = RandomBools(4, 4);
 
+        //return new CTCost(
+        //    (UnityEngine.Random.Range(1, 21) * 250) * Convert.ToInt32(t[0]),
+        //    (UnityEngine.Random.Range(1, 21) * 250) * Convert.ToInt32(t[1]),
+        //    (UnityEngine.Random.Range(1, 21) * 250) * Convert.ToInt32(t[2]),
+        //    (UnityEngine.Random.Range(1, 21) * 250) * Convert.ToInt32(t[3]));
+
         return new CTCost(
-            (UnityEngine.Random.Range(1, 21) * 250) * Convert.ToInt32(t[0]),
-            (UnityEngine.Random.Range(1, 21) * 250) * Convert.ToInt32(t[1]),
-            (UnityEngine.Random.Range(1, 21) * 250) * Convert.ToInt32(t[2]),
-            (UnityEngine.Random.Range(1, 21) * 250) * Convert.ToInt32(t[3]));
+            (CTSeed.RandFromSeed(seed + 0, $"{id}{"PGGC0"}").Next(1, 21) * 250) * Convert.ToInt32(t[0]),
+            (CTSeed.RandFromSeed(seed + 1, $"{id}{"PGGC1"}").Next(1, 21) * 250) * Convert.ToInt32(t[1]),
+            (CTSeed.RandFromSeed(seed + 2, $"{id}{"PGGC2"}").Next(1, 21) * 250) * Convert.ToInt32(t[2]),
+            (CTSeed.RandFromSeed(seed + 3, $"{id}{"PGGC3"}").Next(1, 21) * 250) * Convert.ToInt32(t[3]));
     }
 
     private static SetFactionDistribution GenerateRequirements()
@@ -34,7 +51,9 @@ public static class PolicyGen
 
         Vector4 spread = GeneratePopulationSpread();
 
-        spread *= (UnityEngine.Random.Range(5, 11) * 0.1f);
+        //spread *= (UnityEngine.Random.Range(5, 11) * 0.1f);
+
+        spread *= (CTSeed.RandFromSeed(seed, id).Next(5, 11) * 0.1f);
 
         return new SetFactionDistribution(
             spread.x * Convert.ToInt32(t[0]), // workers
@@ -56,7 +75,10 @@ public static class PolicyGen
             if (buffs[i] == true)
             {
                 if (!buff_dict.ContainsKey(a[i]))
+                {
                     buff_dict.Add(a[i], buffs[i]);
+                    //Debug.Log(a[i]);
+                }
             }
         }
 
@@ -76,7 +98,10 @@ public static class PolicyGen
             if (nerfs[i] == true)
             {
                 if (!debuff_dict.ContainsKey(a[i]))
+                {
                     debuff_dict.Add(a[i], nerfs[i]);
+                    //Debug.Log(a[i]);
+                }
             }
         }
 
@@ -87,16 +112,24 @@ public static class PolicyGen
     {
         Dictionary<BuffsNerfsType, float> degree = new Dictionary<BuffsNerfsType, float>();
 
+        uint x = 0;
         foreach (KeyValuePair<BuffsNerfsType, bool> kvp in _p.buffs)
         {
+            //if (!degree.ContainsKey(kvp.Key))
+            //    degree.Add(kvp.Key, UnityEngine.Random.Range(DataSheet.policy_card_min_scale, DataSheet.policy_card_max_scale));
             if (!degree.ContainsKey(kvp.Key))
-                degree.Add(kvp.Key, UnityEngine.Random.Range(DataSheet.policy_card_min_scale, DataSheet.policy_card_max_scale));
+                degree.Add(kvp.Key, (float)CTSeed.RandFromSeed(seed + x, $"{id}{"PGGD0"}").NextDouble() * (DataSheet.policy_card_max_scale - DataSheet.policy_card_min_scale));
+            x++;
         }
 
+        uint y = 0;
         foreach (KeyValuePair<BuffsNerfsType, bool> kvp in _p.debuffs)
         {
+            //if (!degree.ContainsKey(kvp.Key))
+            //    degree.Add(kvp.Key, UnityEngine.Random.Range(DataSheet.policy_card_min_scale, DataSheet.policy_card_max_scale) * -1);
             if (!degree.ContainsKey(kvp.Key))
-                degree.Add(kvp.Key, UnityEngine.Random.Range(DataSheet.policy_card_min_scale, DataSheet.policy_card_max_scale) * -1);
+                degree.Add(kvp.Key, (float)CTSeed.RandFromSeed(seed + y, $"{id}{"PGGD1"}").NextDouble() * (DataSheet.policy_card_max_scale - DataSheet.policy_card_min_scale) * -1);
+            y++;
         }
 
         return degree;
@@ -115,6 +148,7 @@ public static class PolicyGen
         s = $"{s}Buffs:\n";
 
         // Buff Mid
+        uint x = 0;
         foreach (KeyValuePair<BuffsNerfsType, bool> kvp in _p.buffs)
         {
             if (kvp.Value == true)
@@ -140,8 +174,10 @@ public static class PolicyGen
                 s = $"{s} {DataSheet.policy_type[kvp.Key]}";
 
                 // Buff suffix
-                s = $"{s} {DataSheet.policy_buff_suffixes[UnityEngine.Random.Range(0, DataSheet.policy_buff_suffixes.Length)]}\n";
+                //s = $"{s} {DataSheet.policy_buff_suffixes[UnityEngine.Random.Range(0, DataSheet.policy_buff_suffixes.Length)]}\n";
+                s = $"{s} {DataSheet.policy_buff_suffixes[CTSeed.RandFromSeed(seed + x, $"{id}{"PGGPT0"}").Next(DataSheet.policy_buff_suffixes.Length)]}\n";
             }
+            x++;
         }
 
 
@@ -152,6 +188,7 @@ public static class PolicyGen
         s = $"{s}Nerfs:\n";
 
         // Nerfs section of the string
+        uint y = 0;
         foreach (KeyValuePair<BuffsNerfsType, bool> kvp in _p.debuffs)
         {
             if (kvp.Value == true)
@@ -163,7 +200,7 @@ public static class PolicyGen
                 s = $"{s} {DataSheet.policy_type[kvp.Key]}";
 
                 // Nerf suffix
-                s = $"{s} {DataSheet.policy_nerf_suffixes[UnityEngine.Random.Range(0, DataSheet.policy_nerf_suffixes.Length)]}\n";
+                s = $"{s} {DataSheet.policy_nerf_suffixes[CTSeed.RandFromSeed(seed + y, $"{id}{"PGGPT1"}").Next(0, DataSheet.policy_nerf_suffixes.Length)]}\n";
             }
         }
 
@@ -183,33 +220,40 @@ public static class PolicyGen
             bools[i] = false;
         }
 
-        int total = UnityEngine.Random.Range(1, _n + 1);
+        //int total = UnityEngine.Random.Range(1, _n + 1);
+        int total = CTSeed.RandFromSeed(seed + (uint)_n + (uint)scramble + (uint)_options, $"{id}{"PGRB0"}{scramble}").Next(1, _n + 1);
 
         int index = 0;
+        uint loops = 0;
         while (index < total)
         {
-            int r = UnityEngine.Random.Range(0, _options);
+            int r = CTSeed.RandFromSeed(seed + loops + (uint)scramble, $"{id}{"PGRB1"}{scramble}").Next(0, _options);
 
             if (bools[r] == false)
             {
                 bools[r] = true;
                 index++;
             }
+
+            loops++;
         }
+
+        scramble++;
+        scramble *= Mathf.PI / 2;
 
         return bools;
     }
 
     private static Vector4 GeneratePopulationSpread()
     {
-        System.Random rand = new System.Random();
+        //System.Random rand = new System.Random();
 
         float[] floats = { 0, 0, 0, 0 };
 
-        floats[0] = (float)rand.NextDouble();
-        floats[1] = (float)rand.NextDouble();
-        floats[2] = (float)rand.NextDouble();
-        floats[3] = (float)rand.NextDouble();
+        floats[0] = (float)CTSeed.RandFromSeed(seed + 0, $"{id}{"PGGPS0"}").NextDouble();
+        floats[1] = (float)CTSeed.RandFromSeed(seed + 1, $"{id}{"PGGPS1"}").NextDouble();
+        floats[2] = (float)CTSeed.RandFromSeed(seed + 2, $"{id}{"PGGPS2"}").NextDouble();
+        floats[3] = (float)CTSeed.RandFromSeed(seed + 3, $"{id}{"PGGPS3"}").NextDouble();
 
         float sum = floats[0] + floats[1] + floats[2] + floats[3];
 

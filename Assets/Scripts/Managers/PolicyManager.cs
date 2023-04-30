@@ -191,7 +191,7 @@ public class PolicyManager : MonoBehaviour
     private void ReplacePolicy(int _index)
     {
         // Replace policy in CTPolicyContainer.policies[CURRENT_TURN]
-        PolicyGen.GeneratePolicy(policy_containers[_index].policies[(int)GameManager._INSTANCE.GetTurn().turn]);
+        //PolicyGen.GeneratePolicy(policy_containers[_index].policies[(int)GameManager._INSTANCE.GetTurn().turn], _index));
 
         policy_containers[_index].SetPolicyForTurn();
 

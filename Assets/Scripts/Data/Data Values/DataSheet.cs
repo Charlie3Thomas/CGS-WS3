@@ -74,7 +74,7 @@ namespace CT.Lookup
             }
 
 
-            return new CTCost(0, 0, 0, 0); // Placeholder cost 100 pop
+            return new CTCost(0, 0, 0, 1000);
         }
 
         // Technology cost lookup table
