@@ -4,17 +4,22 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
 using System;
+using CT.Lookup;
+using CT;
 
 public class PolicyManager : MonoBehaviour
 {
     public static PolicyManager instance;
 
     private int policyCardIndex = 0;
-    private int numOfPolicies = 7;
-    public GameObject policyCardPrefab;
+    private static readonly int numOfPolicies = 7;
     public CTPolicyCard currentSelectedPolicy;
     public List<CTPolicyCard> policyList;
     public List<CTPolicyCard> currentPolicies;
+
+    [SerializeField] private List<CTPolicyContainer> policyContainerList;
+
+    private CTPolicyCard[][] cards = new CTPolicyCard[numOfPolicies][];
 
     private Vector2 scroll;
 
@@ -33,6 +38,17 @@ public class PolicyManager : MonoBehaviour
 
     private void Start()
     {
+        for (int i = 0; i < numOfPolicies; i++)
+        {
+            cards[i] = new CTPolicyCard[DataSheet.turns_number];
+
+            for (int j = 0; j < DataSheet.turns_number; j++)
+            {
+                cards[i][j] = new CTPolicyCard();
+                PolicyGen.GeneratePolicy(cards[i][j]);
+            }
+        }
+
         policyList = new List<CTPolicyCard>();
         currentPolicies = new List<CTPolicyCard>();
 
@@ -40,6 +56,12 @@ public class PolicyManager : MonoBehaviour
     }
 
     private void Update()
+    {
+        SelectCurrentPolicyWithScroll();
+
+    }
+
+    private void SelectCurrentPolicyWithScroll()
     {
         if (currentPolicies.Count > 0)
         {
@@ -65,47 +87,47 @@ public class PolicyManager : MonoBehaviour
     public void NewPolicySet()
     {
         policyList.Clear();
-        
-        // Generate policies and add to list
-        for (int i = 0; i < numOfPolicies; i++)
+
+        for (int i = 0; i < cards.Length; i++)
         {
-            policyList.Add(ComputerController.Instance.policyCards[i].GetComponent<CTPolicyCard>());
+            for (int j = 0; j < cards[i].Length; j++)
+            {
+                policyContainerList[i].policies.Add(cards[i][j]);
+            }
         }
 
-        // Clear current cards from computer controller
-        int index = 0;
-        foreach (GameObject g in ComputerController.Instance.policyCards)
+        for (int i = 0; i < policyContainerList.Count; i++)
         {
-            CTPolicyCard pc = g.GetComponent<CTPolicyCard>();
-
-            pc = policyList[index];
-
-            UpdatePolicyCardText(index, pc);
-
-            index++;
+            policyContainerList[i].SetPolicyForCurrentTurn(GameManager._INSTANCE.GetTurn().turn);
+            policyList.Add(policyContainerList[i].GetCurrentPolicy());
+            UpdatePolicyCardText(i, policyContainerList[i].GetCurrentPolicy());
         }
     }
-
 
     public void ReplacePolicyCard(string _ID)
     {
         StartCoroutine(Replace(_ID));
     }
 
-
     private IEnumerator Replace(string _ID)
     {
         if (currentPolicies.Count > 2)
             currentPolicies.Remove(currentSelectedPolicy);
 
-        // Loop through all cards and find corresponding ID
-        for (int i = 0; i < numOfPolicies; i++)
+        // Loop through each CTPolicyContainer
+        for (int i = 0; i < policyContainerList.Count; i++)
         {
-            if (_ID == policyList[i].ID)
+            // Check if the current policy for the container matches the ID of the chosen card
+            if (policyContainerList[i].GetCurrentPolicy().ID == _ID)
             {
-                currentPolicies.Add(policyList[i]);
+                // If there is a match, replace the policy in the container
+                currentPolicies.Add(new CTPolicyCard(policyContainerList[i].GetCurrentPolicy()));
 
-                PolicyGen.GeneratePolicy(policyList[i]);
+                PolicyGen.GeneratePolicy(policyContainerList[i].policies[(int)GameManager._INSTANCE.GetTurn().turn]);
+
+                policyContainerList[i].SetPolicyForCurrentTurn(GameManager._INSTANCE.GetTurn().turn);
+
+                policyList[i] = policyContainerList[i].policies[(int)GameManager._INSTANCE.GetTurn().turn];
 
                 UpdatePolicyCardText(i, policyList[i]);
             }
@@ -114,7 +136,7 @@ public class PolicyManager : MonoBehaviour
         yield return null;
     }
 
-    private void UpdatePolicyCardText(int _index, CTPolicyCard _pc)
+    public void UpdatePolicyCardText(int _index, CTPolicyCard _pc)
     {
         ComputerController.Instance.pCardTexts[_index].text = _pc.info_text;
 

@@ -321,7 +321,7 @@ public class ComputerController : MonoBehaviour
     {
         // Select policy card
         if (isInteractingPressed && _hit.transform.CompareTag("PolicyCard"))
-            PolicyManager.instance.ReplacePolicyCard(_hit.transform.GetComponent<CTPolicyCard>().ID);
+            PolicyManager.instance.ReplacePolicyCard(_hit.transform.GetComponent<CTPolicyContainer>().GetCurrentPolicy().ID);
 
         // Policy cards hover
         for (int i = 0; i < 7; i++)
@@ -447,7 +447,9 @@ public class ComputerController : MonoBehaviour
 
     public void UpdateSlider()
     {
-        //float remappedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+        //float
+        //
+        //pedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
         //yearSlider.transform.localPosition = new Vector3(remappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
 
 

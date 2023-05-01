@@ -6,15 +6,15 @@ using CT.Lookup;
 
 public static class PolicyGen
 {
-    public static void GeneratePolicy(CTPolicyCard _policy)
+    public static void GeneratePolicy(CTPolicyCard _pc)
     {
-        _policy.ID = Guid.NewGuid().ToString();
-        _policy.SetCost(GenerateCost());
-        _policy.SetRequirements(GenerateRequirements());
-        _policy.SetBuffs(GenerateBuffs());
-        _policy.SetDebuffs(GenerateDebuffs());
-        _policy.SetDegrees(GenerateDegree(_policy));
-        _policy.SetName(GeneratePolicyTitle(_policy));
+        _pc.ID = Guid.NewGuid().ToString();
+        _pc.SetCost(GenerateCost());
+        _pc.SetRequirements(GenerateRequirements());
+        _pc.SetBuffs(GenerateBuffs());
+        _pc.SetDebuffs(GenerateDebuffs());
+        _pc.SetDegrees(GenerateDegree(_pc));
+        _pc.SetText(GeneratePolicyTitle(_pc));
     }
 
     private static CTCost GenerateCost()

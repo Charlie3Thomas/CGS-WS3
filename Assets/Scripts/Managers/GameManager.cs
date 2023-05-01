@@ -183,6 +183,86 @@ namespace CT
             game_changes[_disaster.turn].Add(new ApplyDisaster(_disaster));            
         }
 
+        #region Actions
+        // Set Policy
+        public void ApplyPolicy(int _year, CTPolicyCard _policy)
+        {
+            if (_year < 0)
+                throw new ArgumentException("Year cannot be zero or lower!");
+
+            user_changes[_year].Add(new SetPolicy(_policy));
+        }
+
+        public void RevokePolicy(int _year, CTPolicyCard _policy)
+        {
+            if (_year < 0)
+                throw new ArgumentException("Year cannot be zero or lower!");
+
+            user_changes[_year].Add(new RevokePolicy(_policy));
+        }
+
+        private void SetFactionDistribution()
+        {
+            float sci_abs = ComputerController.Instance.pointSelectors[0].pointValue; // Scientist
+            float plan_abs = ComputerController.Instance.pointSelectors[1].pointValue; // Planner
+            float work_abs = ComputerController.Instance.pointSelectors[2].pointValue; // Worker
+            float farm_abs = ComputerController.Instance.pointSelectors[3].pointValue; // Farmer
+
+            float req_sci_ratio = RAUtility.Remap(sci_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_plan_ratio = RAUtility.Remap(plan_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_farm_ratio = RAUtility.Remap(farm_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_work_ratio = RAUtility.Remap(work_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            Vector4 requested_ratios = new Vector4(req_sci_ratio, req_plan_ratio, req_farm_ratio, req_work_ratio);
+
+            float current_sci_ratio = (float)turn.Scientists / (float)turn.Population;
+            float current_plan_ratio = (float)turn.Planners / (float)turn.Population;
+            float current_farm_ratio = (float)turn.Farmers / (float)turn.Population;
+            float current_work_ratio = (float)turn.Workers / (float)turn.Population;
+            Vector4 current_ratios = new Vector4(current_sci_ratio, current_plan_ratio, current_farm_ratio, current_work_ratio);
+
+            //Should make sure that faction spread is not the same as the start of the turn before applying it as a "Change"
+            Vector4 a = CTVector4Round(requested_ratios, 10);
+            Vector4 b = CTVector4Round(current_ratios, 10);
+            if (a == b)
+            {
+                Debug.Log("Requested choice is identical to base distribution!");
+                return;
+            }
+            else
+            {
+                prime_timeline.ChangePopulationDistribution(current_turn, req_work_ratio, req_sci_ratio, req_farm_ratio, req_plan_ratio);
+                awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_change_awareness_rate));
+                Debug.Log("Choices for faction distribution locked in!");
+            }
+        }
+
+        public bool PurchaseTechnology(CTTechnologies _t)
+        {
+            // Check if you can afford tech
+            if (DataSheet.technology_price[_t] <= GetResourceTotals())
+            {
+                user_changes[current_turn].Add(new PurchaseTechnology(_t));
+                current_turn_resource_expenditure += new Vector3(
+                    DataSheet.technology_price[_t].money,   // x
+                    DataSheet.technology_price[_t].science, // y
+                    DataSheet.technology_price[_t].food);   // z
+
+                return true;
+            }
+            return false;
+        }
+
+        public void ResetAwareness()
+        {
+            awareness_changes = new List<CTChange>[DataSheet.turns_number];
+            for (uint year = 0; year < DataSheet.turns_number; year++)
+            {
+                awareness_changes[year] = new List<CTChange>();
+            }
+        }
+
+        #endregion
+
 
         #region Utility
         private void ProjectNetResource()
@@ -299,60 +379,6 @@ namespace CT
             }
         }
 
-        private void SetFactionDistribution()
-        {
-            float sci_abs = ComputerController.Instance.pointSelectors[0].pointValue; // Scientist
-            float plan_abs = ComputerController.Instance.pointSelectors[1].pointValue; // Planner
-            float work_abs = ComputerController.Instance.pointSelectors[2].pointValue; // Worker
-            float farm_abs = ComputerController.Instance.pointSelectors[3].pointValue; // Farmer
-
-            float req_sci_ratio = Remap(sci_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float req_plan_ratio = Remap(plan_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float req_farm_ratio = Remap(farm_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float req_work_ratio = Remap(work_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            Vector4 requested_ratios = new Vector4(req_sci_ratio, req_plan_ratio, req_farm_ratio, req_work_ratio);
-
-            float current_sci_ratio = (float)turn.Scientists / (float)turn.Population;
-            float current_plan_ratio = (float)turn.Planners / (float)turn.Population;
-            float current_farm_ratio = (float)turn.Farmers / (float)turn.Population;
-            float current_work_ratio = (float)turn.Workers / (float)turn.Population;
-            Vector4 current_ratios = new Vector4(current_sci_ratio, current_plan_ratio, current_farm_ratio, current_work_ratio);
-
-            //Should make sure that faction spread is not the same as the start of the turn before applying it as a "Change"
-            Vector4 a = CTVector4Round(requested_ratios, 10);
-            Vector4 b = CTVector4Round(current_ratios, 10);
-            if (a == b)
-            {
-                Debug.Log("Requested choice is identical to base distribution!");
-                return;
-            }
-            else
-            {
-                prime_timeline.ChangePopulationDistribution(current_turn, req_work_ratio, req_sci_ratio, req_farm_ratio, req_plan_ratio);
-                awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_change_awareness_rate));
-                Debug.Log("Choices for faction distribution locked in!");
-            }
-
-            //if (CheckRoundedEquivalency(req_sci_ratio, current_sci_ratio, 0.01f) &&
-            //    CheckRoundedEquivalency(req_plan_ratio, current_plan_ratio, 0.01f) && 
-            //    CheckRoundedEquivalency(req_farm_ratio, current_farm_ratio, 0.01f) &&
-            //    CheckRoundedEquivalency(req_work_ratio, current_work_ratio, 0.01f))
-            //{
-            //    Debug.Log("Requested choice is identical to base distribution!");
-            //    return;
-            //}
-            //else
-            //{
-            //    prime_timeline.ChangePopulationDistribution(current_turn, req_work_ratio, req_sci_ratio, req_farm_ratio, req_plan_ratio);
-            //    Debug.Log("Choices for faction distribution locked in!");
-            //}
-        }
-
-        public float Remap(float value, float from1, float to1, float from2, float to2)
-        {
-            return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
-        }
-        #endregion
 
         private void DebugDisasterChanges()
         {
@@ -423,25 +449,9 @@ namespace CT
             return new Vector4(floats[0], floats[1], floats[2], floats[3]);
         }
 
-        public CTYearData GetTurnData()
+        public CTYearData GetTurn()
         {
             return turn;
-        }
-
-        public bool PurchaseTechnology(CTTechnologies _t)
-        {
-            // Check if you can afford tech
-            if (DataSheet.technology_price[_t] <= GetResourceTotals())
-            {
-                user_changes[current_turn].Add(new PurchaseTechnology(_t));
-                current_turn_resource_expenditure += new Vector3(
-                    DataSheet.technology_price[_t].money,   // x
-                    DataSheet.technology_price[_t].science, // y
-                    DataSheet.technology_price[_t].food);   // z
-
-                return true;
-            }
-            return false;            
         }
 
         private CTResourceTotals GetResourceTotals()
@@ -507,15 +517,6 @@ namespace CT
             }
         }
 
-        public void ResetAwareness()
-        {
-            awareness_changes = new List<CTChange>[DataSheet.turns_number];
-            for (uint year = 0; year < DataSheet.turns_number; year++)
-            {
-                awareness_changes[year] = new List<CTChange>();
-            }
-        }
-
         private void GetChangesAtTurn()
         {
             user_changes_in_turn = user_changes[current_turn].Count();
@@ -557,5 +558,8 @@ namespace CT
 
             ComputerController.Instance.mat_awareness.SetFloat("_FillAmount", ret);
         }
+
+
+        #endregion
     }
 }

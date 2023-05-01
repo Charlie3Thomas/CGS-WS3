@@ -17,7 +17,11 @@ namespace CT.Data
         public Dictionary<CTTechnologies, bool> active_technologues;
 
         // Policies
-        public Dictionary<CTPolicies, bool> active_policies;
+        public List<CTPolicyCard> applied_policies;
+        public List<CTPolicyCard> revoked_policies;
+
+        public CTModifiers modifiers;
+
 
         #region Resources
 
@@ -341,7 +345,6 @@ namespace CT.Data
         #endregion
 
 
-
         #region Methods
         public void Initialise(int _money, int _science, int _food, int _pop)
         {
@@ -373,6 +376,7 @@ namespace CT.Data
 
         #endregion
 
+
         #region Actions
         public void ApplyCosts(CTCost _cost)
         {
@@ -389,6 +393,7 @@ namespace CT.Data
             Population -= _cost.population;
         }
         #endregion
+
 
         #region Utility
         private float GetFactionRatio(CTFaction _type)
