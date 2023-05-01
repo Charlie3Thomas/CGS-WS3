@@ -14,15 +14,10 @@ public class PointSelector : MonoBehaviour
 
     public GameObject pip;
     private Material pipMat;
-    private CustomCursor customCursor;
     [HideInInspector]
     public float pointValue;
     private float pointLimit = 10f;
 
-    private void Awake()
-    {
-        customCursor = FindObjectOfType<CustomCursor>();
-    }
     private void Start()
     {
         pipMat = pip.GetComponent<Renderer>().materials[1];
@@ -51,10 +46,10 @@ public class PointSelector : MonoBehaviour
     }
     void OnMouseOver()
     {
-        customCursor.OnHoverOverResourceSelector();
+        CustomCursor.Instance.OnHoverOverResourceSelector();
     }
     private void OnMouseExit()
     {
-        customCursor.SetDefaultCursor();
+        CustomCursor.Instance.SetDefaultCursor();
     }
 }

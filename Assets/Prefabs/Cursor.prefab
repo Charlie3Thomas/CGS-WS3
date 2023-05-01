@@ -48,3 +48,4 @@ MonoBehaviour:
   clickedCursor: {fileID: 2800000, guid: 460b8c81943825c479af7ffbd80c9e5d, type: 3}
   settingsCusrsor: {fileID: 2800000, guid: f6b5dd15dd6519e4aa3ad03b1da0876d, type: 3}
   resourceCursor: {fileID: 2800000, guid: f6b5dd15dd6519e4aa3ad03b1da0876d, type: 3}
+  knobCursor: {fileID: 2800000, guid: 421880346599851489270e18c36902fe, type: 3}
