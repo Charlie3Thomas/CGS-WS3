@@ -3,12 +3,8 @@ using UnityEngine;
 using System;
 
 namespace CT.Data
-{
-    using Changes;
-    using Enumerations;
+{    
     using Lookup;
-    using Newtonsoft.Json.Schema;
-    using static UnityEngine.Rendering.DebugUI;
 
     public class CTTurnData
     {
@@ -18,15 +14,21 @@ namespace CT.Data
         public CTTurnData(CTTurnData _data) 
         {
             turn                    = _data.turn;
-            technologies            =  new Dictionary<CTTechnologies, bool>(_data.technologies);
-            applied_policies        =  new List<CTPolicyCard>(_data.applied_policies);
-            revoked_policies        =  new List<CTPolicyCard>(_data.revoked_policies);
             Money                   = _data.Money;
             Science                 = _data.Science;
             Food                    = _data.Food;
-            faction_distribution    = _data.faction_distribution;
             Population              = _data.Population;
             Awareness               = _data.Awareness;
+
+            applied_policies        =  new List<CTPolicyCard>(_data.applied_policies);
+            revoked_policies        =  new List<CTPolicyCard>(_data.revoked_policies);
+
+            technologies            =  new Dictionary<CTTechnologies, bool>(_data.technologies);
+
+            faction_distribution    =  new Vector4( _data.faction_distribution.x, 
+                                                    _data.faction_distribution.y, 
+                                                    _data.faction_distribution.z, 
+                                                    _data.faction_distribution.w);
         }
         
         // Debugging
@@ -254,6 +256,9 @@ namespace CT.Data
 
         public void ApplyModifiers()
         {
+            // Apply base safety modifier based on planner total
+            cost_modifier_totals.w = (Population * faction_distribution.w) * DataSheet.planner_safety_factor;
+
             // Technologies
             foreach (KeyValuePair<CTTechnologies, bool> kvp in technologies)
             {
@@ -309,6 +314,13 @@ namespace CT.Data
                     }
                 }
             }
+
+            // Prevent overflow or costs become boons / free
+            if (cost_modifier_totals.x < -1) cost_modifier_totals.w = DataSheet.maximum_modifier_reduction; // Prevent money modifier becoming zero cost / bonus
+            if (cost_modifier_totals.y < -1) cost_modifier_totals.w = DataSheet.maximum_modifier_reduction; // Prevent science modifier becoming zero cost / bonus
+            if (cost_modifier_totals.z < -1) cost_modifier_totals.w = DataSheet.maximum_modifier_reduction; // Prevent food modifier becoming zero cost / bonus
+            if (cost_modifier_totals.w < -1) cost_modifier_totals.w = DataSheet.maximum_modifier_reduction; // Prevent safety modifier becoming zero cost / bonus
+
         }
 
         private void OingoBoingo(BuffsNerfsType _t, float _degree)

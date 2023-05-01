@@ -215,7 +215,7 @@ namespace CT
         public void AddDisastersToGameChanges(Disaster _disaster)
         {
             // Take generated disasters from the disaster manager and insert them into the game changes list
-            game_changes[_disaster.turn].Add(new ApplyDisaster(_disaster));            
+            game_changes[_disaster.turn + 1].Add(new ApplyDisaster(_disaster));            
         }
 
         private void CheckAllUserTechPurchasesValid()

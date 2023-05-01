@@ -3,13 +3,11 @@ using System.Collections.Generic;
 namespace CT.Lookup
 {
     using Data;
+    using FMOD;
+    using System.Linq;
 
     public static class DataSheet
     {
-        // Disaster cost to resources
-        private static Dictionary<CTDisasters, CTCost> disaster_impact;
-
-
         #region Base Values
         public static readonly uint     turn_steps                      = 5;
         public static readonly uint     starting_year                   = 1900;
@@ -27,6 +25,9 @@ namespace CT.Lookup
 
         public static readonly float    policy_card_min_scale           = 25.0f;
         public static readonly float    policy_card_max_scale           = 500.0f;
+
+        public static readonly float    planner_safety_factor           = -0.01f;
+        public static readonly float    maximum_modifier_reduction      = -0.95f;
         #endregion
 
 
@@ -46,37 +47,31 @@ namespace CT.Lookup
             // Price scaling functionality?
 
             return technology_price[_tech];
-            //return new CTCost(500, 500, 0, 0); // Placeholder cost
         }
 
         public static CTCost GetDisasterImpact(CTDisasters _disaster)
         {
-            //return disaster_impact[_disaster];
-            //UnityEngine.Debug.Log("Disaster");
-
             switch (_disaster)
             {
                 case (CTDisasters.Earthquake):
-                    // Impacts all
-                    break;
+                    return disaster_impact[CTDisasters.Earthquake];
 
                 case (CTDisasters.Volcano):
-                    // Impacts 
-                    break;
+                    return disaster_impact[CTDisasters.Volcano];
 
                 case (CTDisasters.Tornado):
-
-                    break;
+                    return disaster_impact[CTDisasters.Tornado];
 
                 case (CTDisasters.Tsunami):
-
-                    break;
+                    return disaster_impact[CTDisasters.Tsunami];
+                default:
+                    UnityEngine.Debug.LogError($"DataSheet.GetDisasterImpact{_disaster} not implemented");
+                    return new CTCost(0, 0, 0, 0);
             }
-
-
-            return new CTCost(0, 0, 0, 1000);
         }
 
+
+        #region Lookup Tables
         // Technology cost lookup table
         public static readonly Dictionary<CTTechnologies, CTCost> technology_price = new Dictionary<CTTechnologies, CTCost>()
         {
@@ -212,38 +207,16 @@ namespace CT.Lookup
             [CTTechnologies.MemoryFlash]            = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.CUSTOM },                                          new List<float>() { 0.0f })
         };
 
-        public static readonly string[] policy_buff_suffixes = new string[]
+        // Disaster cost to lookup table
+        private static Dictionary<CTDisasters, CTCost> disaster_impact = new Dictionary<CTDisasters, CTCost>()
         {
-            "Bonus",
-            "Reward", 
-            "Gain",
-            "Boost",
-            "Increase",
-            "Enhancement",
-            "Raise",
-            "Windfall",
-            "Surge"
+            [CTDisasters.Earthquake]    = new CTCost(2500, 1000, 1000, 1000),
+            [CTDisasters.Volcano]       = new CTCost(1000, 2500, 1000, 1000),
+            [CTDisasters.Tornado]       = new CTCost(1000, 1000, 2500, 1000),
+            [CTDisasters.Tsunami]       = new CTCost(1000, 1000, 1000, 2500)
         };
 
-        public static readonly string[] policy_nerf_suffixes = new string[]
-        {
-            "Loss",
-            "Penalty",
-            "Misfortune",
-            "Decrease",
-            "Deprivation",
-            "Waste",
-            "Diminishment"
-        };
-
-        public static readonly string[] policy_degree_prefixes = new string[]
-        {
-            "Minor",
-            "Moderate",
-            "Major",
-            "Extreme"
-        };
-
+        // Policy type lookup table
         public static readonly Dictionary<BuffsNerfsType, string> policy_type = new Dictionary<BuffsNerfsType, string>()
         {
             [BuffsNerfsType.MONEY_GAIN]         = "Wealth",
@@ -266,8 +239,46 @@ namespace CT.Lookup
             [BuffsNerfsType.SCIENCE_CAPACITY]   = "INVALID BUFF/NERF TYPE",
             [BuffsNerfsType.CUSTOM]             = "INVALID BUFF/NERF TYPE"
         };
+
+        // Policy buff suffix lookup table
+        public static readonly string[] policy_buff_suffixes = new string[]
+        {
+            "Bonus",
+            "Reward",
+            "Gain",
+            "Boost",
+            "Increase",
+            "Enhancement",
+            "Raise",
+            "Windfall",
+            "Surge"
+        };
+
+        // Policy nerf suffix lookup table
+        public static readonly string[] policy_nerf_suffixes = new string[]
+        {
+            "Loss",
+            "Penalty",
+            "Misfortune",
+            "Decrease",
+            "Deprivation",
+            "Waste",
+            "Diminishment"
+        };
+
+        // Policy degree type lookup table
+        public static readonly string[] policy_degree_prefixes = new string[]
+        {
+            "Minor",
+            "Moderate",
+            "Major",
+            "Extreme"
+        };
+
+        #endregion
     }
 
+    #region Enums
     public enum CTTechnologies
     {
         Banking,
@@ -384,4 +395,6 @@ namespace CT.Lookup
         Awareness,
         Safety
     }
+
+    #endregion
 }
