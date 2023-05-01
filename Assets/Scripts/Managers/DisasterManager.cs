@@ -30,8 +30,7 @@ public class DisasterManager : MonoBehaviour
 
     void Start()
     {
-        CreateDisasterList();
-        WriteDisastersInJournal();
+        
     }
     private void Update()
     {
@@ -47,6 +46,13 @@ public class DisasterManager : MonoBehaviour
     //    }
     //}
     // Call this to update the list visually whenever something new happens
+
+    public void Generate()
+    {
+        CreateDisasterList();
+        WriteDisastersInJournal();
+    }
+
     public void WriteDisastersInJournal()
     {
         ComputerController.Instance.disasterNameText.text = "";

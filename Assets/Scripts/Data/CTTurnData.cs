@@ -18,7 +18,7 @@ namespace CT.Data
         public CTTurnData(CTTurnData _data) 
         {
             turn                    = _data.turn;
-            technologies     =  new Dictionary<CTTechnologies, bool>(_data.technologies);
+            technologies            =  new Dictionary<CTTechnologies, bool>(_data.technologies);
             applied_policies        =  new List<CTPolicyCard>(_data.applied_policies);
             revoked_policies        =  new List<CTPolicyCard>(_data.revoked_policies);
             Money                   = _data.Money;

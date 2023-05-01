@@ -60,20 +60,26 @@ namespace CT
 
         private void Start()
         {
+            // Setup data containers
             Initialise();
 
+            // Generate disasters and populate into data containers
+            DisasterManager.instance.Generate();
+
+            // AI generate turn data
             AIPlayFromTurn(0);
 
+            // Set current turn data to year zero
             turn_data = GetYearData(0);
 
-            current_turn_resource_expenditure = new Vector3(0, 0, 0);
-
+            // Setup UI
             UpdateResourceCounters();
 
             UpdateFactionDistributionPips();
 
             UpdatePipsWithCurrentTurnData();
 
+            // Setup Tech Tree
             FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
 
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
@@ -103,6 +109,7 @@ namespace CT
             for(uint year = 0; year < awareness_changes.Length; year++)
                 awareness_changes[year] = new List<CTChange>();
 
+            current_turn_resource_expenditure = new Vector3(0, 0, 0);
         }
 
         private CTTurnData GetYearData(uint _year)
@@ -351,6 +358,8 @@ namespace CT
                     Debug.LogError($"Failed turn bozo {t}");
                     return;
                 }
+
+                Debug.Log(data.Population);
             }
         }
 
