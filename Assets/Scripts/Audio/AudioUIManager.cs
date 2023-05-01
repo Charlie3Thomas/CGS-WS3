@@ -51,13 +51,19 @@ public class AudioUIManager : MonoBehaviour
     private void ShowPopUp()
     {
         audioPanel.SetActive(true);
-        SnapshotHandler.instance.StartOptionsSnapShot();
+        if(SnapshotHandler.instance != null) //For main menu, we dont want to attenuate audio when settings are opened there
+        {
+            SnapshotHandler.instance.StartOptionsSnapShot();
+        }
     }
 
     private void HidePopUp()
     {
-        audioPanel.SetActive(false);     
-        SnapshotHandler.instance.StopSnapShot(SnapshotHandler.instance.optionsSnapShotinstance);
+        audioPanel.SetActive(false);
+        if(SnapshotHandler.instance != null)
+        {     
+           SnapshotHandler.instance.StopSnapShot(SnapshotHandler.instance.optionsSnapShotinstance);
+        }
      
     }
     
@@ -102,16 +108,16 @@ public class AudioUIManager : MonoBehaviour
     private void LoadPlayerPrefAudioSettings()
     {
         //Load slider values from player prefs and set fmod bus values after they are set
-        masterVolumeSlider.value = PlayerPrefs.GetFloat("MasterBusVol");
+        masterVolumeSlider.value = PlayerPrefs.GetFloat("MasterBusVol", 1f);
         FmodRouting.ChangeBusVolume(FmodRouting.masterBus, masterVolumeSlider.value);
 
-        musicVolumeSlider.value = PlayerPrefs.GetFloat("MusicBusVol");
+        musicVolumeSlider.value = PlayerPrefs.GetFloat("MusicBusVol", 1f);
         FmodRouting.ChangeBusVolume(FmodRouting.musicBus, musicVolumeSlider.value);
 
-        sfxVolumeSlider.value = PlayerPrefs.GetFloat("SFXBusVol");
+        sfxVolumeSlider.value = PlayerPrefs.GetFloat("SFXBusVol", 1f);
         FmodRouting.ChangeBusVolume(FmodRouting.sfxBus, sfxVolumeSlider.value);
 
-        uiVolumeSlider.value = PlayerPrefs.GetFloat("UIBusVol");
+        uiVolumeSlider.value = PlayerPrefs.GetFloat("UIBusVol", 1f);
         FmodRouting.ChangeBusVolume(FmodRouting.uiBus, uiVolumeSlider.value);
 
 
