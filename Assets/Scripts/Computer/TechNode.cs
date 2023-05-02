@@ -1,5 +1,6 @@
 using CT;
 using CT.Data;
+using CT.Enumerations;
 using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,16 +13,11 @@ public class TechNode : MonoBehaviour
 {
     private TechTree tree;
     public CTTechnologies tech;
-    [SerializeReference]
-    public Resource requiredMoney = new Resource { allocType = AllocType.MONEY };
-    [SerializeReference]
-    public Resource requiredScience = new Resource { allocType = AllocType.SCIENCE };
     public bool unlocked;
     public TechNode[] requiredNodes;
     private List<LineRenderer> lineRenderers;
     public Material lineMat;
     private float lineWidth = 1.5f;
-    public List<BuffsNerfs> buffs = new List<BuffsNerfs>();
 
     private Material mat;
     private Color faded = new Color(0.5f, 0.5f, 0.5f) * 1;
@@ -133,6 +129,9 @@ public class TechNode : MonoBehaviour
                 break;
             case CTTechnologies.Marketplace1:
                 {
+                    // Swap money and science
+                    // 
+                    GameManager._INSTANCE.turn_data.SwapResources(CTResources.Money, 5.0f, CTResources.Science, 1.0f);
                     //float temp_money = tree.money.amount;
                     //float temp_science = tree.sciencePoints.amount;
                     //tree.money.amount = temp_science / 5;
@@ -141,6 +140,7 @@ public class TechNode : MonoBehaviour
                 break;
             case CTTechnologies.Marketplace2:
                 {
+                    GameManager._INSTANCE.turn_data.SwapResources(CTResources.Money, 1.0f, CTResources.Science, 2.0f);
                     //float temp_money = tree.money.amount;
                     //float temp_science = tree.sciencePoints.amount;
                     //tree.money.amount = temp_science * 2;

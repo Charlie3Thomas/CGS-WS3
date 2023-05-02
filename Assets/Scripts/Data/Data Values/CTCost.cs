@@ -28,6 +28,18 @@ public class CTCost
 
     #region Operator Overrides
     #region CTCost Operators
+    public static CTCost operator *(CTCost _c, float m)
+    {
+        CTCost ret = new CTCost();
+
+        ret.money = _c.money * m;
+        ret.science = _c.science * m;
+        ret.food = _c.food * m;
+        ret.population = _c.population * m;
+
+        return ret;
+    }
+
     public static CTCost operator* (CTCost _c, int m)
     {
         CTCost ret = new CTCost();

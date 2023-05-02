@@ -14,12 +14,12 @@ namespace CT.Lookup
         public static readonly uint     end_year                        = 2100;
         public static readonly uint     turns_number                    = (end_year - starting_year) / turn_steps;
         public static readonly int      starting_money                  = 10000;
-        public static readonly int      starting_science                = 10000;
-        public static readonly int      starting_food                   = 10000;
+        public static readonly int      starting_science                = 1000;
+        public static readonly int      starting_food                   = 1000;
         public static readonly float    year_change_awareness_rate      = 0.05f;
         public static readonly float    year_override_awareness_rate    = 0.15f;
 
-        public static readonly int      starting_population             = 500; 
+        public static readonly int      starting_population             = 1000; 
         public static readonly float    starvation_rate                 = 0.40f;
         public static readonly float    food_surplus_population_gain    = 0.10f;
 
@@ -210,10 +210,10 @@ namespace CT.Lookup
         // Disaster cost to lookup table
         private static Dictionary<CTDisasters, CTCost> disaster_impact = new Dictionary<CTDisasters, CTCost>()
         {
-            [CTDisasters.Earthquake]    = new CTCost(2500, 1000, 1000, 1000),
-            [CTDisasters.Volcano]       = new CTCost(1000, 2500, 1000, 1000),
-            [CTDisasters.Tornado]       = new CTCost(1000, 1000, 2500, 1000),
-            [CTDisasters.Tsunami]       = new CTCost(1000, 1000, 1000, 2500)
+            [CTDisasters.Earthquake]    = new CTCost(0.075f,  0.03f,  0.03f,  0.04f), // Costs money to rebuild infrastructure
+            [CTDisasters.Tornado]       = new CTCost(0.075f, 0.075f,  0.03f,  0.02f), // Costs money and food to feed the homeless + rebuild infrastructure
+            [CTDisasters.Volcano]       = new CTCost( 0.03f,  0.03f, 0.075f, 0.015f), // Spreads ash over your crops, killing them
+            [CTDisasters.Tsunami]       = new CTCost(0.075f,  0.03f, 0.075f, 0.075f)  // Fucks your shit up
         };
 
         // Policy type lookup table
@@ -394,6 +394,13 @@ namespace CT.Lookup
         Population,
         Awareness,
         Safety
+    }
+
+    public enum CTCostType
+    {
+        Upkeep,
+        Purchase,
+        Disaster
     }
 
     #endregion

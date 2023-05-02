@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.DualShock;
 
 public class DisasterManager : MonoBehaviour
 {
@@ -101,7 +102,8 @@ public class DisasterManager : MonoBehaviour
 
             dis.year = (int)(dis.turn * CT.Lookup.DataSheet.turn_steps + CT.Lookup.DataSheet.starting_year) + CTSeed.RandFromSeed((uint)i, "dis.year").Next(5);/*Random.Range(0, 5)*/;
 
-            dis.intensity = CTSeed.RandFromSeed((uint)i, "dis.intensity").Next(1, 10);        /*Random.Range(1f, 10f);*/;
+            dis.intensity = CTSeed.RandFromSeed((uint)i, "dis.intensity").Next(1, 10);              /*Random.Range(1f, 10f);*/;
+            dis.intensity += (float)CTSeed.RandFromSeed((uint)i, "dis.intensity").NextDouble();
 
             disasterList.Add(dis);
         }

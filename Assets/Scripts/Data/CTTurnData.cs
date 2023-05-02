@@ -3,7 +3,8 @@ using UnityEngine;
 using System;
 
 namespace CT.Data
-{    
+{
+    using CT.Enumerations;
     using Lookup;
 
     public class CTTurnData
@@ -47,6 +48,8 @@ namespace CT.Data
         private Vector4 cost_modifier_totals = new Vector4(0, 0, 0, 0);
 
         private float food_delta = 0;
+
+        private float safety_factor = 1.0f;
 
         #region Resources
 
@@ -99,10 +102,7 @@ namespace CT.Data
                     return;
 
                 if (value < 0)
-                {
-                    food_delta = value;
                     data_food = 0;
-                }
                 else
                     data_food = value;
             }
@@ -239,14 +239,50 @@ namespace CT.Data
 
 
         #region Actions
-        public void ApplyCosts(CTCost _cost)
+        public void ApplyCosts(CTCost _cost, CTCostType _type)
         {
             if (Population == 0) return;
 
-            Money       -= (int)(_cost.money        * (1 + cost_modifier_totals.x));
-            Science     -= (int)(_cost.science      * (1 + cost_modifier_totals.y));
-            Food        -= (int)(_cost.food         * (1 + cost_modifier_totals.z));
-            Population  -= (int)(_cost.population   * (1 + cost_modifier_totals.w));
+            switch (_type)
+            {
+                // Upkeep
+                // Apply costs with modifiers x, y, z
+                case CTCostType.Upkeep:
+                    Money       -= (int)(_cost.money        * (1 + cost_modifier_totals.x));
+                    Science     -= (int)(_cost.science      * (1 + cost_modifier_totals.y));
+                    Food        -= (int)(_cost.food         * (1 + cost_modifier_totals.z));
+                    Population  -= (int)_cost.population;
+                    break;
+
+                // Purchase
+                // Apply costs with no modifiers
+                case CTCostType.Purchase:
+                    Money       -= (int)_cost.money;
+                    Science     -= (int)_cost.science;
+                    Food        -= (int)_cost.food;
+                    Population  -= (int)_cost.population;
+                    break;
+
+                // Disaster
+                // Apply costs with all modifiers
+                case CTCostType.Disaster:
+                    Vector4 sfcmt = new Vector4(    cost_modifier_totals.x, 
+                                                    cost_modifier_totals.y, 
+                                                    cost_modifier_totals.z, 
+                                                    cost_modifier_totals.w);
+                    float multiplier = 1.0f / safety_factor;
+                    sfcmt *= multiplier;
+
+                    Money       -= (int)((Money *        _cost.money)        * (1 + sfcmt.x));
+                    Science     -= (int)((Science *      _cost.science)      * (1 + sfcmt.y));
+                    Food        -= (int)((Food *         _cost.food)         * (1 + sfcmt.z));
+                    Population  -= (int)((Population *   _cost.population)   * (1 + sfcmt.w));
+                    break;
+
+                default:
+                    Debug.LogError("CTTurnData.ApplyCosts: Invalid CTCostType");
+                    break;
+            }
         }
 
         public void ApplyTechnology(CTTechnologies _tech)
@@ -316,10 +352,10 @@ namespace CT.Data
             }
 
             // Prevent overflow or costs become boons / free
-            if (cost_modifier_totals.x < -1) cost_modifier_totals.w = DataSheet.maximum_modifier_reduction; // Prevent money modifier becoming zero cost / bonus
-            if (cost_modifier_totals.y < -1) cost_modifier_totals.w = DataSheet.maximum_modifier_reduction; // Prevent science modifier becoming zero cost / bonus
-            if (cost_modifier_totals.z < -1) cost_modifier_totals.w = DataSheet.maximum_modifier_reduction; // Prevent food modifier becoming zero cost / bonus
-            if (cost_modifier_totals.w < -1) cost_modifier_totals.w = DataSheet.maximum_modifier_reduction; // Prevent safety modifier becoming zero cost / bonus
+            if (cost_modifier_totals.x < DataSheet.maximum_modifier_reduction) cost_modifier_totals.x = DataSheet.maximum_modifier_reduction; // Prevent money modifier becoming zero cost / bonus
+            if (cost_modifier_totals.y < DataSheet.maximum_modifier_reduction) cost_modifier_totals.y = DataSheet.maximum_modifier_reduction; // Prevent science modifier becoming zero cost / bonus
+            if (cost_modifier_totals.z < DataSheet.maximum_modifier_reduction) cost_modifier_totals.z = DataSheet.maximum_modifier_reduction; // Prevent food modifier becoming zero cost / bonus
+            if (cost_modifier_totals.w < DataSheet.maximum_modifier_reduction) cost_modifier_totals.w = DataSheet.maximum_modifier_reduction; // Prevent safety modifier becoming zero cost / bonus
 
         }
 
@@ -455,14 +491,76 @@ namespace CT.Data
             return;
         }
 
-        public void DecayPopulation()
+        public void DecayPopulation(float _required)
         {
             // Calculate delta in required vs available food
-            float delta_scale = ScalePopulationStarvation(food_delta, Population);
+            float delta = Food - _required;
+            float delta_scale = ScalePopulationStarvation(delta, Population);
 
             Population -= (int)(Population * (DataSheet.starvation_rate * delta_scale) + 1);
 
             return;
+        }
+
+        public void SwapResources(CTResources _lhs, float _lhs_ratio, CTResources _rhs, float _rhs_ratio)
+        {
+            int lhs = -1;
+            int rhs = -1;
+
+            Vector4 temps = new Vector4(Money, Science, Food, Population);
+
+            switch (_lhs)
+            {
+                case CTResources.Money:
+                    lhs = 0;
+                    break;
+                case CTResources.Science:
+                    lhs = 1;
+                    break;
+                case CTResources.Food:
+                    lhs = 2;
+                    break;
+                case CTResources.Population:
+                    lhs = 3;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (_rhs)
+            {
+                case CTResources.Money:
+                    rhs = 0;
+                    break;
+                case CTResources.Science:
+                    rhs = 1;
+                    break;
+                case CTResources.Food:
+                    rhs = 2;
+                    break;
+                case CTResources.Population:
+                    rhs = 3;
+                    break;
+                default:
+                    break;
+            }
+
+            if (lhs == -1 || rhs == -1)
+            {
+                Debug.LogError("CTTurnData.SwapResources: Invalid resource type input!");
+                return;
+            }
+
+
+            Vector4 ret = new Vector4(temps.x, temps.y, temps.z, temps.w);
+
+            ret[lhs] = temps[rhs] * _rhs_ratio;
+            ret[rhs] = temps[lhs] * _lhs_ratio;
+
+            Money       = (int)ret.x;
+            Science     = (int)ret.y;
+            Food        = (int)ret.z;
+            Population  = (int)ret.w;
         }
 
         #endregion

@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 /*
     SELECTOR ORDER:
@@ -19,14 +17,12 @@ namespace CT
     using Data;
     using Data.Changes;
     using Data.Resources;
-    using Lookup;
     using Enumerations;
-    using UnityEngine.UIElements;
-    using UnityEditor.Experimental.GraphView;
-    using System.Linq.Expressions;
+    using Lookup;
 
     public class GameManager : MonoBehaviour
     {
+        #region Member Variables
         public static GameManager _INSTANCE;
 
         // Changes
@@ -42,8 +38,13 @@ namespace CT
         private uint current_turn = 0;
         public uint CurrentTurn { get { return current_turn; } }
         private int user_changes_in_turn;
-        private Vector3 current_turn_resource_expenditure;
+        private Vector3 empty_turn_resource_expenditure;
 
+        #endregion
+
+
+
+        #region UnityFunctions
         private void Awake()
         {
             if (_INSTANCE != null)
@@ -89,7 +90,10 @@ namespace CT
         {
             UpdateResourceCounters();
         }
+        #endregion
 
+
+        #region Setup
         private void Initialise()
         {
             initial_year.Initialise(DataSheet.starting_money, DataSheet.starting_science, DataSheet.starting_food, DataSheet.starting_population);
@@ -106,12 +110,16 @@ namespace CT
 
             // Initialise awareness changes list
             awareness_changes = new List<CTChange>[DataSheet.turns_number + 1];
-            for(uint year = 0; year < awareness_changes.Length; year++)
+            for (uint year = 0; year < awareness_changes.Length; year++)
                 awareness_changes[year] = new List<CTChange>();
 
-            current_turn_resource_expenditure = new Vector3(0, 0, 0);
+            empty_turn_resource_expenditure = new Vector3(0, 0, 0);
         }
 
+        #endregion
+
+
+        #region Data
         private CTTurnData GetYearData(uint _year)
         {
             CTTurnData ret = new CTTurnData(initial_year);
@@ -140,120 +148,12 @@ namespace CT
                 net_total += (DataSheet.unemployed_net * ret.UnassignedPopulation);
 
                 if (ret.Food >= ret.Population) { ret.GrowPopulation(i); }
-                else { ret.DecayPopulation(); }
+                else { ret.DecayPopulation(net_total.food); }
 
-                ret.ApplyCosts(net_total);
+                ret.ApplyCosts(net_total, CTCostType.Upkeep);
             }
 
             return ret;
-        }
-
-        private CTTurnData GetNextTurnData(CTTurnData _current_turn)
-        {
-            CTTurnData ret = new CTTurnData(_current_turn);
-
-            ret.turn++;
-
-            // Disaster instances for year
-            foreach (CTChange change in game_changes[ret.turn])
-                change.ApplyChange(ref ret);
-
-            // Technology changes for year
-            foreach (CTChange change in user_changes[ret.turn])
-                change.ApplyChange(ref ret);
-
-            // Apply net resource worth of each assigned population member for each turn between zero and requested turn
-            CTCost net_total = new CTCost(0, 0, 0, 0);
-            net_total += (DataSheet.worker_net * ret.Workers);
-            net_total += (DataSheet.scientist_net * ret.Scientists);
-            net_total += (DataSheet.farmers_net * ret.Farmers);
-            net_total += (DataSheet.planners_net * ret.Planners);
-            net_total += (DataSheet.unemployed_net * ret.UnassignedPopulation);
-
-            ret.ApplyCosts(net_total);
-
-            return ret;
-        }
-
-        public void OnClickCheckoutYearButton(uint _requested_turn)
-        {
-            //Debug.Log("GameManager.OnClickCheckoutYearButton" + _year);
-
-            // Don't allow user to checkout year if the requested turn is the current turn
-            if (_requested_turn == current_turn)
-                return;
-
-            // Lock in changes to faction distribution
-            SetFactionDistribution();
-
-            // If player made changes to a turn
-            if (WereChangesMadeInTurn())
-            {
-                // Adjust awareness
-                awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_change_awareness_rate));
-
-                // Recalculate AI turns
-                AIPlayFromTurn(current_turn);
-            }
-
-            current_turn = _requested_turn;
-
-            CheckAllUserTechPurchasesValid();
-
-            //GetChangesAtTurn();
-            turn_data = GetYearData(_requested_turn);
-            current_turn_resource_expenditure = new Vector3(0, 0, 0);
-            UpdateResourceCounters();
-            UpdateFactionDistributionPips();
-            UpdatePipsWithCurrentTurnData();
-            //CheckForTimelineConflicts();
-            GetTimelineAwareness();
-            FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
-            FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
-        }
-
-        public void AddDisastersToGameChanges(Disaster _disaster)
-        {
-            // Take generated disasters from the disaster manager and insert them into the game changes list
-            game_changes[_disaster.turn + 1].Add(new ApplyDisaster(_disaster));            
-        }
-
-        private void CheckAllUserTechPurchasesValid()
-        {
-            TechTree tt = FindObjectOfType<TechTree>().GetComponent<TechTree>();
-            List<TechNode> nodes = new List<TechNode>();
-            // Loop through all turns
-            for (uint t = 0; t < user_changes.Length; t++)
-            {
-                CTTurnData data = GetYearData(t);
-
-                // If turn contains user change of type PurchaseTechnology
-                if (user_changes[t].Exists(x => x.GetType() == typeof(PurchaseTechnology)))
-                {
-                    // Loop through all user_changes and check if of type PurchaseTechnology
-                    for (int i = 0; i < user_changes[t].Count; i++)
-                    {
-                        // If user change is of type PurchaseTechnology
-                        if (user_changes[t][i].GetType() == typeof(PurchaseTechnology))
-                        {
-                            PurchaseTechnology change = (PurchaseTechnology)user_changes[t][i];
-                            // Check if prereqs for tech are unlocked
-                            TechNode node = tt.GetNodeOfType(change.tech);
-                            List<TechNode> required_nodes = node.GetRequiredTechs();
-
-                            foreach(TechNode n in required_nodes)
-                            {
-                                if (data.technologies[n.tech] == false)
-                                {
-                                    // PurchaseTechnology is invalid
-                                    user_changes[t].Remove(user_changes[t][i]);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         public void AIPlayFromTurn(uint _turn)
@@ -268,7 +168,7 @@ namespace CT
                 //Debug.Log($"Loop {t} has {active_techs} active techs");
 
                 // Generate a faction dist game change
-                Vector4 dist = GetRandomFactionSpread(t);
+                Vector4 dist = GenerateRandomFactionSpread(t);
 
                 // If game_changes[t] does not contain a CTChange of type SetFactionDistribution
                 if (!game_changes[t].Exists(x => x.GetType() == typeof(SetFactionDistribution)))
@@ -362,11 +262,100 @@ namespace CT
                 Debug.Log(data.Population);
             }
         }
+        #endregion
 
-        public bool IsTechnologyOwned(CTTechnologies _tech)
+
+        #region UI
+        public void OnClickCheckoutYearButton(uint _requested_turn)
         {
-            return true;
+            //Debug.Log("GameManager.OnClickCheckoutYearButton" + _year);
+
+            // Don't allow user to checkout year if the requested turn is the current turn
+            if (_requested_turn == current_turn)
+                return;
+
+            // Lock in changes to faction distribution
+            SetFactionDistribution();
+
+            // If player made changes to a turn
+            if (WereChangesMadeInTurn())
+            {
+                // Adjust awareness
+                awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_change_awareness_rate));
+
+                // Recalculate AI turns
+                AIPlayFromTurn(current_turn);
+            }
+
+            current_turn = _requested_turn;
+
+            CheckAllUserTechPurchasesValid();
+
+            //GetChangesAtTurn();
+            turn_data = GetYearData(_requested_turn);
+            empty_turn_resource_expenditure = new Vector3(0, 0, 0);
+            UpdateResourceCounters();
+            UpdateFactionDistributionPips();
+            UpdatePipsWithCurrentTurnData();
+            //CheckForTimelineConflicts();
+            SetAwarenessUI();
+            FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
+            FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
         }
+
+        private void UpdateFactionDistributionPips()
+        {
+            float workers = turn_data.faction_distribution.x;
+            float scientists = turn_data.faction_distribution.y;
+            float farmers = turn_data.faction_distribution.z;
+            float planners = turn_data.faction_distribution.w;
+
+            // This does not work as expected
+            ComputerController.Instance.pointSelectors[0].pointValue = scientists; // Scientist
+            ComputerController.Instance.pointSelectors[1].pointValue = planners; // Planner
+            ComputerController.Instance.pointSelectors[2].pointValue = farmers; // Farmer
+            ComputerController.Instance.pointSelectors[3].pointValue = workers; // Worker
+        }
+
+        private void UpdateResourceCounters()
+        {
+            ComputerController.Instance.currencyText.text = (turn_data.Money - (int)empty_turn_resource_expenditure.x).ToString();
+            ComputerController.Instance.rpText.text = (turn_data.Science - (int)empty_turn_resource_expenditure.y).ToString();
+            ComputerController.Instance.foodText.text = (turn_data.Food - (int)empty_turn_resource_expenditure.z).ToString();
+
+            ComputerController.Instance.populationText.text = turn_data.Population.ToString();
+
+            SetAwarenessUI();
+        }
+
+        private void UpdatePipsWithCurrentTurnData()
+        {
+            // Sci
+            ComputerController.Instance.pointSelectors[0].SetPoints(GetFactionDistribtion(CTFaction.Scientist, turn_data) * 10);
+            // Plan
+            ComputerController.Instance.pointSelectors[1].SetPoints(GetFactionDistribtion(CTFaction.Planner, turn_data) * 10);
+            // Farmer
+            ComputerController.Instance.pointSelectors[3].SetPoints(GetFactionDistribtion(CTFaction.Farmer, turn_data) * 10);
+            // Worker
+            ComputerController.Instance.pointSelectors[2].SetPoints(GetFactionDistribtion(CTFaction.Worker, turn_data) * 10);
+        }
+
+        public void SetAwarenessUI()
+        {
+            float ret = 0.0f;
+
+            for (int i = 0; i < awareness_changes.Length; i++)
+            {
+                foreach (TrackAwareness blob in awareness_changes[i])
+                {
+                    ret += blob.value;
+                }
+            }
+
+            ComputerController.Instance.mat_awareness.SetFloat("_FillAmount", ret);
+        }
+
+        #endregion
 
 
         #region Actions
@@ -389,22 +378,8 @@ namespace CT
 
         private void SetFactionDistribution()
         {
-            float work_abs  = ComputerController.Instance.pointSelectors[2].pointValue; // Worker
-            float sci_abs   = ComputerController.Instance.pointSelectors[0].pointValue; // Scientist
-            float farm_abs  = ComputerController.Instance.pointSelectors[3].pointValue; // Farmer
-            float plan_abs  = ComputerController.Instance.pointSelectors[1].pointValue; // Planner
+            Vector4 requested_ratios = GetFactionDistribution();
 
-            float req_work_ratio    = RAUtility.Remap(work_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float req_sci_ratio     = RAUtility.Remap(sci_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float req_farm_ratio    = RAUtility.Remap(farm_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            float req_plan_ratio    = RAUtility.Remap(plan_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
-            //Vector4 requested_ratios = new Vector4(req_sci_ratio, req_plan_ratio, req_farm_ratio, req_work_ratio);
-            Vector4 requested_ratios = new Vector4(req_work_ratio, req_sci_ratio, req_farm_ratio, req_plan_ratio);
-
-            //float current_sci_ratio = (float)turn.Scientists / (float)turn.Population;
-            //float current_plan_ratio = (float)turn.Planners / (float)turn.Population;
-            //float current_farm_ratio = (float)turn.Farmers / (float)turn.Population;
-            //float current_work_ratio = (float)turn.Workers / (float)turn.Population;
             Vector4 current_ratios = turn_data.faction_distribution;
 
             //Should make sure that faction spread is not the same as the start of the turn before applying it as a "Change"
@@ -417,11 +392,26 @@ namespace CT
             }
             else
             {
-                user_changes[current_turn].Add(new SetFactionDistribution(req_work_ratio, req_sci_ratio, req_farm_ratio, req_plan_ratio));
+                user_changes[current_turn].Add(new SetFactionDistribution(requested_ratios.x, requested_ratios.y, requested_ratios.z, requested_ratios.w));
                 //prime_timeline.ChangePopulationDistribution();
                 awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_change_awareness_rate));
                 Debug.Log("Choices for faction distribution locked in!");
             }
+        }
+
+        public Vector4 GetFactionDistribution()
+        {
+            float work_abs = ComputerController.Instance.pointSelectors[2].pointValue; // Worker
+            float sci_abs = ComputerController.Instance.pointSelectors[0].pointValue; // Scientist
+            float farm_abs = ComputerController.Instance.pointSelectors[3].pointValue; // Farmer
+            float plan_abs = ComputerController.Instance.pointSelectors[1].pointValue; // Planner
+
+            float req_work_ratio = RAUtility.Remap(work_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_sci_ratio = RAUtility.Remap(sci_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_farm_ratio = RAUtility.Remap(farm_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+            float req_plan_ratio = RAUtility.Remap(plan_abs, 0f, ComputerController.Instance.totalPointsLimit, 0f, 1f);
+
+            return new Vector4(req_work_ratio, req_sci_ratio, req_farm_ratio, req_plan_ratio);
         }
 
         public bool PurchaseTechnology(CTTechnologies _t, uint _turn)
@@ -431,7 +421,7 @@ namespace CT
             {
                 turn_data.technologies[_t] = true;
                 user_changes[_turn].Add(new PurchaseTechnology(_t));
-                current_turn_resource_expenditure += new Vector3(
+                empty_turn_resource_expenditure += new Vector3(
                     DataSheet.technology_price[_t].money,   // x
                     DataSheet.technology_price[_t].science, // y
                     DataSheet.technology_price[_t].food);   // z
@@ -450,60 +440,55 @@ namespace CT
             }
         }
 
+        public void AddDisastersToGameChanges(Disaster _disaster)
+        {
+            // Take generated disasters from the disaster manager and insert them into the game changes list
+            game_changes[_disaster.turn + 1].Add(new ApplyDisaster(_disaster));
+        }
+
+
+        private void CheckAllUserTechPurchasesValid()
+        {
+            TechTree tt = FindObjectOfType<TechTree>().GetComponent<TechTree>();
+            List<TechNode> nodes = new List<TechNode>();
+            // Loop through all turns
+            for (uint t = 0; t < user_changes.Length; t++)
+            {
+                CTTurnData data = GetYearData(t);
+
+                // If turn contains user change of type PurchaseTechnology
+                if (user_changes[t].Exists(x => x.GetType() == typeof(PurchaseTechnology)))
+                {
+                    // Loop through all user_changes and check if of type PurchaseTechnology
+                    for (int i = 0; i < user_changes[t].Count; i++)
+                    {
+                        // If user change is of type PurchaseTechnology
+                        if (user_changes[t][i].GetType() == typeof(PurchaseTechnology))
+                        {
+                            PurchaseTechnology change = (PurchaseTechnology)user_changes[t][i];
+                            // Check if prereqs for tech are unlocked
+                            TechNode node = tt.GetNodeOfType(change.tech);
+                            List<TechNode> required_nodes = node.GetRequiredTechs();
+
+                            foreach (TechNode n in required_nodes)
+                            {
+                                if (data.technologies[n.tech] == false)
+                                {
+                                    // PurchaseTechnology is invalid
+                                    user_changes[t].Remove(user_changes[t][i]);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
 
         #region Utility
-        private void ProjectNetResource()
-        {
-            // Look at current faction distribution at current turn 
-
-            // Apply faction distribtion to population at current turn
-
-            // Get numbers for scientists, planners, farmers, workers
-
-            // Multiply scientists, planners, farmers, workers by DataSheet net values
-
-            // Put post-multiplcation net into the projection boxes
-
-            throw new NotImplementedException();
-        }
-
-        private void UpdateFactionDistributionPips()
-        {
-            float workers       = turn_data.faction_distribution.x;
-            float scientists    = turn_data.faction_distribution.y;
-            float farmers       = turn_data.faction_distribution.z;
-            float planners      = turn_data.faction_distribution.w;
-
-            // This does not work as expected
-            ComputerController.Instance.pointSelectors[0].pointValue = scientists; // Scientist
-            ComputerController.Instance.pointSelectors[1].pointValue = planners; // Planner
-            ComputerController.Instance.pointSelectors[2].pointValue = farmers; // Farmer
-            ComputerController.Instance.pointSelectors[3].pointValue = workers; // Worker
-        }
-
-        private void UpdateResourceCounters()
-        {
-            ComputerController.Instance.currencyText.text = (turn_data.Money - (int)current_turn_resource_expenditure.x).ToString();
-            ComputerController.Instance.rpText.text = (turn_data.Science - (int)current_turn_resource_expenditure.y).ToString();
-            ComputerController.Instance.foodText.text = (turn_data.Food - (int)current_turn_resource_expenditure.z).ToString();
-            ComputerController.Instance.populationText.text = turn_data.Population.ToString();
-
-            GetTimelineAwareness();
-        }
-
-        private void UpdatePipsWithCurrentTurnData()
-        {
-            // Sci
-            ComputerController.Instance.pointSelectors[0].SetPoints(GetFactionDistribtion(CTFaction.Scientist, turn_data) * 10);
-            // Plan
-            ComputerController.Instance.pointSelectors[1].SetPoints(GetFactionDistribtion(CTFaction.Planner, turn_data) * 10);
-            // Farmer
-            ComputerController.Instance.pointSelectors[3].SetPoints(GetFactionDistribtion(CTFaction.Farmer, turn_data) * 10);
-            // Worker
-            ComputerController.Instance.pointSelectors[2].SetPoints(GetFactionDistribtion(CTFaction.Worker, turn_data) * 10);
-        }
 
         private float GetFactionDistribtion(CTFaction _faction, CTTurnData _turn)
         {
@@ -528,20 +513,7 @@ namespace CT
             }
         }
 
-        private void DebugDisasterChanges()
-        {
-
-
-            for (int i = 0; i < 40; i++)
-            {
-                if (game_changes[i].Count != 0)
-                {
-                    Debug.Log($"Game Changes Turn {i} Size = {game_changes[i].Count}");
-                }
-            }
-        }
-
-        private Vector4 GetRandomFactionSpread(uint _turn)
+        private Vector4 GenerateRandomFactionSpread(uint _turn)
         {
             System.Random rand = new System.Random();
 
@@ -597,6 +569,19 @@ namespace CT
             return new Vector4(floats[0], floats[1], floats[2], floats[3]);
         }
 
+        public static Vector4 CTVector4Round(Vector4 _value, int _precision)
+        {
+            Vector4 ret = new Vector4(
+                (Mathf.Round(_value.x * _precision) / _precision),
+                (Mathf.Round(_value.y * _precision) / _precision),
+                (Mathf.Round(_value.z * _precision) / _precision),
+                (Mathf.Round(_value.w * _precision) / _precision));
+
+            //float ret = Mathf.Round(_value * _precision) / _precision;
+            return ret;
+        }
+
+        #region Getters
         public CTTurnData GetTurn()
         {
             return turn_data;
@@ -605,10 +590,24 @@ namespace CT
         private CTResourceTotals GetResourceTotals()
         {
             return new CTResourceTotals(
-                turn_data.Money - (int)current_turn_resource_expenditure.x, 
-                turn_data.Science - (int)current_turn_resource_expenditure.y, 
-                turn_data.Food - (int)current_turn_resource_expenditure.z, 
+                turn_data.Money - (int)empty_turn_resource_expenditure.x,
+                turn_data.Science - (int)empty_turn_resource_expenditure.y,
+                turn_data.Food - (int)empty_turn_resource_expenditure.z,
                 turn_data.Population);
+        }
+        public bool IsTechnologyOwned(CTTechnologies _tech)
+        {
+            return true;
+        }
+
+        private int GetTurnChanges()
+        {
+            return user_changes[current_turn].Count();
+        }
+
+        private bool WereChangesMadeInTurn()
+        {
+            return !(GetTurnChanges() == user_changes_in_turn);
         }
 
         public List<CTTechnologies> GetUnlockedTechnologiesInTurn()
@@ -630,48 +629,7 @@ namespace CT
             return ret;
         }
 
-        private void GetChangesAtTurn()
-        {
-            if (current_turn == 40) { return; }
-            user_changes_in_turn = user_changes[current_turn].Count();
-        }
-
-        private int GetTurnChanges()
-        {
-            return user_changes[current_turn].Count();
-        }
-
-        private bool WereChangesMadeInTurn()
-        {
-            return !(GetTurnChanges() == user_changes_in_turn);
-        }
-
-        public static Vector4 CTVector4Round(Vector4 _value, int _precision)
-        {
-            Vector4 ret = new Vector4(
-                (Mathf.Round(_value.x * _precision) / _precision),
-                (Mathf.Round(_value.y * _precision) / _precision),
-                (Mathf.Round(_value.z * _precision) / _precision),
-                (Mathf.Round(_value.w * _precision) / _precision));
-
-            //float ret = Mathf.Round(_value * _precision) / _precision;
-            return ret;
-        }
-
-        public void GetTimelineAwareness()
-        {
-            float ret = 0.0f;
-
-            for (int i = 0; i < awareness_changes.Length; i++)
-            {
-                foreach (TrackAwareness blob in awareness_changes[i])
-                {
-                    ret += blob.value;
-                }
-            }
-
-            ComputerController.Instance.mat_awareness.SetFloat("_FillAmount", ret);
-        }
+        #endregion
         #endregion
     }
 }
