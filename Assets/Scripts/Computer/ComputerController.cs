@@ -463,10 +463,14 @@ public class ComputerController : MonoBehaviour
 
     private PointSelector FindHighestPointSelector(PointSelector excluded)
     {
-        PointSelector highestPointSelector = pointSelectors[0];
+        PointSelector highestPointSelector = null;
         for (int i = 0; i < pointSelectors.Count; i++)
         {
-            if ((pointSelectors[i].pointValue > highestPointSelector.pointValue) && pointSelectors[i] != excluded)
+            if (pointSelectors[i] == excluded)
+            {
+                continue;
+            }
+            if (highestPointSelector == null || pointSelectors[i].pointValue > highestPointSelector.pointValue)
             {
                 highestPointSelector = pointSelectors[i];
             }
