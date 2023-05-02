@@ -14,8 +14,7 @@ public class PointSelector : MonoBehaviour
 {
     public GameObject pip;
     private Material pipMat;
-
-    //[HideInInspector]
+    [HideInInspector]
     public float pointValue;
     private float pointLimit = 10f;
 
@@ -51,6 +50,14 @@ public class PointSelector : MonoBehaviour
             pipMat.SetFloat("_FillAmount", pointValue);
 
         ComputerController.Instance.CheckPoints(this);
+    }
+    void OnMouseOver()
+    {
+        CustomCursor.Instance.OnHoverOverResourceSelector();
+    }
+    private void OnMouseExit()
+    {
+        CustomCursor.Instance.SetDefaultCursor();
     }
 
     public void SetPoints(float _points)

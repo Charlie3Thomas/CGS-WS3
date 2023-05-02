@@ -70,4 +70,15 @@ public class ComputerButton : MonoBehaviour
                 break;
         }
     }
+
+    void OnMouseOver()
+    {
+        if(type == buttonType.SHOW_GRAPH || type == buttonType.CONFIRM_YEAR)
+            CustomCursor.Instance.OnHoverOverResourceSelector();
+    }
+    private void OnMouseExit()
+    {
+        if(type == buttonType.SHOW_GRAPH || type == buttonType.CONFIRM_YEAR)
+            CustomCursor.Instance.SetDefaultCursor();
+    }
 }

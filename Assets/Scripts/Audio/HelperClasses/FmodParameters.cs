@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-/* This is an FmodParameters class, it is responsible for setting params, each method contains the implementation of every way to set a param using the FMOD API.
+/* This is an FmodParameters class and is part of the SamSquanch fmod helper library, it is responsible for setting params, each method contains the implementation of every way to set a param using the FMOD API.
  * To use this script reference this class on a script, then if you are using discrete or continous params 
  * you will call the 'SetParamByName' method, this is a generic method, containing three arguments, one of which is of a generic data type,
  * this allows you to send a param value of any data type. The first argument of this method is an fmod event instance 
@@ -16,7 +16,7 @@ using UnityEngine;
 public static class FmodParameters
 {
     /***************************** LOCAL PARAMETERS **********************************************************************************************************************/
-
+    
     //Used to set state value of fmod labled params
     public static void SetParamByLabelName(FMOD.Studio.EventInstance eventInstance, string labelParamName, string labelParamState)
     {
@@ -59,4 +59,5 @@ public static class FmodParameters
         FMODUnity.RuntimeManager.StudioSystem.setParameterByName(globalParamName, value);
     }
 
+   
 }

@@ -6,9 +6,14 @@ using UnityEngine.InputSystem;
 
 public class CustomCursor : MonoBehaviour
 {
+    public static CustomCursor Instance;
+
     public Texture2D mainCursor;
     public Texture2D clickedCursor;
     public Texture2D settingsCusrsor;
+    public Texture2D resourceCursor;
+    public Texture2D knobCursor;
+    public Texture2D horizontalSliderCursor;
 
     private PlayerControls controls;
 
@@ -20,6 +25,7 @@ public class CustomCursor : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         controls = new PlayerControls();
 
         ChangeCursor(mainCursor); 
@@ -48,11 +54,24 @@ public class CustomCursor : MonoBehaviour
         ChangeCursor(mainCursor);
     }
 
-
+    public void OnHoverOverResourceSelector()
+    {
+        ChangeCursor(resourceCursor);
+    }
+    public void OnHoverOverKnobSelector()
+    {
+        ChangeCursor(knobCursor);
+    }
+    public void SetDefaultCursor()
+    {
+        ChangeCursor(mainCursor);
+    }
+    public void OnHoverOverHorizontalSlider()
+    {
+        ChangeCursor(horizontalSliderCursor);
+    }
     private void ChangeCursor(Texture2D cursorType)
     {
-
         Cursor.SetCursor(cursorType, Vector2.zero, CursorMode.Auto);
-
     }
 }
