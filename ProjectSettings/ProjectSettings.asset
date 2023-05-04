@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: CGS_Bigstack
   productName: DisasterGame
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -924,11 +924,11 @@ PlayerSettings:
     m_VersionName: 
   apiCompatibilityLevel: 3
   activeInputHandler: 2
-  cloudProjectId: 
+  cloudProjectId: a2e889d7-036d-41ea-bce6-95b3f36a5ada
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: DisasterGame
+  organizationId: hirenkacha
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 

@@ -1,23 +1,23 @@
+using CT;
+using CT.Data;
+using CT.Enumerations;
+using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 
 //Nodes 23, 24, 46, 47, 48, 62 are unique and need their own implementations
 public class TechNode : MonoBehaviour
 {
     private TechTree tree;
-    public int id = 0;
-    public string name = "";
-    [SerializeReference]
-    public Resource requiredMoney = new Resource { allocType = AllocType.MONEY };
-    [SerializeReference]
-    public Resource requiredScience = new Resource { allocType = AllocType.SCIENCE };
+    public CTTechnologies tech;
     public bool unlocked;
     public TechNode[] requiredNodes;
     private List<LineRenderer> lineRenderers;
     public Material lineMat;
     private float lineWidth = 1.5f;
-    public List<BuffsNerfs> buffs = new List<BuffsNerfs>();
 
     private Material mat;
     private Color faded = new Color(0.5f, 0.5f, 0.5f) * 1;
@@ -26,7 +26,6 @@ public class TechNode : MonoBehaviour
     private void Start()
     {
         tree = GameObject.FindGameObjectWithTag("TechTree").GetComponent<TechTree>();
-        id = transform.GetSiblingIndex() + 1;
         lineRenderers = new List<LineRenderer>();
         mat = GetComponent<Renderer>().material;
         mat.SetVector("_Color", faded);
@@ -70,10 +69,13 @@ public class TechNode : MonoBehaviour
             return;
         }
 
+        //Debug.Log(tech.ToString());
+
         if (unlocked)
         {
             UIHoverManager.instance.ShowTip("Node Unlocked!", Input.mousePosition);
             AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "AlreadyUnlocked"));
+
             UIHoverManager.instance.ManuallyHideToolTip();
             return;
         }
@@ -85,6 +87,7 @@ public class TechNode : MonoBehaviour
             if (!requiredNode.unlocked)
             {
                 allRequiredNodesUnlocked = false;
+                Debug.Log($"Can't unlock {this.tech} as the required nodes are not unlocked yet {requiredNode.tech}");
                 Debug.Log("Can't unlock as the required nodes are not unlocked yet");
                 UIHoverManager.instance.ShowTip("Can't unlock as the required nodes are not unlocked yet!", Input.mousePosition);
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
@@ -95,16 +98,15 @@ public class TechNode : MonoBehaviour
 
         if (allRequiredNodesUnlocked)
         {
-            if (tree.sciencePoints.amount >= requiredScience.amount && tree.money.amount >= requiredMoney.amount)
+            if (GameManager._INSTANCE.PurchaseTechnology(tech, GameManager._INSTANCE.turn_data.turn))
             {
                 unlocked = true;
-                mat.SetVector("_Color", Lit * 8);
-                tree.sciencePoints.amount -= requiredScience.amount;
-                tree.money.amount -= requiredMoney.amount;
-                tree.UpdateBuffs(buffs);
+                //mat.SetVector("_Color", Lit * 8);
+                //tree.UpdateBuffs(buffs);
                 SpecialCase();
                 UIHoverManager.instance.ShowTip("Node Unlocked!", Input.mousePosition);
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "Unlocked"));
+                UpdateTechNodes();
                 UIHoverManager.instance.ManuallyHideToolTip();
             }
             else
@@ -119,44 +121,81 @@ public class TechNode : MonoBehaviour
 
     void SpecialCase()
     {
-        switch(id)
+        switch(tech)
         {
-            case 23:
+            case CTTechnologies.RiskAssessment:
                 {
                     DisasterManager.instance.showMagnitude = true;
                     DisasterManager.instance.WriteDisastersInJournal();
                 }
                 break;
-            case 24:
+            case CTTechnologies.PopulationAssessment:
                 {
                     DisasterManager.instance.showDeathToll = true;
                     DisasterManager.instance.WriteDisastersInJournal();
                 }
                 break;
-            case 46:
+            case CTTechnologies.Marketplace1:
                 {
-                    float temp_money = tree.money.amount;
-                    float temp_science = tree.sciencePoints.amount;
-                    tree.money.amount = temp_science / 5;
-                    tree.sciencePoints.amount = temp_money;
+                    // Swap money and science
+                    // 
+                    GameManager._INSTANCE.turn_data.SwapResources(CTResources.Money, 5.0f, CTResources.Science, 1.0f);
+                    //float temp_money = tree.money.amount;
+                    //float temp_science = tree.sciencePoints.amount;
+                    //tree.money.amount = temp_science / 5;
+                    //tree.sciencePoints.amount = temp_money;
                 }
                 break;
-            case 47:
+            case CTTechnologies.Marketplace2:
                 {
-                    float temp_money = tree.money.amount;
-                    float temp_science = tree.sciencePoints.amount;
-                    tree.money.amount = temp_science * 2;
-                    tree.sciencePoints.amount = temp_money;
+                    GameManager._INSTANCE.turn_data.SwapResources(CTResources.Money, 1.0f, CTResources.Science, 2.0f);
+                    //float temp_money = tree.money.amount;
+                    //float temp_science = tree.sciencePoints.amount;
+                    //tree.money.amount = temp_science * 2;
+                    //tree.sciencePoints.amount = temp_money;
                 }
                 break;
-            case 48:
+            case CTTechnologies.SafetyRating:
                 {
                     DisasterManager.instance.showSafety = true;
                 }
                 break;
-            case 62:
+            case CTTechnologies.MemoryFlash:
                 // Reset awareness
+                GameManager._INSTANCE.ResetAwareness();
                 break;
         }
+    }
+
+    public void UpdateTechNodes()
+    {
+        this.unlocked = false;
+        List<CTTechnologies> techs = GameManager._INSTANCE.GetUnlockedTechnologiesInTurn();
+
+        //Debug.Log($"TechNode:UpdateTechNodes:active_techs = {active_techs.Count}");
+
+        foreach (CTTechnologies t in techs)
+        {
+            if (t == this.tech)
+            {
+                this.unlocked = true;
+                tree.LookupBuffs(t);
+                break;
+            }
+        }
+
+        this.mat.SetVector("_Color", this.unlocked ? Lit * 8 : faded);
+    }
+
+    public List<TechNode> GetRequiredTechs()
+    {
+        List<TechNode> ret = new List<TechNode>();
+
+        for(int i = 0; i < requiredNodes.Length; i++)
+        {
+            ret.Add(requiredNodes[i]);
+        }
+
+        return ret;
     }
 }

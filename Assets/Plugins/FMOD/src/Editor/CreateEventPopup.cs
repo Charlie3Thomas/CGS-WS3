@@ -388,11 +388,11 @@ namespace FMODUnity
         {
             string path = "";
             var entry = currentFolder;
-            while (entry.parent != null)
-            {
-                path = entry.name + "/" + path;
-                entry = entry.parent;
-            }
+            //while (entry.parent != null)
+            //{
+            //    path = entry.name + "/" + path;
+            //    entry = entry.parent;
+            //}
 
             eventFolder = "/" + path;
             resetCursor = true;

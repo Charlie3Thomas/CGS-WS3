@@ -6,6 +6,7 @@ public class YearKnob : MonoBehaviour
 {
     public void YearUp()
     {
+        // if 
         if (ComputerController.Instance.desiredYear < 2100)
             ComputerController.Instance.desiredYear += 5;
 
@@ -20,5 +21,13 @@ public class YearKnob : MonoBehaviour
 
         ComputerController.Instance.UpdateSlider();
         AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.dialRightEvent, null);
+    }
+    void OnMouseOver()
+    {
+        CustomCursor.Instance.OnHoverOverKnobSelector();
+    }
+    private void OnMouseExit()
+    {
+        CustomCursor.Instance.SetDefaultCursor();
     }
 }

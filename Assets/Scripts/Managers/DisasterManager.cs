@@ -1,22 +1,10 @@
+using CT;
+using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-
-public enum disasterType
-{
-    EARTHQUAKE,
-    TSUNAMI,
-    VOLCANO,
-    TORNADO
-}
-
-[System.Serializable]
-public class Disaster
-{
-    public disasterType type;
-    public int year;
-    public float magnitude;
-}
+using UnityEngine.InputSystem.DualShock;
 
 public class DisasterManager : MonoBehaviour
 {
@@ -43,8 +31,7 @@ public class DisasterManager : MonoBehaviour
 
     void Start()
     {
-        CreateDisasterList();
-        WriteDisastersInJournal();
+        
     }
     private void Update()
     {
@@ -60,6 +47,13 @@ public class DisasterManager : MonoBehaviour
     //    }
     //}
     // Call this to update the list visually whenever something new happens
+
+    public void Generate()
+    {
+        CreateDisasterList();
+        WriteDisastersInJournal();
+    }
+
     public void WriteDisastersInJournal()
     {
         ComputerController.Instance.disasterNameText.text = "";
@@ -72,10 +66,10 @@ public class DisasterManager : MonoBehaviour
             ComputerController.Instance.disasterNameText.text += dis.type.ToString() + "\n";
             ComputerController.Instance.disasterYearText.text += dis.year + "\n";
 
-            if (showMagnitude)
-                ComputerController.Instance.disasterMagnitudeText.text += dis.magnitude.ToString("F1") + "\n";
-            else
-                ComputerController.Instance.disasterMagnitudeText.text += "???\n";
+            //if (showMagnitude)
+            //    ComputerController.Instance.disasterMagnitudeText.text += dis.magnitude.ToString("F1") + "\n";
+            //else
+            //    ComputerController.Instance.disasterMagnitudeText.text += "???\n";
 
             // Random for now, change later when everything gets hooked up
             if (showDeathToll)
@@ -87,24 +81,47 @@ public class DisasterManager : MonoBehaviour
 
     void CreateDisasterList()
     {
-        HashSet<int> uniqueYears = new HashSet<int>();
+        HashSet<int> uniqueTurns = new HashSet<int>();
         for (int i = 0; i < numOfDisasters; i++)
         {
             Disaster dis = new Disaster();
-            dis.type = (disasterType)Random.Range(0, System.Enum.GetValues(typeof(disasterType)).Length);
-            dis.year = (Random.Range(YearData._INSTANCE.earliest_year / 5, (YearData._INSTANCE.latest_year / 5) + 1) * 5);
-            while (!uniqueYears.Add(dis.year))
-            {
-                dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
-            }
-            dis.magnitude = Random.Range(1f, 10f);
+            //dis.type = (CTDisasters)Random.Range(0, System.Enum.GetValues(typeof(CTDisasters)).Length);
+            dis.type = (CTDisasters)CTSeed.RandFromSeed((uint)i, "dis.type").Next(System.Enum.GetValues(typeof(CTDisasters)).Length);
+            //dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
+            //while (!uniqueYears.Add(dis.year))
+            //{
+            //    //dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
+            //}
+
+            //dis.turn = Random.Range(4,  (int)CT.Lookup.DataSheet.turns_number);
+            dis.turn = CTSeed.RandFromSeed((uint)i, "dis.turn").Next(4, (int)CT.Lookup.DataSheet.turns_number);
+            //while (!uniqueTurns.Add(dis.turn))
+            //{
+            //    dis.turn = CTSeed.RandFromSeed((uint)i, "dis.turn").Next((int)CT.Lookup.DataSheet.turns_number);
+            //}
+
+            dis.year = (int)(dis.turn * CT.Lookup.DataSheet.turn_steps + CT.Lookup.DataSheet.starting_year) + CTSeed.RandFromSeed((uint)i, "dis.year").Next(5);/*Random.Range(0, 5)*/;
+
+            dis.intensity = CTSeed.RandFromSeed((uint)i, "dis.intensity").Next(1, 10);              /*Random.Range(1f, 10f);*/;
+            dis.intensity += (float)CTSeed.RandFromSeed((uint)i, "dis.intensity").NextDouble();
+
             disasterList.Add(dis);
         }
         disasterList.Sort(SortByYear);
+
+        WriteDisastersToGameManager();
     }
 
     private static int SortByYear(Disaster dis1, Disaster dis2)
     {
         return dis1.year.CompareTo(dis2.year);
+    }
+
+    private void WriteDisastersToGameManager()
+    {
+        foreach (Disaster d in disasterList)
+        {
+            GameManager._INSTANCE.AddDisastersToGameChanges(d);
+        }
     }
 }

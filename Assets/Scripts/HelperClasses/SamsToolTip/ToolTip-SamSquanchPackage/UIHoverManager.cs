@@ -45,7 +45,7 @@ public class UIHoverManager : MonoBehaviour
         tipText.text = tip;
 
         //Ternary operator to insure the pixel size is not above 200
-        tipWindow.sizeDelta = new Vector2(tipText.preferredWidth > 200 ? 200 : tipText.preferredWidth, tipText.preferredHeight);
+        tipWindow.sizeDelta = new Vector2(tipText.preferredWidth > 200 ? 200 : tipText.preferredWidth+10, tipText.preferredHeight+15);
 
         tipWindow.gameObject.SetActive(true);
         tipWindow.transform.position = new Vector2(mousePos.x + tipWindow.sizeDelta.x * 2, mousePos.y);
