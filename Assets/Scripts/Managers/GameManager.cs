@@ -96,20 +96,20 @@ namespace CT
         #region Setup
         private void Initialise()
         {
-            initial_year.Initialise(DataSheet.starting_money, DataSheet.starting_science, DataSheet.starting_food, DataSheet.starting_population);
+            initial_year.Initialise(DataSheet.STARTING_MONEY, DataSheet.STARTING_SCIENCE, DataSheet.STARTING_FOOD, DataSheet.STARTING_POPULATION);
 
             // Initialise user changes list
-            user_changes = new List<CTChange>[DataSheet.turns_number + 1];
+            user_changes = new List<CTChange>[DataSheet.TURNS_NUMBER + 1];
             for (uint year = 0; year < user_changes.Length; year++)
                 user_changes[year] = new List<CTChange>();
 
             // Initialise game changes list
-            game_changes = new List<CTChange>[DataSheet.turns_number + 1];
+            game_changes = new List<CTChange>[DataSheet.TURNS_NUMBER + 1];
             for (uint year = 0; year < game_changes.Length; year++)
                 game_changes[year] = new List<CTChange>();
 
             // Initialise awareness changes list
-            awareness_changes = new List<CTChange>[DataSheet.turns_number + 1];
+            awareness_changes = new List<CTChange>[DataSheet.TURNS_NUMBER + 1];
             for (uint year = 0; year < awareness_changes.Length; year++)
                 awareness_changes[year] = new List<CTChange>();
 
@@ -141,11 +141,11 @@ namespace CT
 
                 // Apply net resource worth of each assigned population member for each turn between zero and requested turn
                 CTCost net_total = new CTCost(0, 0, 0, 0);
-                net_total += (DataSheet.worker_net * ret.Workers);
-                net_total += (DataSheet.scientist_net * ret.Scientists);
-                net_total += (DataSheet.farmers_net * ret.Farmers);
-                net_total += (DataSheet.planners_net * ret.Planners);
-                net_total += (DataSheet.unemployed_net * ret.UnassignedPopulation);
+                net_total += (DataSheet.WORKER_NET * ret.Workers);
+                net_total += (DataSheet.SCIENTIST_NET * ret.Scientists);
+                net_total += (DataSheet.FARMERS_NET * ret.Farmers);
+                net_total += (DataSheet.PLANNERS_NET * ret.Planners);
+                net_total += (DataSheet.UNEMPLOYED_NET * ret.UnassignedPopulation);
 
                 if (ret.Food >= ret.Population) { ret.GrowPopulation(i); }
                 else { ret.DecayPopulation(net_total.food); }
@@ -163,7 +163,7 @@ namespace CT
             CTTurnData data = new CTTurnData(GetYearData(_turn));
 
             //For each turn
-            for (uint t = _turn; t < DataSheet.turns_number - 1; t++)
+            for (uint t = _turn; t < DataSheet.TURNS_NUMBER - 1; t++)
             {
                 //Debug.Log($"Loop {t} has {active_techs} active techs");
 
@@ -178,7 +178,7 @@ namespace CT
                 // If there is already a PurchaseTechnology change in turn t
                 if (game_changes[t].Exists(x => x.GetType() == typeof(PurchaseTechnology)))
                 {
-                    for (uint i = t; i < DataSheet.turns_number - 1; i++)
+                    for (uint i = t; i < DataSheet.TURNS_NUMBER - 1; i++)
                     {
                         // Find index in game_changes[t] of type PurchaseTechnology
                         int index = game_changes[i].FindIndex(change => change is PurchaseTechnology);
@@ -259,7 +259,7 @@ namespace CT
                     return;
                 }
 
-                Debug.Log(data.Population);
+                //Debug.Log(data.Population);
             }
         }
         #endregion
@@ -281,7 +281,7 @@ namespace CT
             if (WereChangesMadeInTurn())
             {
                 // Adjust awareness
-                awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_change_awareness_rate));
+                awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.YEAR_CHANGE_AWARENESS_RATE));
 
                 // Recalculate AI turns
                 AIPlayFromTurn(current_turn);
@@ -394,7 +394,7 @@ namespace CT
             {
                 user_changes[current_turn].Add(new SetFactionDistribution(requested_ratios.x, requested_ratios.y, requested_ratios.z, requested_ratios.w));
                 //prime_timeline.ChangePopulationDistribution();
-                awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.year_change_awareness_rate));
+                awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.YEAR_CHANGE_AWARENESS_RATE));
                 Debug.Log("Choices for faction distribution locked in!");
             }
         }
@@ -433,8 +433,8 @@ namespace CT
 
         public void ResetAwareness()
         {
-            awareness_changes = new List<CTChange>[DataSheet.turns_number];
-            for (uint year = 0; year < DataSheet.turns_number; year++)
+            awareness_changes = new List<CTChange>[DataSheet.TURNS_NUMBER];
+            for (uint year = 0; year < DataSheet.TURNS_NUMBER; year++)
             {
                 awareness_changes[year] = new List<CTChange>();
             }

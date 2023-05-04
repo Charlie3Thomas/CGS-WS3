@@ -3,6 +3,7 @@ using CT.Data.Changes;
 using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -31,5 +32,9 @@ public class ApplyDisaster : CTChange
         // Look at all modifiers to disaster impact and apply them to the base disaster impact value
         // Apply final modified disaster impact
         _year.ApplyCosts(DataSheet.GetDisasterImpact(disaster) * intensity, CTCostType.Disaster);
+
+        // Switch to city view if in graph view
+        // Disaster event manager
+            // Determines when events (animation/audio/UI etc update)
     }
 }

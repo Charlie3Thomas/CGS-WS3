@@ -49,7 +49,7 @@ public class ComputerButton : MonoBehaviour
                 //YearData._INSTANCE.current_year = ComputerController.Instance.desiredYear;
                 //Debug.Log("Year confirmed! The year is now: " + YearData._INSTANCE.current_year);
 
-                uint turn = (uint)((ComputerController.Instance.desiredYear - DataSheet.starting_year) / 5);
+                uint turn = (uint)((ComputerController.Instance.desiredYear - DataSheet.STARTING_YEAR) / 5);
 
                 GameManager._INSTANCE.OnClickCheckoutYearButton(turn);
 
@@ -69,5 +69,16 @@ public class ComputerButton : MonoBehaviour
 
                 break;
         }
+    }
+
+    void OnMouseOver()
+    {
+        if (type == buttonType.SHOW_GRAPH || type == buttonType.CONFIRM_YEAR)
+            CustomCursor.Instance.OnHoverOverResourceSelector();
+    }
+    private void OnMouseExit()
+    {
+        if (type == buttonType.SHOW_GRAPH || type == buttonType.CONFIRM_YEAR)
+            CustomCursor.Instance.SetDefaultCursor();
     }
 }

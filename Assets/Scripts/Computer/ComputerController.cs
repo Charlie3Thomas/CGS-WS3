@@ -249,9 +249,9 @@ public class ComputerController : MonoBehaviour
         // Moving the year slider
         if (yearSliding)
         {
-            float remappedValue = RAUtility.Remap(desiredYear, DataSheet.starting_year, DataSheet.end_year, minYearSlider, maxYearSlider);
+            float remappedValue = RAUtility.Remap(desiredYear, DataSheet.STARTING_YEAR, DataSheet.END_YEAR, minYearSlider, maxYearSlider);
             float newRemappedValue = remappedValue + mouseDelta.x * 0.025f;
-            desiredYear = (int)RAUtility.Remap(newRemappedValue, minYearSlider, maxYearSlider, DataSheet.starting_year, DataSheet.end_year);
+            desiredYear = (int)RAUtility.Remap(newRemappedValue, minYearSlider, maxYearSlider, DataSheet.STARTING_YEAR, DataSheet.END_YEAR);
 
             if (desiredYear % 5 != 0)
             {
@@ -259,13 +259,13 @@ public class ComputerController : MonoBehaviour
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
             }
 
-            if (desiredYear < DataSheet.starting_year)
-                desiredYear = (int)DataSheet.starting_year;
+            if (desiredYear < DataSheet.STARTING_YEAR)
+                desiredYear = (int)DataSheet.STARTING_YEAR;
 
-            if (desiredYear > DataSheet.end_year)
-                desiredYear = (int)DataSheet.end_year;
+            if (desiredYear > DataSheet.END_YEAR)
+                desiredYear = (int)DataSheet.END_YEAR;
 
-            newRemappedValue = RAUtility.Remap(desiredYear, DataSheet.starting_year, DataSheet.end_year, minYearSlider, maxYearSlider);
+            newRemappedValue = RAUtility.Remap(desiredYear, DataSheet.STARTING_YEAR, DataSheet.END_YEAR, minYearSlider, maxYearSlider);
             yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
             UpdateSlider();
         }
@@ -485,10 +485,14 @@ public class ComputerController : MonoBehaviour
 
     private PointSelector FindHighestPointSelector(PointSelector excluded)
     {
-        PointSelector highestPointSelector = pointSelectors[0];
+        PointSelector highestPointSelector = null;
         for (int i = 0; i < pointSelectors.Count; i++)
         {
-            if ((pointSelectors[i].pointValue > highestPointSelector.pointValue) && pointSelectors[i] != excluded)
+            if (pointSelectors[i] == excluded)
+            {
+                continue;
+            }
+            if (highestPointSelector == null || pointSelectors[i].pointValue > highestPointSelector.pointValue)
             {
                 highestPointSelector = pointSelectors[i];
             }

@@ -109,7 +109,7 @@ namespace CT.Data
         }
 
         // Population 
-        private float data_population = DataSheet.starting_population;
+        private float data_population = DataSheet.STARTING_POPULATION;
         public int Population
         {
             get { return (int)data_population; }
@@ -293,7 +293,7 @@ namespace CT.Data
         public void ApplyModifiers()
         {
             // Apply base safety modifier based on planner total
-            cost_modifier_totals.w = (Population * faction_distribution.w) * DataSheet.planner_safety_factor;
+            cost_modifier_totals.w = (Population * faction_distribution.w) * DataSheet.PLANNER_SAFETY_FACTOR;
 
             // Technologies
             foreach (KeyValuePair<CTTechnologies, bool> kvp in technologies)
@@ -352,10 +352,10 @@ namespace CT.Data
             }
 
             // Prevent overflow or costs become boons / free
-            if (cost_modifier_totals.x < DataSheet.maximum_modifier_reduction) cost_modifier_totals.x = DataSheet.maximum_modifier_reduction; // Prevent money modifier becoming zero cost / bonus
-            if (cost_modifier_totals.y < DataSheet.maximum_modifier_reduction) cost_modifier_totals.y = DataSheet.maximum_modifier_reduction; // Prevent science modifier becoming zero cost / bonus
-            if (cost_modifier_totals.z < DataSheet.maximum_modifier_reduction) cost_modifier_totals.z = DataSheet.maximum_modifier_reduction; // Prevent food modifier becoming zero cost / bonus
-            if (cost_modifier_totals.w < DataSheet.maximum_modifier_reduction) cost_modifier_totals.w = DataSheet.maximum_modifier_reduction; // Prevent safety modifier becoming zero cost / bonus
+            if (cost_modifier_totals.x < DataSheet.MAX_MODIFIER_REDUCTION) cost_modifier_totals.x = DataSheet.MAX_MODIFIER_REDUCTION; // Prevent money modifier becoming zero cost / bonus
+            if (cost_modifier_totals.y < DataSheet.MAX_MODIFIER_REDUCTION) cost_modifier_totals.y = DataSheet.MAX_MODIFIER_REDUCTION; // Prevent science modifier becoming zero cost / bonus
+            if (cost_modifier_totals.z < DataSheet.MAX_MODIFIER_REDUCTION) cost_modifier_totals.z = DataSheet.MAX_MODIFIER_REDUCTION; // Prevent food modifier becoming zero cost / bonus
+            if (cost_modifier_totals.w < DataSheet.MAX_MODIFIER_REDUCTION) cost_modifier_totals.w = DataSheet.MAX_MODIFIER_REDUCTION; // Prevent safety modifier becoming zero cost / bonus
 
         }
 
@@ -487,7 +487,7 @@ namespace CT.Data
             if (_i == 0)
                 return;
 
-            Population += (int)(Population * DataSheet.food_surplus_population_gain);
+            Population += (int)(Population * DataSheet.FOOD_SURPLUS_POPULATION_GAIN);
             return;
         }
 
@@ -497,7 +497,7 @@ namespace CT.Data
             float delta = Food - _required;
             float delta_scale = ScalePopulationStarvation(delta, Population);
 
-            Population -= (int)(Population * (DataSheet.starvation_rate * delta_scale) + 1);
+            Population -= (int)(Population * (DataSheet.STARVATION_RATE * delta_scale) + 1);
 
             return;
         }
