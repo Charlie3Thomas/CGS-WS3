@@ -67,6 +67,10 @@ namespace CT.Lookup
 
                 case (CTDisasters.Tsunami):
                     return disaster_impact[CTDisasters.Tsunami];
+
+                case (CTDisasters.None):
+                    return new CTCost(0, 0, 0, 0);
+
                 default:
                     UnityEngine.Debug.LogError($"DataSheet.GetDisasterImpact{_disaster} not implemented");
                     return new CTCost(0, 0, 0, 0);
@@ -353,7 +357,8 @@ namespace CT.Lookup
         Earthquake,
         Tsunami,
         Volcano,
-        Tornado
+        Tornado,
+        None
     };
 
     public enum CTPolicies

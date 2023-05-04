@@ -289,6 +289,8 @@ namespace CT
 
             current_turn = _requested_turn;
 
+            Debug.Log($"GameManager.CheckDisasterInTurn: {CheckDisasterInTurn()}");
+
             CheckAllUserTechPurchasesValid();
 
             //GetChangesAtTurn();
@@ -627,6 +629,20 @@ namespace CT
             //Debug.Log($"GameManager.GetUnlockedTechnologiesInTurn: {ret.Count}, {turn_data.turn}");
 
             return ret;
+        }
+
+        public CTDisasters CheckDisasterInTurn()
+        {
+            foreach (CTChange change in game_changes[current_turn])
+            {
+                if (change.GetType() == typeof(ApplyDisaster))
+                {
+                    ApplyDisaster ret = (ApplyDisaster)change;
+                    return ret.disaster;
+                }
+            }
+            
+            return CTDisasters.None;
         }
 
         #endregion
