@@ -316,6 +316,8 @@ public class ComputerController : MonoBehaviour
             PolicyManager.instance.policyList.Remove(_hit.transform.GetComponent<PolicyCard>().policy);
             Destroy(_hit.transform.gameObject);
             PolicyManager.instance.ReplacePolicyCard();
+            AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.policySelected, null);
+            
         }
 
         // Policy cards hover

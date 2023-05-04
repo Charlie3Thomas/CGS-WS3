@@ -3,24 +3,13 @@ using FMODUnity;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
+
+
+//This is the audio manager and is responsible for holding references to different fmod ref scripts, as well as handling the life cycle for looping / complex audio events
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
-
-    [Serializable]
-    public class sfxLib
-    {
-        public string Name;
-        public EventReference sfxPath;
-    }
-
-    [Header("Volume Sliders")]
-    public float masterVolume = 0.9f;
-    public float bgVolume = 0.5f;
-    public float sfxVolume = 0.5f;
-    public int testIndex = 2;
 
     EventInstance ambienceInstance;
     EventInstance musicInstance;
@@ -64,7 +53,11 @@ public class AudioManager : MonoBehaviour
          StartMusic();
     }
 
-   
+    public void PlayDisasterAudio()
+    {
+
+    }
+
 
     public void StartOceanAmbience(Transform transform)
     {
