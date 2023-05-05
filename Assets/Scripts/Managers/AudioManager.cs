@@ -3,7 +3,7 @@ using FMODUnity;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
+using CT.Lookup;
 
 
 //This is the audio manager and is responsible for holding references to different fmod ref scripts, as well as handling the life cycle for looping / complex audio events
@@ -53,9 +53,31 @@ public class AudioManager : MonoBehaviour
          StartMusic();
     }
 
-    public void PlayDisasterAudio()
+    public void PlayDisasterAudio(CTDisasters disasterType, float intensity)
     {
+        FmodParameters.SetGlobalParamByName("Intensity", intensity); //Set global parm value
+        switch(disasterType)
+        {
+            case (CTDisasters.Earthquake):
+            Debug.Log("Playing: " + disasterType);
+            AudioPlayback.PlayOneShot(ambienceEvents.earthQuakeDisaster, null);
+            break;
 
+            case (CTDisasters.Tsunami):
+            Debug.Log("Playing: " + disasterType);
+            AudioPlayback.PlayOneShot(ambienceEvents.tsunamiDisaster, null);
+            break;
+
+            case (CTDisasters.Volcano):
+            Debug.Log("Playing: " + disasterType);
+            AudioPlayback.PlayOneShot(ambienceEvents.eruptionDisaster, null);
+            break;
+
+            case (CTDisasters.Tornado):
+            Debug.Log("Playing: " + disasterType);
+            AudioPlayback.PlayOneShot(ambienceEvents.tornadoDisaster, null);
+            break;
+        }
     }
 
 
