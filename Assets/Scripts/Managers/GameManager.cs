@@ -290,7 +290,7 @@ namespace CT
         public void OnClickCheckoutYearButton(uint _requested_turn)
         {
             //Debug.Log("GameManager.OnClickCheckoutYearButton" + _year);
-
+            AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn(), GetDisasterIntensityAtTurn(current_turn));
             // Don't allow user to checkout year if the requested turn is the current turn
             if (_requested_turn == current_turn)
                 return;
@@ -334,6 +334,8 @@ namespace CT
             Debug.Log($"{turn_data.turn} Planners ratio: {turn_data.GetFactionDistribution().w} SafetyFactor: {turn_data.GetSafetyFactor()}");
 
             AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn());
+            
+
             
         }
 

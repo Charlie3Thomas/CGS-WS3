@@ -1,7 +1,7 @@
 using FMOD.Studio;
 using FMODUnity;
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using CT.Lookup;
 
@@ -45,24 +45,39 @@ public class AudioManager : MonoBehaviour
         StartMusic();
     }
 
-    public void StartDisasterAudio(CTDisasters disaster)
+    public void StartDisasterAudio(CTDisasters disaster, float intensity)
     {
+        if(intensity != -1f && disaster != CTDisasters.None) //Check charlies no disaster -1 val to not set param 
+        {
+            FmodParameters.SetGlobalParamByName("Intensity", intensity);
+            FmodParameters.SetParamByLabelName(musicInstance, "Play", "Play");
+        }
+
+        Debug.Log("Audio disaster:" + disaster + " Intensity: " + intensity);
         switch(disaster)
         {
             case (CTDisasters.Earthquake):
             AudioPlayback.PlayOneShot(ambienceEvents.earthquakeDisaster, null);
+            AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            StartCoroutine("TenseMusicTimer");
             break;
 
             case (CTDisasters.Tsunami):
             AudioPlayback.PlayOneShot(ambienceEvents.tsunamiDisaster, null);
+            AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            StartCoroutine("TenseMusicTimer");
             break;
 
             case (CTDisasters.Volcano):
             AudioPlayback.PlayOneShot(ambienceEvents.volcanoDisaster, null);
+            AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            StartCoroutine("TenseMusicTimer");
             break;
             
             case (CTDisasters.Tornado):
             AudioPlayback.PlayOneShot(ambienceEvents.tornadoDisaster, null);
+            AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            StartCoroutine("TenseMusicTimer");
             break;
 
             default:
@@ -71,7 +86,21 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-   
+    private IEnumerator TenseMusicTimer()
+    {
+        yield return new WaitForSeconds(20f);
+        FmodParameters.SetParamByLabelName(musicInstance, "Play", "Stop");
+
+        //yield return new WaitForSeconds(WaitTime);
+
+        musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        musicInstance.release();
+        
+        yield return new WaitForSeconds(3f);
+
+        FmodParameters.SetGlobalParamByName("Intensity", 0f);
+        StartMusic();
+    }
 
     public void StartOceanAmbience(Transform transform)
     {
