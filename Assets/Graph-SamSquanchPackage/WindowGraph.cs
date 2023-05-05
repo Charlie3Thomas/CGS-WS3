@@ -50,11 +50,11 @@ public class WindowGraph : MonoBehaviour
        instance = this;
        //Set up references 
        graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
-       labelTemplateX = graphContainer.Find("LabelTemplateX").GetComponent<RectTransform>();
-       labelTemplateY = graphContainer.Find("LabelTemplateY").GetComponent<RectTransform>();
+       //labelTemplateX = graphContainer.Find("LabelTemplateX").GetComponent<RectTransform>();
+       //labelTemplateY = graphContainer.Find("LabelTemplateY").GetComponent<RectTransform>();
        dashTemplateX = graphContainer.Find("DashTemplateX").GetComponent<RectTransform>();
        dashTemplateY = graphContainer.Find("DashTemplateY").GetComponent<RectTransform>();
-       tooltipGameObject = graphContainer.Find("GraphToolTip").gameObject;
+      // tooltipGameObject = graphContainer.Find("GraphToolTip").gameObject;
 
        gameObjectList = new List<GameObject>();
        graphVisualObjectList = new List<IGraphVisualObject>();
@@ -187,23 +187,23 @@ public class WindowGraph : MonoBehaviour
   
   public static void ShowToolTip_Static(string tooltipText, Vector2 anchoredPosition)
   {
-     instance.ShowToolTip(tooltipText, anchoredPosition);
+    // instance.ShowToolTip(tooltipText, anchoredPosition);
   }
   private void ShowToolTip(string tooltipText, Vector2 anchoredPosition)
   {
-    tooltipGameObject.SetActive(true);
+    //tooltipGameObject.SetActive(true);
     
-    tooltipGameObject.GetComponent<RectTransform>().anchoredPosition = anchoredPosition;
-    Text tooltipUIText = tooltipGameObject.transform.Find("Text").GetComponent<Text>();
-    tooltipUIText.text = tooltipText;
+    //tooltipGameObject.GetComponent<RectTransform>().anchoredPosition = anchoredPosition;
+    //Text tooltipUIText = tooltipGameObject.transform.Find("Text").GetComponent<Text>();
+    //tooltipUIText.text = tooltipText;
 
-    float textPaddingSize = 4f;
+    //float textPaddingSize = 4f;
 
-    Vector2 backgroundSize = new Vector2(tooltipUIText.preferredWidth + textPaddingSize * 2f, tooltipUIText.preferredHeight + textPaddingSize * 2f);
+    //Vector2 backgroundSize = new Vector2(tooltipUIText.preferredWidth + textPaddingSize * 2f, tooltipUIText.preferredHeight + textPaddingSize * 2f);
 
-    tooltipGameObject.transform.Find("Background").GetComponent<RectTransform>().sizeDelta = backgroundSize;
+  //  tooltipGameObject.transform.Find("Background").GetComponent<RectTransform>().sizeDelta = backgroundSize;
     
-    tooltipGameObject.transform.SetAsLastSibling(); //So it shows up on top of graph
+    //tooltipGameObject.transform.SetAsLastSibling(); //So it shows up on top of graph
   }
 
     public void UpdateAndShowGraphs(List<float> moneyValues, List<float> scienceValues, List<float> foodValues, List<float> popValues)
@@ -237,32 +237,32 @@ public class WindowGraph : MonoBehaviour
 
   public static void HideToolTip_Static()
   {
-    instance.HideToolTip();
+   // instance.HideToolTip();
   }
 
   private void HideToolTip()
   {
-    tooltipGameObject.SetActive(false);
+    //tooltipGameObject.SetActive(false);
   }
 
   private void SetAxisLabelX(Func<int, string> getAxisLabelX)
   {
-      ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount, getAxisLabelX, this.getAxisLabelY);
+    //  ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount, getAxisLabelX, this.getAxisLabelY);
   }
   
   private void SetAxisLabelY(Func<float, string> getAxisLabelY)
   {
-      ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount, this.getAxisLabelX, getAxisLabelY);
+     // ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount, this.getAxisLabelX, getAxisLabelY);
   }
 
   private void IncreaseVisibleAmount()
   {
-      ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount + 1, this.getAxisLabelX, this.getAxisLabelY);
+     /// ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount + 1, this.getAxisLabelX, this.getAxisLabelY);
   }
 
   private void DecreaseVisibleAmount()
   {
-      ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount - 1, this.getAxisLabelX, this.getAxisLabelY);
+    ///  ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount - 1, this.getAxisLabelX, this.getAxisLabelY);
   }
 
 
@@ -352,12 +352,12 @@ public class WindowGraph : MonoBehaviour
        
         
         //Set up X axis labels for graph values
-        RectTransform labelX = Instantiate(labelTemplateX);
-        labelX.SetParent(graphContainer, false);
-        labelX.gameObject.SetActive(true);
-        labelX.anchoredPosition = new Vector2(xPosition - 5f, 0f);
-        labelX.GetComponent<Text>().text = getAxisLabelX(i);
-        gameObjectList.Add(labelX.gameObject);
+       // RectTransform labelX = Instantiate(labelTemplateX);
+        //labelX.SetParent(graphContainer, false);
+        //labelX.gameObject.SetActive(true);
+       // labelX.anchoredPosition = new Vector2(xPosition - 5f, 0f);
+       // labelX.GetComponent<Text>().text = getAxisLabelX(i);
+       // gameObjectList.Add(labelX.gameObject);
 
         //Setting the positions for dash sprites for Y axis (Yes it is supposed to be here even tho X labels are made here)
         RectTransform dashY = Instantiate(dashTemplateY);
@@ -376,13 +376,13 @@ public class WindowGraph : MonoBehaviour
       for(int i = 0; i <= serpratorCount; i++)
       {
         //Set up Y axis labels for graph values
-        RectTransform labelY = Instantiate(labelTemplateY);
-        labelY.SetParent(graphContainer, false);
-        labelY.gameObject.SetActive(true);
-        float normalizedValue = i * 1f / serpratorCount; 
-        labelY.anchoredPosition = new Vector2(-10f, (normalizedValue * graphHeight));
-        labelY.GetComponent<Text>().text = getAxisLabelY(yMinimum + (normalizedValue * (yMaximum - yMinimum)));
-        gameObjectList.Add(labelY.gameObject);
+        //RectTransform labelY = Instantiate(labelTemplateY);
+       // labelY.SetParent(graphContainer, false);
+       // labelY.gameObject.SetActive(true);
+       float normalizedValue = i * 1f / serpratorCount; 
+       // labelY.anchoredPosition = new Vector2(-10f, (normalizedValue * graphHeight));
+       // labelY.GetComponent<Text>().text = getAxisLabelY(yMinimum + (normalizedValue * (yMaximum - yMinimum)));
+       // gameObjectList.Add(labelY.gameObject);
 
         //Setting the positions for dash sprites for X axis (Yes it is supposed to be here even tho Y labels are made here)
         RectTransform dashX = Instantiate(dashTemplateX);
