@@ -327,6 +327,7 @@ public class ComputerController : MonoBehaviour
             //PolicyManager.instance.ReplacePolicyCard(_hit.transform.GetComponent<CTPolicyContainer>().GetCurrentPolicy().ID);
             CTPolicyContainer test = _hit.transform.GetComponent<CTPolicyContainer>();
             PolicyManager.instance.SelectPolicy(test.GetCurrentPolicy().ID);
+            AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.policySelected, null);
         }
 
         // Policy cards hover
