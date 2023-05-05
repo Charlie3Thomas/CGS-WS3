@@ -458,6 +458,12 @@ public class ComputerController : MonoBehaviour
 
     }
 
+    public void RefreshGraph()
+    {
+        RAUtility.Vector4List timeLineResources = GameManager._INSTANCE.GetResourcesAcrossYears();
+        graph.UpdateAndShowGraphs(timeLineResources.x, timeLineResources.y, timeLineResources.z, timeLineResources.w);
+    }
+
     public void UpdateSlider()
     {
         float rectOffset = 148.545f;

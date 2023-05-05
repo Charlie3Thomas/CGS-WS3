@@ -46,8 +46,7 @@ public class ComputerButton : MonoBehaviour
                     // Get index by name instead in future, im just super tired right now
 
                     // Plot graph with necessary values when showing graph
-                    RAUtility.Vector4List timeLineresources = GameManager._INSTANCE.GetResourcesAcrossYears();
-                    ComputerController.Instance.graph.UpdateAndShowGraphs(timeLineresources.x, timeLineresources.y, timeLineresources.z, timeLineresources.w);
+                    ComputerController.Instance.RefreshGraph();
 
                     ComputerController.Instance.showGraph = !ComputerController.Instance.showGraph;
                     ComputerController.Instance.screen.SetActive(!ComputerController.Instance.showGraph);
@@ -68,8 +67,7 @@ public class ComputerButton : MonoBehaviour
                     GameManager._INSTANCE.OnClickCheckoutYearButton(turn);
 
                     // Plot graph with necessary values when year changes in case graph is already showing and we need to update it
-                    RAUtility.Vector4List timeLineresources = GameManager._INSTANCE.GetResourcesAcrossYears();
-                    ComputerController.Instance.graph.UpdateAndShowGraphs(timeLineresources.x, timeLineresources.y, timeLineresources.z, timeLineresources.w);
+                    ComputerController.Instance.RefreshGraph();
 
                     // Refresh Policies
                     PolicyManager.instance.LoadPoliciesForTurn();
