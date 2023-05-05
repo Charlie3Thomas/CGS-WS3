@@ -99,8 +99,6 @@ public class TechNode : MonoBehaviour
                 //mat.SetVector("_Color", Lit * 8);
                 //tree.UpdateBuffs(buffs);
                 SpecialCase();
-                // Refresh graph every time player purchases a node?
-                ComputerController.Instance.RefreshGraph();
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "Unlocked"));
                 UpdateTechNodes();
             }

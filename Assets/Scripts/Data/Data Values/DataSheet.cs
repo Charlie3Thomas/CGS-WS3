@@ -24,7 +24,7 @@ namespace CT.Lookup
         public static readonly float    POLICY_CARD_MIN_SCALE           = 25.0f;
         public static readonly float    POLICY_CARD_MAX_SCALE           = 500.0f;
 
-        public static readonly float    PLANNER_SAFETY_FACTOR           = -0.001f;
+        public static readonly float    PLANNER_SAFETY_FACTOR           = -0.01f;
         public static readonly float    MAX_MODIFIER_REDUCTION          = -0.95f;
         #endregion
 
@@ -39,10 +39,10 @@ namespace CT.Lookup
         public static readonly CTCost FARMERS_NET    = new CTCost( 0.0f,  0.0f, -1.0f, 0.0f);
         public static readonly CTCost UNEMPLOYED_NET = new CTCost( 1.0f,  0.0f,  1.0f, 0.0f);
 
-        public static Color WORKER_COLOUR = new Color(1.0f, 0.0f, 0.0f, 1.0f);          // RED
-        public static Color SCIENTIST_COLOUR = new Color(0.0f, 1.0f, 1.0f, 1.0f);       // CYAN
-        public static Color PLANNER_COLOUR = new Color(1.0f, 1.0f, 0.0f, 1.0f);       // YELLOW
-        public static Color FARMER_COLOUR = new Color(0.0f, 1.0f, 0.0f, 1.0f);       // GREEN
+        public static Color WORKER_COLOUR = new Color(0.0f, 1.0f, 1.0f, 1.0f);          // RED
+        public static Color SCIENTIST_COLOUR = new Color(0.0f, 1.0f, 1.0f, 1.0f);       // BLUE
+        public static Color PLANNER_COLOUR = new Color(0.0f, 1.0f, 1.0f, 1.0f);       // YELLOW
+        public static Color FARMER_COLOUR = new Color(0.0f, 1.0f, 1.0f, 1.0f);       // GREEN
 
 
         public static CTCost GetTechPrice(CTTechnologies _tech)
