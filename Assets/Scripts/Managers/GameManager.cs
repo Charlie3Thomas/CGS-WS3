@@ -333,7 +333,7 @@ namespace CT
 
             Debug.Log($"{turn_data.turn} Planners ratio: {turn_data.GetFactionDistribution().w} SafetyFactor: {turn_data.GetSafetyFactor()}");
 
-            AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn());
+            
             
 
             
