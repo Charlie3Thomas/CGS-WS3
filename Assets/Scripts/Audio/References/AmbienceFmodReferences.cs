@@ -10,4 +10,10 @@ public class AmbienceFmodReferences : MonoBehaviour
     public EventReference volcanoAmbienceEvent;
     public EventReference windAmbienceEvent;
     public EventReference cityAmbienceEvent;
+
+    public EventReference earthquakeDisaster;
+    public EventReference tsunamiDisaster;
+    public EventReference volcanoDisaster;
+    public EventReference tornadoDisaster;
+
 }

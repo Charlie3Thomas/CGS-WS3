@@ -3,25 +3,13 @@ using FMODUnity;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using CT.Lookup;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
-    [Serializable]
-    public class sfxLib
-    {
-        public string Name;
-        public EventReference sfxPath;
-    }
-
-    [Header("Volume Sliders")]
-    public float masterVolume = 0.9f;
-    public float bgVolume = 0.5f;
-    public float sfxVolume = 0.5f;
-    public int testIndex = 2;
-
+   
     EventInstance ambienceInstance;
     EventInstance musicInstance;
     EventInstance chargeInstance;
@@ -36,13 +24,6 @@ public class AudioManager : MonoBehaviour
     public UIFmodReferences uiEvents;
     public AmbienceFmodReferences ambienceEvents;
 
-
-    /*
-    public EventReference ambienceEvent;
-    public EventReference musicEvent;
-    private static string sfxDir = "event:/SFX/";
-    public List<sfxLib> sfxObjectsList;
-    */
     void Awake()
     {
         if (Instance == null)
@@ -59,9 +40,35 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-         FmodRouting.SetUpBuses();
-         StartAmbience();
-         StartMusic();
+        FmodRouting.SetUpBuses();
+        StartAmbience();
+        StartMusic();
+    }
+
+    public void StartDisasterAudio(CTDisasters disaster)
+    {
+        switch(disaster)
+        {
+            case (CTDisasters.Earthquake):
+            AudioPlayback.PlayOneShot(ambienceEvents.earthquakeDisaster, null);
+            break;
+
+            case (CTDisasters.Tsunami):
+            AudioPlayback.PlayOneShot(ambienceEvents.tsunamiDisaster, null);
+            break;
+
+            case (CTDisasters.Volcano):
+            AudioPlayback.PlayOneShot(ambienceEvents.volcanoDisaster, null);
+            break;
+            
+            case (CTDisasters.Tornado):
+            AudioPlayback.PlayOneShot(ambienceEvents.tornadoDisaster, null);
+            break;
+
+            default:
+            //No disaster
+            break;
+        }
     }
 
    
