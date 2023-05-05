@@ -24,7 +24,7 @@ namespace CT.Lookup
         public static readonly float    POLICY_CARD_MIN_SCALE           = 25.0f;
         public static readonly float    POLICY_CARD_MAX_SCALE           = 500.0f;
 
-        public static readonly float    PLANNER_SAFETY_FACTOR           = -0.01f;
+        public static readonly float    PLANNER_SAFETY_FACTOR           = -0.001f;
         public static readonly float    MAX_MODIFIER_REDUCTION          = -0.95f;
         #endregion
 
