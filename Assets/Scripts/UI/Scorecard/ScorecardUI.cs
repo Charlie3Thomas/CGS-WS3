@@ -40,6 +40,14 @@ public class ScorecardUI : MonoBehaviour
         incrementRate2 = disasterPoints / (50 * 4);
         incrementRate3 = nodePoints / (50 * 4);
         incrementRate4 = turnsPoints / (50 * 4);
+       
+    }
+    
+    void Start()
+    {
+        FadeInAnimation();
+        ScoreBoardAudio.Instance.PlayScoreRiseAudio();
+
     }
 
 
@@ -84,7 +92,7 @@ public class ScorecardUI : MonoBehaviour
         {
             counter1 += incrementRate1;
             pointsUI[0].text = counter1.ToString();
-            ScoreBoardAudio.Instance.PlayScoreRiseAudio();
+           
         }
        
 
