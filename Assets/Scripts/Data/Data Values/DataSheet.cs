@@ -1,33 +1,31 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CT.Lookup
 {
-    using Data;
-    using FMOD;
-    using System.Linq;
 
     public static class DataSheet
     {
         #region Base Values
-        public static readonly uint     turn_steps                      = 5;
-        public static readonly uint     starting_year                   = 1900;
-        public static readonly uint     end_year                        = 2100;
-        public static readonly uint     turns_number                    = (end_year - starting_year) / turn_steps;
-        public static readonly int      starting_money                  = 10000;
-        public static readonly int      starting_science                = 1000;
-        public static readonly int      starting_food                   = 1000;
-        public static readonly float    year_change_awareness_rate      = 0.05f;
-        public static readonly float    year_override_awareness_rate    = 0.15f;
+        public static readonly uint     TURN_STEPS                      = 5;
+        public static readonly uint     STARTING_YEAR                   = 1900;
+        public static readonly uint     END_YEAR                        = 2100;
+        public static readonly uint     TURNS_NUMBER                    = (END_YEAR - STARTING_YEAR) / TURN_STEPS;
+        public static readonly int      STARTING_MONEY                  = 100000;
+        public static readonly int      STARTING_SCIENCE                = 100000;
+        public static readonly int      STARTING_FOOD                   = 100000;
+        public static readonly float    YEAR_CHANGE_AWARENESS_RATE      = 0.05f;
+        public static readonly float    YEAR_OVERRIDE_AWARENESS_RATE    = 0.15f;
 
-        public static readonly int      starting_population             = 1000; 
-        public static readonly float    starvation_rate                 = 0.40f;
-        public static readonly float    food_surplus_population_gain    = 0.10f;
+        public static readonly int      STARTING_POPULATION             = 1000; 
+        public static readonly float    STARVATION_RATE                 = 0.40f;
+        public static readonly float    FOOD_SURPLUS_POPULATION_GAIN    = 0.10f;
 
-        public static readonly float    policy_card_min_scale           = 25.0f;
-        public static readonly float    policy_card_max_scale           = 500.0f;
+        public static readonly float    POLICY_CARD_MIN_SCALE           = 25.0f;
+        public static readonly float    POLICY_CARD_MAX_SCALE           = 500.0f;
 
-        public static readonly float    planner_safety_factor           = -0.01f;
-        public static readonly float    maximum_modifier_reduction      = -0.95f;
+        public static readonly float    PLANNER_SAFETY_FACTOR           = -0.01f;
+        public static readonly float    MAX_MODIFIER_REDUCTION          = -0.95f;
         #endregion
 
 
@@ -35,11 +33,16 @@ namespace CT.Lookup
         // Positive numbers show the cost
         // Negative numbers show production
         // A negative cost is a boon
-        public static readonly CTCost worker_net     = new CTCost(-3.0f,  0.0f,  1.0f, 0.0f);
-        public static readonly CTCost scientist_net  = new CTCost( 0.0f, -1.0f,  1.0f, 0.0f);
-        public static readonly CTCost planners_net   = new CTCost( 0.0f,  5.0f,  1.0f, 0.0f);
-        public static readonly CTCost farmers_net    = new CTCost( 0.0f,  0.0f, -1.0f, 0.0f);
-        public static readonly CTCost unemployed_net = new CTCost( 1.0f,  0.0f,  1.0f, 0.0f);
+        public static readonly CTCost WORKER_NET     = new CTCost(-3.0f,  0.0f,  1.0f, 0.0f);
+        public static readonly CTCost SCIENTIST_NET  = new CTCost( 0.0f, -1.0f,  1.0f, 0.0f);
+        public static readonly CTCost PLANNERS_NET   = new CTCost( 0.0f,  5.0f,  1.0f, 0.0f);
+        public static readonly CTCost FARMERS_NET    = new CTCost( 0.0f,  0.0f, -1.0f, 0.0f);
+        public static readonly CTCost UNEMPLOYED_NET = new CTCost( 1.0f,  0.0f,  1.0f, 0.0f);
+
+        public static Color WORKER_COLOUR = new Color(1.0f, 0.0f, 0.0f, 1.0f);          // RED
+        public static Color SCIENTIST_COLOUR = new Color(0.0f, 1.0f, 1.0f, 1.0f);       // CYAN
+        public static Color PLANNER_COLOUR = new Color(1.0f, 1.0f, 0.0f, 1.0f);       // YELLOW
+        public static Color FARMER_COLOUR = new Color(0.0f, 1.0f, 0.0f, 1.0f);       // GREEN
 
 
         public static CTCost GetTechPrice(CTTechnologies _tech)
@@ -64,6 +67,10 @@ namespace CT.Lookup
 
                 case (CTDisasters.Tsunami):
                     return disaster_impact[CTDisasters.Tsunami];
+
+                case (CTDisasters.None):
+                    return new CTCost(0, 0, 0, 0);
+
                 default:
                     UnityEngine.Debug.LogError($"DataSheet.GetDisasterImpact{_disaster} not implemented");
                     return new CTCost(0, 0, 0, 0);
@@ -350,7 +357,8 @@ namespace CT.Lookup
         Earthquake,
         Tsunami,
         Volcano,
-        Tornado
+        Tornado,
+        None
     };
 
     public enum CTPolicies
