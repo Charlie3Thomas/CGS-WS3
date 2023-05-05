@@ -20,7 +20,6 @@ public class ApplyDisaster : CTChange
         this.disaster = _disaster.type;
         this.turn = _disaster.turn;
         this.intensity = _disaster.intensity;
-         
     }
 
     public CTDisasters disaster;
@@ -32,8 +31,5 @@ public class ApplyDisaster : CTChange
         // Look at all modifiers to disaster impact and apply them to the base disaster impact value
         // Apply final modified disaster impact
         _year.ApplyCosts(DataSheet.GetDisasterImpact(disaster) * intensity, CTCostType.Disaster);
-        
-        AudioManager.Instance.PlayDisasterAudio(disaster, intensity); //Pass disaster enum and intensity to audio manager to trigger event + param
-
     }
 }

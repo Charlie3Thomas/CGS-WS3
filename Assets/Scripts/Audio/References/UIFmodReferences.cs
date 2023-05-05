@@ -17,5 +17,4 @@ public class UIFmodReferences : MonoBehaviour
     public EventReference pipEvent;
     public EventReference keyboardEvent;
     public EventReference nodeSelectorEvent;
-    public EventReference policySelected;
 }
