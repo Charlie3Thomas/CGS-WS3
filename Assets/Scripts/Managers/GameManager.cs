@@ -492,6 +492,27 @@ namespace CT
 
         #region Utility
 
+        public RAUtility.Vector4List GetResourcesAcrossYears()
+        {
+            CTTurnData data = new CTTurnData(initial_year);
+            List<float> moneys = new List<float>();
+            List<float> sciences = new List<float>();
+            List<float> foods = new List<float>();
+            List<float> populations = new List<float>();
+
+            for (uint i = 0; i < 39; i++)
+            {
+                data = GetYearData(i);
+                moneys.Add(data.Money);
+                sciences.Add(data.Science);
+                foods.Add(data.Food);
+                populations.Add(data.Population);
+                //Debug.Log($"Year {i} has {data.Money} money, {data.Science} science, {data.Food} food, {data.Population} population");
+            }
+
+            return new RAUtility.Vector4List(moneys, sciences, foods, populations);
+        }
+
         private float GetFactionDistribtion(CTFaction _faction, CTTurnData _turn)
         {
             switch (_faction)

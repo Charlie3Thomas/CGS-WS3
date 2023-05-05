@@ -1,4 +1,5 @@
 using CT;
+using CT.Data;
 using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,52 +23,75 @@ public class ComputerButton : MonoBehaviour
         switch (type)
         {
             case buttonType.GENERIC:
-                //Debug.Log("Generic button press");
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.keyboardEvent, null);
-                break;
+                {
+                    //Debug.Log("Generic button press");
+                    AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.keyboardEvent, null);
+                    break;
+                }
 
             case buttonType.RESET:
-                // Reset
-                // Debug.Log("Reset");
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+                {
+                    // Reset
+                    // Debug.Log("Reset");
+                    AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
 
-                break;
+                    break;
+                }
+
             case buttonType.SHOW_GRAPH:
-                // Confirm allocation
-                Debug.Log("Show Graph");
-                // Allocates the populations/factions and registers turn in a list as well as sorts the list in resource manager
-                // Get index by name instead in future, im just super tired right now
-                ComputerController.Instance.showGraph = !ComputerController.Instance.showGraph;
-                ComputerController.Instance.screen.SetActive(!ComputerController.Instance.showGraph);
-                ComputerController.Instance.graph.SetActive(ComputerController.Instance.showGraph);
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+                {
+                    // Confirm allocation
+                    Debug.Log("Show Graph");
+                    // Allocates the populations/factions and registers turn in a list as well as sorts the list in resource manager
+                    // Get index by name instead in future, im just super tired right now
 
-                break;
+                    // Plot graph with necessary values when showing graph
+                    RAUtility.Vector4List timeLineresources = GameManager._INSTANCE.GetResourcesAcrossYears();
+                    ComputerController.Instance.graph.UpdateAndShowGraphs(timeLineresources.x, timeLineresources.y, timeLineresources.z, timeLineresources.w);
+
+                    ComputerController.Instance.showGraph = !ComputerController.Instance.showGraph;
+                    ComputerController.Instance.screen.SetActive(!ComputerController.Instance.showGraph);
+                    ComputerController.Instance.graphGO.SetActive(ComputerController.Instance.showGraph);
+                    AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+
+                    break;
+                }
 
             case buttonType.CONFIRM_YEAR:
-                // Confirm year
-                //YearData._INSTANCE.current_year = ComputerController.Instance.desiredYear;
-                //Debug.Log("Year confirmed! The year is now: " + YearData._INSTANCE.current_year);
+                {
+                    // Confirm year
+                    //YearData._INSTANCE.current_year = ComputerController.Instance.desiredYear;
+                    //Debug.Log("Year confirmed! The year is now: " + YearData._INSTANCE.current_year);
 
-                uint turn = (uint)((ComputerController.Instance.desiredYear - DataSheet.STARTING_YEAR) / 5);
+                    uint turn = (uint)((ComputerController.Instance.desiredYear - DataSheet.STARTING_YEAR) / 5);
 
-                GameManager._INSTANCE.OnClickCheckoutYearButton(turn);
+                    GameManager._INSTANCE.OnClickCheckoutYearButton(turn);
 
-                // Refresh Policies
-                PolicyManager.instance.LoadPoliciesForTurn();
+                    // Plot graph with necessary values when year changes in case graph is already showing and we need to update it
+                    RAUtility.Vector4List timeLineresources = GameManager._INSTANCE.GetResourcesAcrossYears();
+                    ComputerController.Instance.graph.UpdateAndShowGraphs(timeLineresources.x, timeLineresources.y, timeLineresources.z, timeLineresources.w);
 
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+                    // Refresh Policies
+                    PolicyManager.instance.LoadPoliciesForTurn();
 
-                break;
+                    // Ensures colour of counter is correct on check out
+                    ComputerController.Instance.UpdateSlider();
+
+                    AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+
+                    break;
+                }
 
             case buttonType.JOURNAL_NOTEPAD:
-                // Change between journal and notepad
-                // Debug.Log("Change screen between notepad and journal");
-                ComputerController.Instance.notepad.SetActive(!ComputerController.Instance.notepad.activeSelf);
-                ComputerController.Instance.journal.SetActive(!ComputerController.Instance.journal.activeSelf);
-                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+                {
+                    // Change between journal and notepad
+                    // Debug.Log("Change screen between notepad and journal");
+                    ComputerController.Instance.notepad.SetActive(!ComputerController.Instance.notepad.activeSelf);
+                    ComputerController.Instance.journal.SetActive(!ComputerController.Instance.journal.activeSelf);
+                    AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
 
-                break;
+                    break;
+                }
         }
     }
 
