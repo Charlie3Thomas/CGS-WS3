@@ -21,26 +21,35 @@ public class ScorecardUI : MonoBehaviour
     private float counter2 = 0.0f;
     private float counter3 = 0.0f;
     private float counter4 = 0.0f;
+    private float counter5 = 0.0f;
 
     private float awarenessPoints=1000.0f;
     private float disasterPoints=25000.0f;
     private float nodePoints=20000f;
     private float turnsPoints=22000f;
+    private float totalPoints =100f;
 
     private float incrementRate1 =10f;
     private float incrementRate2 = 10f;
     private float incrementRate3 = 10f;
     private float incrementRate4 = 10f;
+    private float incrementRate5 = 10f;
 
 
 
     private void Awake()
     {
+
+       totalPoints = awarenessPoints + disasterPoints + nodePoints + turnsPoints;
+
         incrementRate1 = awarenessPoints / (50 * 4);
         incrementRate2 = disasterPoints / (50 * 4);
         incrementRate3 = nodePoints / (50 * 4);
         incrementRate4 = turnsPoints / (50 * 4);
-       
+        incrementRate5 = totalPoints / (50 * 4);
+
+
+
     }
     
     void Start()
@@ -115,7 +124,12 @@ public class ScorecardUI : MonoBehaviour
             counter4 += incrementRate4;
             pointsUI[3].text = counter4.ToString();
         }
-       
+
+        if (counter5 < totalPoints)
+        {
+            counter5 += incrementRate5;
+            pointsUI[4].text = counter5.ToString();
+        }
 
     }
 
