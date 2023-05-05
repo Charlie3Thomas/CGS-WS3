@@ -26,6 +26,7 @@ namespace CT
         public static GameManager _INSTANCE;
 
         // Changes
+        private ApplyDisaster[] disaster_timeline;
         private List<CTChange>[] game_changes;
         private List<CTChange>[] user_changes;
         private List<CTChange>[] awareness_changes;
@@ -84,6 +85,8 @@ namespace CT
             FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
 
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
+
+            //Debug.Log($"{current_turn}: Workers: {turn_data.GetFactionDistribution().y}, Scientists: {turn_data.GetFactionDistribution().x}, Farmers: {turn_data.GetFactionDistribution().z}, Planners: {turn_data.GetFactionDistribution().w}");
         }
 
         private void FixedUpdate()
@@ -97,6 +100,20 @@ namespace CT
         private void Initialise()
         {
             initial_year.Initialise(DataSheet.STARTING_MONEY, DataSheet.STARTING_SCIENCE, DataSheet.STARTING_FOOD, DataSheet.STARTING_POPULATION);
+
+            // Initialise disaster timeline
+            disaster_timeline = new ApplyDisaster[DataSheet.TURNS_NUMBER  + 1];
+            for (int i = 0; i < disaster_timeline.Length; i++)
+            {
+                disaster_timeline[i] = null;
+                //ApplyDisaster init = new ApplyDisaster();
+                //init.disaster = CTDisasters.None;
+                //init.intensity = -1.0f;
+                //init.turn = i;
+                //disaster_timeline[i] = init;
+            }
+
+            Debug.Log("Disaster Timeline initialised");
 
             // Initialise user changes list
             user_changes = new List<CTChange>[DataSheet.TURNS_NUMBER + 1];
@@ -128,16 +145,16 @@ namespace CT
 
             for (int i = 0; i <= _year; i++)
             {
-                // Disaster instances for year
+                // Game Changes for year
                 foreach (CTChange change in game_changes[i])
                     change.ApplyChange(ref ret);
 
-                // Technology changes for year
+                // User Changes for year
                 foreach (CTChange change in user_changes[i])
                     change.ApplyChange(ref ret);
 
                 // Get Total Modifiers for turn
-                ret.ApplyModifiers();
+                //ret.ApplyModifiers();                
 
                 // Apply net resource worth of each assigned population member for each turn between zero and requested turn
                 CTCost net_total = new CTCost(0, 0, 0, 0);
@@ -150,7 +167,11 @@ namespace CT
                 if (ret.Food >= ret.Population) { ret.GrowPopulation(i); }
                 else { ret.DecayPopulation(net_total.food); }
 
+                // Apply net faction produce/consumption
                 ret.ApplyCosts(net_total, CTCostType.Upkeep);
+
+                // Apply disaster events
+                disaster_timeline[i]?.ApplyChange(ref ret);
             }
 
             return ret;
@@ -269,7 +290,7 @@ namespace CT
         public void OnClickCheckoutYearButton(uint _requested_turn)
         {
             //Debug.Log("GameManager.OnClickCheckoutYearButton" + _year);
-
+            AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn(), GetDisasterIntensityAtTurn(current_turn));
             // Don't allow user to checkout year if the requested turn is the current turn
             if (_requested_turn == current_turn)
                 return;
@@ -289,8 +310,6 @@ namespace CT
 
             current_turn = _requested_turn;
 
-            Debug.Log($"GameManager.CheckDisasterInTurn: {CheckDisasterInTurn()}");
-
             CheckAllUserTechPurchasesValid();
 
             //GetChangesAtTurn();
@@ -303,14 +322,29 @@ namespace CT
             SetAwarenessUI();
             FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
+
+            //Debug.Log($"{current_turn}: Workers: {turn_data.GetFactionDistribution().y}, Scientists: {turn_data.GetFactionDistribution().x}, Farmers: {turn_data.GetFactionDistribution().z}, Planners: {turn_data.GetFactionDistribution().w}");
+
+            //Debug.Log(turn_data.GetSafetyFactor());
+
+            //turn_data.Logs();
+
+            //LogChangesInCurrentTurn();
+
+            Debug.Log($"{turn_data.turn} Planners ratio: {turn_data.GetFactionDistribution().w} SafetyFactor: {turn_data.GetSafetyFactor()}");
+
+            AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn());
+            
+
+            
         }
 
         private void UpdateFactionDistributionPips()
         {
-            float workers = turn_data.faction_distribution.x;
-            float scientists = turn_data.faction_distribution.y;
-            float farmers = turn_data.faction_distribution.z;
-            float planners = turn_data.faction_distribution.w;
+            float workers = turn_data.GetFactionDistribution().x;
+            float scientists = turn_data.GetFactionDistribution().y;
+            float farmers = turn_data.GetFactionDistribution().z;
+            float planners = turn_data.GetFactionDistribution().w;
 
             // This does not work as expected
             ComputerController.Instance.pointSelectors[0].pointValue = scientists; // Scientist
@@ -382,7 +416,7 @@ namespace CT
         {
             Vector4 requested_ratios = GetFactionDistribution();
 
-            Vector4 current_ratios = turn_data.faction_distribution;
+            Vector4 current_ratios = turn_data.GetFactionDistribution();
 
             //Should make sure that faction spread is not the same as the start of the turn before applying it as a "Change"
             Vector4 a = CTVector4Round(requested_ratios, 10);
@@ -442,10 +476,20 @@ namespace CT
             }
         }
 
-        public void AddDisastersToGameChanges(Disaster _disaster)
+        public void AddDisastersToGameChanges(List<Disaster> _disaster)
         {
+            //for (int i = 0; i < _disaster.Count; i++)
+            //{
+            //    disaster_timeline[i] = new ApplyDisaster(_disaster[i]);
+            //}
+
+            foreach (Disaster d in _disaster)
+            {
+                disaster_timeline[d.turn] = new ApplyDisaster(d);
+            }
+
             // Take generated disasters from the disaster manager and insert them into the game changes list
-            game_changes[_disaster.turn + 1].Add(new ApplyDisaster(_disaster));
+            //game_changes[_disaster.turn].Add(new ApplyDisaster(_disaster));
         }
 
 
@@ -492,21 +536,42 @@ namespace CT
 
         #region Utility
 
+        public RAUtility.Vector4List GetResourcesAcrossYears()
+        {
+            CTTurnData data = new CTTurnData(initial_year);
+            List<float> moneys = new List<float>();
+            List<float> sciences = new List<float>();
+            List<float> foods = new List<float>();
+            List<float> populations = new List<float>();
+
+            for (uint i = 0; i < DataSheet.TURNS_NUMBER - 1; i++)
+            {
+                data = GetYearData(i);
+                moneys.Add(data.Money);
+                sciences.Add(data.Science);
+                foods.Add(data.Food);
+                populations.Add(data.Population);
+                //Debug.Log($"Year {i} has {data.Money} money, {data.Science} science, {data.Food} food, {data.Population} population");
+            }
+
+            return new RAUtility.Vector4List(moneys, sciences, foods, populations);
+        }
+
         private float GetFactionDistribtion(CTFaction _faction, CTTurnData _turn)
         {
             switch (_faction)
             {
                 case CTFaction.Scientist:
-                    return (turn_data.faction_distribution.y);
+                    return (turn_data.GetFactionDistribution().y);
 
                 case CTFaction.Planner:
-                    return (turn_data.faction_distribution.w);
+                    return (turn_data.GetFactionDistribution().w);
 
                 case CTFaction.Farmer:
-                    return (turn_data.faction_distribution.z);
+                    return (turn_data.GetFactionDistribution().z);
 
                 case CTFaction.Worker:
-                    return (turn_data.faction_distribution.x);
+                    return (turn_data.GetFactionDistribution().x);
 
                 // Default at impossible error value
                 default:
@@ -641,8 +706,92 @@ namespace CT
                     return ret.disaster;
                 }
             }
-            
+
             return CTDisasters.None;
+        }
+
+        /// <summary>
+        /// Returns an ApplyDisaster object if a disaster was applied in the given turn, otherwise returns null.
+        /// To get current turn, pass in GameManager._INSTANCE.current_turn
+        /// </summary>
+        public ApplyDisaster GetDisasterDataAtTurn(uint _turn)
+        {
+            foreach (CTChange change in game_changes[_turn])
+            {
+                if (change.GetType() == typeof(ApplyDisaster))
+                {
+                    ApplyDisaster ret = (ApplyDisaster)change;
+
+                    if (ret.disaster == CTDisasters.None)
+                        return null;
+
+                    return ret;
+                }
+            }
+
+            return null;
+        }
+
+        public float GetDisasterIntensityAtTurn(uint _turn)
+        {
+            ApplyDisaster ret = GetDisasterDataAtTurn(_turn);
+            
+            return ret?.intensity ?? -1.0f; // Return error value
+        }
+
+        private void LogChangesInCurrentTurn()
+        {
+            string ret = $"\n";
+
+            foreach (CTChange c in game_changes[current_turn])
+            {
+                // For each disaster
+                if (c.GetType() == typeof(ApplyDisaster))
+                {
+                    ApplyDisaster ad = (ApplyDisaster)c;
+                    ret = $"{ret} Apply disaster :{ad.disaster} applied in game changes\n";
+                }
+
+                // For each set faction distribution
+                if (c.GetType() == typeof(SetFactionDistribution))
+                {
+                    SetFactionDistribution ad = (SetFactionDistribution)c;
+                    ret = $"{ret} SetFactionDistribution: {new Vector4(ad.worker_percentage, ad.farmer_percentage, ad.scientist_percentage, ad.planner_percentage)} applied in game changes\n";
+                }
+
+                // For each purchase technology
+                if (c.GetType() == typeof(PurchaseTechnology))
+                {
+                    PurchaseTechnology ad = (PurchaseTechnology)c;
+                    ret = $"{ret} PurchaseTechnology: {ad.tech} applied in game changes\n";
+                }
+            }
+
+            foreach (CTChange c in user_changes[current_turn])
+            {
+                // For each set faction distribution
+                if (c.GetType() == typeof(SetFactionDistribution))
+                {
+                    SetFactionDistribution ad = (SetFactionDistribution)c;
+                    ret = $"{ret} SetFactionDistribution applied in user changes\n";
+                }
+
+                // For each purchase technology
+                if (c.GetType() == typeof(PurchaseTechnology))
+                {
+                    PurchaseTechnology ad = (PurchaseTechnology)c;
+                    ret = $"{ret} PurchaseTechnology: {ad.tech} applied in user changes\n";
+                }
+
+                // For each set policy
+                if (c.GetType() == typeof(SetPolicy))
+                {
+                    SetPolicy ad = (SetPolicy)c;
+                    ret = $"{ret} SetPolicy: {ad.policy.ID} applied in user changes\n";
+                }
+            }
+
+            Debug.Log(ret);
         }
 
         #endregion

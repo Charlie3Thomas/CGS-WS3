@@ -1,27 +1,15 @@
 using FMOD.Studio;
 using FMODUnity;
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using CT.Lookup;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
-    [Serializable]
-    public class sfxLib
-    {
-        public string Name;
-        public EventReference sfxPath;
-    }
-
-    [Header("Volume Sliders")]
-    public float masterVolume = 0.9f;
-    public float bgVolume = 0.5f;
-    public float sfxVolume = 0.5f;
-    public int testIndex = 2;
-
+   
     EventInstance ambienceInstance;
     EventInstance musicInstance;
     EventInstance chargeInstance;
@@ -36,13 +24,6 @@ public class AudioManager : MonoBehaviour
     public UIFmodReferences uiEvents;
     public AmbienceFmodReferences ambienceEvents;
 
-
-    /*
-    public EventReference ambienceEvent;
-    public EventReference musicEvent;
-    private static string sfxDir = "event:/SFX/";
-    public List<sfxLib> sfxObjectsList;
-    */
     void Awake()
     {
         if (Instance == null)
@@ -59,12 +40,67 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-         FmodRouting.SetUpBuses();
-         StartAmbience();
-         StartMusic();
+        FmodRouting.SetUpBuses();
+        StartAmbience();
+        StartMusic();
     }
 
-   
+    public void StartDisasterAudio(CTDisasters disaster, float intensity)
+    {
+        if(intensity != -1f && disaster != CTDisasters.None) //Check charlies no disaster -1 val to not set param 
+        {
+            FmodParameters.SetGlobalParamByName("Intensity", intensity);
+            FmodParameters.SetParamByLabelName(musicInstance, "Play", "Play");
+        }
+
+        Debug.Log("Audio disaster:" + disaster + " Intensity: " + intensity);
+        switch(disaster)
+        {
+            case (CTDisasters.Earthquake):
+            AudioPlayback.PlayOneShot(ambienceEvents.earthquakeDisaster, null);
+            AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            StartCoroutine("TenseMusicTimer");
+            break;
+
+            case (CTDisasters.Tsunami):
+            AudioPlayback.PlayOneShot(ambienceEvents.tsunamiDisaster, null);
+            AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            StartCoroutine("TenseMusicTimer");
+            break;
+
+            case (CTDisasters.Volcano):
+            AudioPlayback.PlayOneShot(ambienceEvents.volcanoDisaster, null);
+            AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            StartCoroutine("TenseMusicTimer");
+            break;
+            
+            case (CTDisasters.Tornado):
+            AudioPlayback.PlayOneShot(ambienceEvents.tornadoDisaster, null);
+            AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            StartCoroutine("TenseMusicTimer");
+            break;
+
+            default:
+            //No disaster
+            break;
+        }
+    }
+
+    private IEnumerator TenseMusicTimer()
+    {
+        yield return new WaitForSeconds(20f);
+        FmodParameters.SetParamByLabelName(musicInstance, "Play", "Stop");
+
+        //yield return new WaitForSeconds(WaitTime);
+
+        musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        musicInstance.release();
+        
+        yield return new WaitForSeconds(3f);
+
+        FmodParameters.SetGlobalParamByName("Intensity", 0f);
+        StartMusic();
+    }
 
     public void StartOceanAmbience(Transform transform)
     {

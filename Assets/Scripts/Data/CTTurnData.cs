@@ -36,7 +36,7 @@ namespace CT.Data
         public uint turn;
         public bool failed_turn { get { return (Population <= 0); } }
 
-        public Vector4 faction_distribution = new Vector4();
+        private Vector4 faction_distribution = new Vector4();
 
         // Technologies
         public Dictionary<CTTechnologies, bool> technologies = new Dictionary<CTTechnologies, bool>();
@@ -45,11 +45,11 @@ namespace CT.Data
         public List<CTPolicyCard> applied_policies = new List<CTPolicyCard>();
         public List<CTPolicyCard> revoked_policies = new List<CTPolicyCard>();
 
-        private Vector4 cost_modifier_totals = new Vector4(0, 0, 0, 0);
+        private Vector4 cost_modifier_totals = new Vector4(1, 1, 1, 1);
 
-        private float food_delta = 0;
+        private bool modified = false;
 
-        private float safety_factor = 1.0f;
+        //private float safety_factor = 1.0f;
 
         #region Resources
 
@@ -247,10 +247,11 @@ namespace CT.Data
             {
                 // Upkeep
                 // Apply costs with modifiers x, y, z
+
                 case CTCostType.Upkeep:
-                    Money       -= (int)(_cost.money        * (1 + cost_modifier_totals.x));
-                    Science     -= (int)(_cost.science      * (1 + cost_modifier_totals.y));
-                    Food        -= (int)(_cost.food         * (1 + cost_modifier_totals.z));
+                    Money       -= (int)(_cost.money        * (cost_modifier_totals.x));
+                    Science     -= (int)(_cost.science      * (cost_modifier_totals.y));
+                    Food        -= (int)(_cost.food         * (cost_modifier_totals.z));
                     Population  -= (int)_cost.population;
                     break;
 
@@ -266,17 +267,12 @@ namespace CT.Data
                 // Disaster
                 // Apply costs with all modifiers
                 case CTCostType.Disaster:
-                    Vector4 sfcmt = new Vector4(    cost_modifier_totals.x, 
-                                                    cost_modifier_totals.y, 
-                                                    cost_modifier_totals.z, 
-                                                    cost_modifier_totals.w);
-                    float multiplier = 1.0f / safety_factor;
-                    sfcmt *= multiplier;
+                    float sf = Mathf.Abs(GetSafetyFactor());
 
-                    Money       -= (int)((Money *        _cost.money)        * (1 + sfcmt.x));
-                    Science     -= (int)((Science *      _cost.science)      * (1 + sfcmt.y));
-                    Food        -= (int)((Food *         _cost.food)         * (1 + sfcmt.z));
-                    Population  -= (int)((Population *   _cost.population)   * (1 + sfcmt.w));
+                    Money       -= (int)((Money *        _cost.money)        * (sf));
+                    Science     -= (int)((Science *      _cost.science)      * (sf));
+                    Food        -= (int)((Food *         _cost.food)         * (sf));
+                    Population  -= (int)((Population *   _cost.population)   * (sf));
                     break;
 
                 default:
@@ -290,10 +286,18 @@ namespace CT.Data
             technologies[_tech] = true;
         }
 
+        public void SetFactionDistribution(Vector4 _dist)
+        {
+            faction_distribution = _dist;
+        }
+
         public void ApplyModifiers()
         {
+            //Debug.Log("CTTurnData.ApplyModifiers");
+
             // Apply base safety modifier based on planner total
-            cost_modifier_totals.w = (Population * faction_distribution.w) * DataSheet.PLANNER_SAFETY_FACTOR;
+            //safety_factor = (Population * faction_distribution.w) * DataSheet.PLANNER_SAFETY_FACTOR;
+            //Debug.Log(safety_factor);
 
             // Technologies
             foreach (KeyValuePair<CTTechnologies, bool> kvp in technologies)
@@ -357,10 +361,20 @@ namespace CT.Data
             if (cost_modifier_totals.z < DataSheet.MAX_MODIFIER_REDUCTION) cost_modifier_totals.z = DataSheet.MAX_MODIFIER_REDUCTION; // Prevent food modifier becoming zero cost / bonus
             if (cost_modifier_totals.w < DataSheet.MAX_MODIFIER_REDUCTION) cost_modifier_totals.w = DataSheet.MAX_MODIFIER_REDUCTION; // Prevent safety modifier becoming zero cost / bonus
 
+            //// If planners do not have enough science, half their effectiveness
+            //if (Science < (Population * faction_distribution.w) * DataSheet.PLANNERS_NET.science)
+            //    safety_factor *= 0.5f;
+
+            modified = true;
         }
 
         private void OingoBoingo(BuffsNerfsType _t, float _degree)
         {
+            //if (_degree == 0)
+            //    return;
+
+            //Debug.Log(_degree);
+
             switch (_t)
             {
                 case BuffsNerfsType.MONEY_GAIN:
@@ -444,19 +458,19 @@ namespace CT.Data
             switch (_t)
             {
                 case CTModifierType.Money:
-                    cost_modifier_totals.x += _value;
+                    cost_modifier_totals.x += 1;
                     break;
 
                 case CTModifierType.Science:
-                    cost_modifier_totals.y += _value;
+                    cost_modifier_totals.y += 1;
                     break;
 
                 case CTModifierType.Food:
-                    cost_modifier_totals.z += _value;
+                    cost_modifier_totals.z += 1;
                     break;
 
                 case CTModifierType.Population:
-                    cost_modifier_totals.w += _value;
+                    cost_modifier_totals.w += 1;
                     break;
 
                 default:
@@ -561,6 +575,30 @@ namespace CT.Data
             Science     = (int)ret.y;
             Food        = (int)ret.z;
             Population  = (int)ret.w;
+        }
+
+        public Vector4 GetFactionDistribution()
+        {
+            return faction_distribution;
+        }
+
+        public float GetSafetyFactor()
+        {
+            float ret = faction_distribution.w;
+
+            if (Science < (Population * faction_distribution.w) * DataSheet.PLANNERS_NET.science)
+                ret *= 0.5f;
+
+            if (ret >= 0.95f)
+                ret = 0.95f;
+
+            return 1.0f - ret;
+        }
+
+        public void Logs()
+        {
+            //Debug.Log($"Cost Modifier: {cost_modifier_totals}");
+            //Debug.Log($"Safety Factor: {safety_factor}");
         }
 
         #endregion
