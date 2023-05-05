@@ -6,7 +6,7 @@ using FMODUnity;
 
 public class MenuAudioManager : MonoBehaviour
 {
-    public static MenuAudioManager instance => m_instance;
+    public static MenuAudioManager Instance => m_instance;
     private static MenuAudioManager m_instance;
 
     public MainMenuAuidioRefs mainMenuRefs {get; private set;}

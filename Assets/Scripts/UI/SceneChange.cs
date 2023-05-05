@@ -14,18 +14,18 @@ public class SceneChange : MonoBehaviour
     public void OnSelectStartGame()
     {
         SceneManager.LoadScene(1);
-        AudioPlayback.PlayOneShot(MenuAudioManager.instance.mainMenuRefs.menuButtonSelectEvent, null);
-        MenuAudioManager.instance.ReleaseMenuMusic();
+        AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
+        MenuAudioManager.Instance.ReleaseMenuMusic();
     }
 
     public void OnSelectLoadGame()
     {
-        AudioPlayback.PlayOneShot(MenuAudioManager.instance.mainMenuRefs.menuButtonSelectEvent, null);
+        AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
     }
 
     public void OnSelectSettings()
     {
-        AudioPlayback.PlayOneShot(MenuAudioManager.instance.mainMenuRefs.menuButtonSelectEvent, null);
+        AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
     }
     public void OnSelectQuitGame()
     {
@@ -39,17 +39,17 @@ public class SceneChange : MonoBehaviour
 
     public void OnSelectBack() 
     {
-        AudioPlayback.PlayOneShot(MenuAudioManager.instance.mainMenuRefs.menuButtonSelectEvent, null);
+        AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
     }
 
     public void OnSelectAudioSetttings()
     {
-        AudioPlayback.PlayOneShot(MenuAudioManager.instance.mainMenuRefs.menuButtonSelectEvent, null);
+        AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
     }
 
     public void OnSelectExitAudioSettings()
     {
-        AudioPlayback.PlayOneShot(MenuAudioManager.instance.mainMenuRefs.menuButtonSelectEvent, null);
+        AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
     }
 }
 
