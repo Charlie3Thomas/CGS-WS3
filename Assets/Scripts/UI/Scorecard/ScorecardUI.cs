@@ -34,7 +34,7 @@ public class ScorecardUI : MonoBehaviour
 
 
 
-    private void Start()
+    private void Awake()
     {
         incrementRate1 = awarenessPoints / (50 * 4);
         incrementRate2 = disasterPoints / (50 * 4);
@@ -70,6 +70,7 @@ public class ScorecardUI : MonoBehaviour
         foreach (var item in items)
         {
             item.transform.DOScale(1f, fadetime).SetEase(Ease.OutBounce);
+            ScoreBoardAudio.Instance.PlayShowLeaderboardAudio();
             yield return new WaitForSeconds(1f);
 
         }
@@ -78,11 +79,12 @@ public class ScorecardUI : MonoBehaviour
     private void IncrementPoints()
     {
         
-
+        
         if (counter1 < awarenessPoints)
         {
             counter1 += incrementRate1;
             pointsUI[0].text = counter1.ToString();
+            ScoreBoardAudio.Instance.PlayScoreRiseAudio();
         }
        
 
