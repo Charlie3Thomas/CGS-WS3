@@ -25,7 +25,7 @@ public class ScorecardUI : MonoBehaviour
     private float awarenessPoints=1000.0f;
     private float disasterPoints=25000.0f;
     private float nodePoints=20000f;
-    private float yearPoints=22000f;
+    private float turnsPoints=22000f;
 
     private float incrementRate1 =10f;
     private float incrementRate2 = 10f;
@@ -39,7 +39,7 @@ public class ScorecardUI : MonoBehaviour
         incrementRate1 = awarenessPoints / (50 * 4);
         incrementRate2 = disasterPoints / (50 * 4);
         incrementRate3 = nodePoints / (50 * 4);
-        incrementRate4 = yearPoints / (50 * 4);
+        incrementRate4 = turnsPoints / (50 * 4);
     }
 
 
@@ -100,7 +100,7 @@ public class ScorecardUI : MonoBehaviour
         }
         
 
-        if (counter4 < yearPoints)
+        if (counter4 < turnsPoints)
         {
             counter4 += incrementRate4;
             pointsUI[3].text = counter4.ToString();
