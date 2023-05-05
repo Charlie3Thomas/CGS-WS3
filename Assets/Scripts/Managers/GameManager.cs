@@ -36,10 +36,13 @@ namespace CT
         public CTTurnData turn_data = new CTTurnData();
         //private CTTimelineData prime_timeline;
 
-        private uint current_turn = 0;
+        private uint current_turn;
         public uint CurrentTurn { get { return current_turn; } }
-        private int user_changes_in_turn;
+        //private int user_changes_in_turn;
         private Vector3 empty_turn_resource_expenditure;
+
+        //private int[] user_changes_in_turn;
+        private int stored_changes_in_turn;
 
         #endregion
 
@@ -99,6 +102,8 @@ namespace CT
         #region Setup
         private void Initialise()
         {
+            current_turn = 0;
+
             initial_year.Initialise(DataSheet.STARTING_MONEY, DataSheet.STARTING_SCIENCE, DataSheet.STARTING_FOOD, DataSheet.STARTING_POPULATION);
 
             // Initialise disaster timeline
@@ -129,6 +134,8 @@ namespace CT
             awareness_changes = new List<CTChange>[DataSheet.TURNS_NUMBER + 1];
             for (uint year = 0; year < awareness_changes.Length; year++)
                 awareness_changes[year] = new List<CTChange>();
+
+            stored_changes_in_turn = 0;
 
             empty_turn_resource_expenditure = new Vector3(0, 0, 0);
         }
@@ -292,8 +299,8 @@ namespace CT
             //Debug.Log("GameManager.OnClickCheckoutYearButton" + _year);
             
             // Don't allow user to checkout year if the requested turn is the current turn
-            if (_requested_turn == current_turn)
-                return;
+            //if (_requested_turn == current_turn)
+            //    return;
 
             // Lock in changes to faction distribution
             SetFactionDistribution();
@@ -307,6 +314,8 @@ namespace CT
                 // Recalculate AI turns
                 AIPlayFromTurn(current_turn);
             }
+
+            stored_changes_in_turn = 0;
 
             current_turn = _requested_turn;
 
@@ -335,8 +344,6 @@ namespace CT
 
             Debug.Log($"{turn_data.turn} Planners ratio: {turn_data.GetFactionDistribution().w} SafetyFactor: {turn_data.GetSafetyFactor()}");
 
-            
-            
 
             
         }
@@ -404,6 +411,7 @@ namespace CT
                 throw new ArgumentException("Year cannot be zero or lower!");
 
             user_changes[_year].Add(new SetPolicy(_policy));
+            stored_changes_in_turn++;
         }
 
         public void RevokePolicy(int _year, CTPolicyCard _policy)
@@ -412,6 +420,7 @@ namespace CT
                 throw new ArgumentException("Year cannot be zero or lower!");
 
             user_changes[_year].Add(new RevokePolicy(_policy));
+            stored_changes_in_turn++;
         }
 
         private void SetFactionDistribution()
@@ -431,6 +440,7 @@ namespace CT
             else
             {
                 user_changes[current_turn].Add(new SetFactionDistribution(requested_ratios.x, requested_ratios.y, requested_ratios.z, requested_ratios.w));
+                stored_changes_in_turn++;
                 //prime_timeline.ChangePopulationDistribution();
                 awareness_changes[current_turn].Add(new TrackAwareness(DataSheet.YEAR_CHANGE_AWARENESS_RATE));
                 Debug.Log("Choices for faction distribution locked in!");
@@ -459,6 +469,7 @@ namespace CT
             {
                 turn_data.technologies[_t] = true;
                 user_changes[_turn].Add(new PurchaseTechnology(_t));
+                stored_changes_in_turn++;
                 empty_turn_resource_expenditure += new Vector3(
                     DataSheet.technology_price[_t].money,   // x
                     DataSheet.technology_price[_t].science, // y
@@ -669,14 +680,16 @@ namespace CT
             return true;
         }
 
-        private int GetTurnChanges()
-        {
-            return user_changes[current_turn].Count();
-        }
-
         private bool WereChangesMadeInTurn()
         {
-            return !(GetTurnChanges() == user_changes_in_turn);
+            // This is flawed as it returns true even if the user did not make changes in the current year checkout, so long as there are user changes for the current year
+            //return !(GetTurnChanges() == user_changes_in_turn);
+
+            // New implementation:
+            if (stored_changes_in_turn == 0) // If the stored number of changes for this turn == the current changes in this turn
+                return false; // return false;
+
+            return true;
         }
 
         public List<CTTechnologies> GetUnlockedTechnologiesInTurn()
@@ -713,7 +726,7 @@ namespace CT
 
             //return CTDisasters.None;
 
-            return disaster_timeline[current_turn].disaster;
+            return disaster_timeline[current_turn]?.disaster ?? CTDisasters.None;
         }
 
         /// <summary>
