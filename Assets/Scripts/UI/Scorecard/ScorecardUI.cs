@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class ScorecardUI : MonoBehaviour
 {
     // Animation Variables
-    public float fadetime = 5f;
+    public float fadetime = 1f;
     public CanvasGroup canvasGroup; 
     public RectTransform rectTransform;
     public List<GameObject> items = new List<GameObject>();
@@ -40,7 +40,7 @@ public class ScorecardUI : MonoBehaviour
         incrementRate2 = disasterPoints / (50 * 4);
         incrementRate3 = nodePoints / (50 * 4);
         incrementRate4 = turnsPoints / (50 * 4);
-        FadeInAnimation();
+       
     }
     
     void Start()
