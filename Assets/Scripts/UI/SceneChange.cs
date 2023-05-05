@@ -32,6 +32,11 @@ public class SceneChange : MonoBehaviour
         Application.Quit();
     }
 
+    public void OnSelectBackToMainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     public void OnSelectBack() 
     {
         AudioPlayback.PlayOneShot(MenuAudioManager.instance.mainMenuRefs.menuButtonSelectEvent, null);
