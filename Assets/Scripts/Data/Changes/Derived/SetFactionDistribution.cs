@@ -38,7 +38,8 @@ public class SetFactionDistribution : CTChange
 
     public override void ApplyChange(ref CTTurnData _year)
     {
-        _year.faction_distribution = new Vector4(worker_percentage, scientist_percentage, farmer_percentage, planner_percentage);
+        //_year.faction_distribution = new Vector4(worker_percentage, scientist_percentage, farmer_percentage, planner_percentage);
+        _year.SetFactionDistribution(new Vector4(worker_percentage, scientist_percentage, farmer_percentage, planner_percentage));
         //ResetDistribution(ref _year);
         //AssignNewDistribution(ref _year);
     }
