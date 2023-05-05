@@ -662,8 +662,33 @@ namespace CT
                     return ret.disaster;
                 }
             }
-            
+
             return CTDisasters.None;
+        }
+
+        /// <summary>
+        /// Returns an ApplyDisaster object if a disaster was applied in the given turn, otherwise returns null.
+        /// To get current turn, pass in GameManager._INSTANCE.current_turn
+        /// </summary>
+        public ApplyDisaster GetDisasterDataAtTurn(uint _turn)
+        {
+            foreach (CTChange change in game_changes[_turn])
+            {
+                if (change.GetType() == typeof(ApplyDisaster))
+                {
+                    ApplyDisaster ret = (ApplyDisaster)change;
+                    return ret;
+                }
+            }
+
+            return null;
+        }
+
+        public float GetDisasterIntensityAtTurn(uint _turn)
+        {
+            ApplyDisaster ret = GetDisasterDataAtTurn(_turn);
+            
+            return ret?.intensity ?? -1.0f; // Return error value
         }
 
         #endregion
