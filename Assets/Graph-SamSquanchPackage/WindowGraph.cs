@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using SamSquanchLibrary.Functions;
 using HelperLibrary.UI;
-using CT.Lookup;
 
 public class WindowGraph : MonoBehaviour
 {
@@ -67,19 +66,19 @@ public class WindowGraph : MonoBehaviour
         //Intitialise different chart visuals (For multiple Displays) 
 
         //Population graph
-        popLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.white, Color.white);
+        popLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(1, 1, 1, .5f));
        //barChartVisual = new BarChartVisual(graphContainer, Color.red, .8f);
        
        //Money graph
-       moneyLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, DataSheet.WORKER_COLOUR, DataSheet.WORKER_COLOUR);
+       moneyLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(238, 130, 238, .3f));
        //IGraphVisual moneyBarChartVisual = new BarChartVisual(graphContainer, Color.green, .8f);
 
        //Food Graph
-       foodLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, DataSheet.FARMER_COLOUR, DataSheet.FARMER_COLOUR);
+       foodLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.white, new Color(255, 0, 0, .3f));
        //IGraphVisual co2BarChartVisual = new BarChartVisual(graphContainer, Color.red, .8f);
 
        //Science Graph
-       scienceLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, DataSheet.SCIENTIST_COLOUR, DataSheet.SCIENTIST_COLOUR);
+       scienceLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.blue, new Color(176, 224, 230, .3f));
         //IGraphVisual treesBarChartVisual = new BarChartVisual(graphContainer, Color.blue, .8f);
 
 
@@ -101,6 +100,12 @@ public class WindowGraph : MonoBehaviour
         */
 
         isLineChartActive = true;
+        UpdateAndShowGraphs(
+            new List<float>() { 500, 2555, 900, 8000, 600, 7000, 2334 },
+            new List<float>() { 1000, 5000, 2000, 8000, 600, 7000, 8665 },
+            new List<float>() { 1000, 3222, 4268, 5253, 612, 2689, 5378 },
+            new List<float>() { 1000, 8421, 8537, 8000, 600, 7000, 10000 }
+            );
 
         /*
        transform.Find("LineGraphButton").GetComponent<Button_UI>().ClickFunc = () => 
@@ -206,7 +211,7 @@ public class WindowGraph : MonoBehaviour
     tooltipGameObject.transform.SetAsLastSibling(); //So it shows up on top of graph
   }
 
-    public void UpdateAndShowGraphs(List<float> moneyValues, List<float> scienceValues, List<float> foodValues, List<float> popValues)
+    public void UpdateAndShowGraphs(List<float> popValues, List<float> moneyValues, List<float> foodValues, List<float> scienceValues)
     {
         //Clear previous list of values before displaying new ones
         foreach (GameObject gameObject in gameObjectList)
@@ -229,10 +234,10 @@ public class WindowGraph : MonoBehaviour
         foodLineGraphVisual.CleanUp();
         scienceLineGraphVisual.CleanUp();
 
-        SetGraphVisual(moneyLineGraphVisual, moneyValues);
-        SetGraphVisual(scienceLineGraphVisual, scienceValues);
-        SetGraphVisual(foodLineGraphVisual, foodValues);
         SetGraphVisual(popLineGraphVisual, popValues);
+        SetGraphVisual(moneyLineGraphVisual, moneyValues);
+        SetGraphVisual(foodLineGraphVisual, foodValues);
+        SetGraphVisual(scienceLineGraphVisual, scienceValues);
     }
 
   public static void HideToolTip_Static()

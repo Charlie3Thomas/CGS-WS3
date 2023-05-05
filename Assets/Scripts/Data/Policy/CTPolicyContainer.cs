@@ -16,7 +16,7 @@ public class CTPolicyContainer : MonoBehaviour
         string s = this.gameObject.name;
         current_policy = new CTPolicyCard();
 
-        policies = new CTPolicyCard[DataSheet.TURNS_NUMBER + 1];
+        policies = new CTPolicyCard[DataSheet.turns_number + 1];
         for (int i = 0; i < policies.Length; i++)
         {
             policies[i] = new CTPolicyCard();

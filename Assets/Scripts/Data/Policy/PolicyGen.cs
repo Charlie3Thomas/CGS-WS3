@@ -118,7 +118,7 @@ public static class PolicyGen
             //if (!degree.ContainsKey(kvp.Key))
             //    degree.Add(kvp.Key, UnityEngine.Random.Range(DataSheet.policy_card_min_scale, DataSheet.policy_card_max_scale));
             if (!degree.ContainsKey(kvp.Key))
-                degree.Add(kvp.Key, (float)CTSeed.RandFromSeed(seed + x, $"{id}{"PGGD0"}").NextDouble() * (DataSheet.POLICY_CARD_MAX_SCALE - DataSheet.POLICY_CARD_MIN_SCALE));
+                degree.Add(kvp.Key, (float)CTSeed.RandFromSeed(seed + x, $"{id}{"PGGD0"}").NextDouble() * (DataSheet.policy_card_max_scale - DataSheet.policy_card_min_scale));
             x++;
         }
 
@@ -128,7 +128,7 @@ public static class PolicyGen
             //if (!degree.ContainsKey(kvp.Key))
             //    degree.Add(kvp.Key, UnityEngine.Random.Range(DataSheet.policy_card_min_scale, DataSheet.policy_card_max_scale) * -1);
             if (!degree.ContainsKey(kvp.Key))
-                degree.Add(kvp.Key, (float)CTSeed.RandFromSeed(seed + y, $"{id}{"PGGD1"}").NextDouble() * (DataSheet.POLICY_CARD_MAX_SCALE - DataSheet.POLICY_CARD_MIN_SCALE) * -1);
+                degree.Add(kvp.Key, (float)CTSeed.RandFromSeed(seed + y, $"{id}{"PGGD1"}").NextDouble() * (DataSheet.policy_card_max_scale - DataSheet.policy_card_min_scale) * -1);
             y++;
         }
 
@@ -154,7 +154,7 @@ public static class PolicyGen
             if (kvp.Value == true)
             {
                 // Buff Prefix
-                float degree = _p.buff_nerf_scale[kvp.Key] / DataSheet.POLICY_CARD_MAX_SCALE;
+                float degree = _p.buff_nerf_scale[kvp.Key] / DataSheet.policy_card_max_scale;
                 degree = Mathf.Abs(degree);
 
                 int index = -1;

@@ -35,11 +35,7 @@ public class ComputerController : MonoBehaviour
     [HideInInspector]
     public List<PointSelector> pointSelectors;
     [HideInInspector]
-    public GameObject graphGO;
-    [HideInInspector]
-    public GameObject sliderRect;
-    [HideInInspector]
-    public WindowGraph graph;
+    public GameObject graph;
     [HideInInspector]
     public GameObject screen;
 
@@ -253,9 +249,9 @@ public class ComputerController : MonoBehaviour
         // Moving the year slider
         if (yearSliding)
         {
-            float remappedValue = RAUtility.Remap(desiredYear, DataSheet.STARTING_YEAR, DataSheet.END_YEAR, minYearSlider, maxYearSlider);
+            float remappedValue = RAUtility.Remap(desiredYear, DataSheet.starting_year, DataSheet.end_year, minYearSlider, maxYearSlider);
             float newRemappedValue = remappedValue + mouseDelta.x * 0.025f;
-            desiredYear = (int)RAUtility.Remap(newRemappedValue, minYearSlider, maxYearSlider, DataSheet.STARTING_YEAR, DataSheet.END_YEAR);
+            desiredYear = (int)RAUtility.Remap(newRemappedValue, minYearSlider, maxYearSlider, DataSheet.starting_year, DataSheet.end_year);
 
             if (desiredYear % 5 != 0)
             {
@@ -263,13 +259,13 @@ public class ComputerController : MonoBehaviour
                 AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.sliderEvent, null);
             }
 
-            if (desiredYear < DataSheet.STARTING_YEAR)
-                desiredYear = (int)DataSheet.STARTING_YEAR;
+            if (desiredYear < DataSheet.starting_year)
+                desiredYear = (int)DataSheet.starting_year;
 
-            if (desiredYear > DataSheet.END_YEAR)
-                desiredYear = (int)DataSheet.END_YEAR;
+            if (desiredYear > DataSheet.end_year)
+                desiredYear = (int)DataSheet.end_year;
 
-            newRemappedValue = RAUtility.Remap(desiredYear, DataSheet.STARTING_YEAR, DataSheet.END_YEAR, minYearSlider, maxYearSlider);
+            newRemappedValue = RAUtility.Remap(desiredYear, DataSheet.starting_year, DataSheet.end_year, minYearSlider, maxYearSlider);
             yearSlider.transform.localPosition = new Vector3(newRemappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
             UpdateSlider();
         }
@@ -408,9 +404,7 @@ public class ComputerController : MonoBehaviour
         screen = GameObject.FindGameObjectWithTag("Screen");
         notepad = GameObject.FindGameObjectWithTag("Notepad");
         journal = GameObject.FindGameObjectWithTag("Journal");
-        graphGO = GameObject.FindGameObjectWithTag("Graph");
-        sliderRect = GameObject.Find("SliderRect");
-        graph = graphGO.transform.GetChild(0).GetComponent<WindowGraph>();
+        graph = GameObject.FindGameObjectWithTag("Graph");
         yearKnobAnim = GameObject.FindGameObjectWithTag("YearKnob").GetComponent<Animator>();
         mat_awareness = GameObject.Find("Liquid").GetComponent<Renderer>().material;
 
@@ -426,7 +420,6 @@ public class ComputerController : MonoBehaviour
         disasterDeathTollText = notepad.transform.GetChild(1).GetChild(3).GetComponent<TMP_Text>();
         safetyText = notepad.transform.GetChild(1).GetChild(4).GetComponent<TMP_Text>();
         yearSlider = GameObject.FindGameObjectWithTag("YearSlider");
-        yearText.color = desiredEqualCurrentColour;
 
         // Policy Cards Setup
         policyCards = GameObject.FindGameObjectsWithTag("PolicyCard");
@@ -444,7 +437,7 @@ public class ComputerController : MonoBehaviour
         panDownButton.SetActive(true);
         panBackFromUpButton.SetActive(false);
         panBackFromDownButton.SetActive(false);
-        graphGO.SetActive(false);
+        graph.SetActive(false);
 
         // Set Values
         //desiredYear = YearData._INSTANCE.current_year;
@@ -458,29 +451,22 @@ public class ComputerController : MonoBehaviour
 
     }
 
-    public void RefreshGraph()
-    {
-        RAUtility.Vector4List timeLineResources = GameManager._INSTANCE.GetResourcesAcrossYears();
-        graph.UpdateAndShowGraphs(timeLineResources.x, timeLineResources.y, timeLineResources.z, timeLineResources.w);
-    }
-
     public void UpdateSlider()
     {
-        float rectOffset = 148.545f;
-        float sliderPosValue = RAUtility.Remap(desiredYear, DataSheet.STARTING_YEAR, DataSheet.END_YEAR, minYearSlider, maxYearSlider);
-        float sliderRectPosValue = RAUtility.Remap(sliderPosValue, minYearSlider, maxYearSlider, 18, 283);
-        yearSlider.transform.localPosition = new Vector3(sliderPosValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
-        sliderRect.transform.localPosition = new Vector3(sliderRectPosValue - rectOffset, sliderRect.transform.localPosition.y, sliderRect.transform.localPosition.z);
+        //float
+        //
+        //pedValue = RAUtility.Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+        //yearSlider.transform.localPosition = new Vector3(remappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
+
+
+        //float remappedValue = Remap(desiredYear, YearData._INSTANCE.earliest_year, YearData._INSTANCE.latest_year, minYearSlider, maxYearSlider);
+        //yearSlider.transform.localPosition = new Vector3(remappedValue, yearSlider.transform.localPosition.y, yearSlider.transform.localPosition.z);
 
         yearText.text = desiredYear.ToString();
-
-        if (GameManager._INSTANCE == null)
-            return;
-
-        if ((desiredYear - DataSheet.STARTING_YEAR) / 5 == GameManager._INSTANCE.GetTurn().turn)
-            yearText.color = desiredEqualCurrentColour;
-        else
-            yearText.color = desiredNotEqualCurrentColour;
+        //if (desiredYear == YearData._INSTANCE.current_year)
+        //    yearText.color = desiredEqualCurrentColour;
+        //else
+        //    yearText.color = desiredNotEqualCurrentColour;
     }
 
     public void CheckPoints(PointSelector excluded)
