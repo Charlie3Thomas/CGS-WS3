@@ -40,6 +40,7 @@ public class ScorecardUI : MonoBehaviour
         incrementRate2 = disasterPoints / (50 * 4);
         incrementRate3 = nodePoints / (50 * 4);
         incrementRate4 = turnsPoints / (50 * 4);
+        FadeInAnimation();
     }
 
 
