@@ -303,6 +303,9 @@ namespace CT
             SetAwarenessUI();
             FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
+
+            AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn());
+            
         }
 
         private void UpdateFactionDistributionPips()
