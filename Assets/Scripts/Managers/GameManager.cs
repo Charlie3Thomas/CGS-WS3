@@ -26,7 +26,7 @@ namespace CT
         public static GameManager _INSTANCE;
 
         // Changes
-        private ApplyDisaster[] disaster_timeline;
+        private ApplyDisaster [] disaster_timeline;
         private List<CTChange>[] game_changes;
         private List<CTChange>[] user_changes;
         private List<CTChange>[] awareness_changes;
@@ -290,7 +290,7 @@ namespace CT
         public void OnClickCheckoutYearButton(uint _requested_turn)
         {
             //Debug.Log("GameManager.OnClickCheckoutYearButton" + _year);
-            AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn(), GetDisasterIntensityAtTurn(current_turn));
+            
             // Don't allow user to checkout year if the requested turn is the current turn
             if (_requested_turn == current_turn)
                 return;
@@ -314,6 +314,8 @@ namespace CT
 
             //GetChangesAtTurn();
             turn_data = GetYearData(_requested_turn);
+            AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn(), GetDisasterIntensityAtTurn(current_turn));
+
             empty_turn_resource_expenditure = new Vector3(0, 0, 0);
             UpdateResourceCounters();
             UpdateFactionDistributionPips();
@@ -698,16 +700,20 @@ namespace CT
 
         public CTDisasters CheckDisasterInTurn()
         {
-            foreach (CTChange change in game_changes[current_turn])
-            {
-                if (change.GetType() == typeof(ApplyDisaster))
-                {
-                    ApplyDisaster ret = (ApplyDisaster)change;
-                    return ret.disaster;
-                }
-            }
+            //foreach (CTChange change in game_changes[current_turn])
+            //{
+            //    if (change.GetType() == typeof(ApplyDisaster))
+            //    {
+            //        ApplyDisaster ret = (ApplyDisaster)change;
 
-            return CTDisasters.None;
+            //        if (ret.disaster != CTDisasters.None)
+            //            return ret.disaster;
+            //    }
+            //}
+
+            //return CTDisasters.None;
+
+            return disaster_timeline[current_turn].disaster;
         }
 
         /// <summary>
@@ -716,20 +722,21 @@ namespace CT
         /// </summary>
         public ApplyDisaster GetDisasterDataAtTurn(uint _turn)
         {
-            foreach (CTChange change in game_changes[_turn])
-            {
-                if (change.GetType() == typeof(ApplyDisaster))
-                {
-                    ApplyDisaster ret = (ApplyDisaster)change;
+            //foreach (CTChange change in game_changes[_turn])
+            //{
+            //    if (change.GetType() == typeof(ApplyDisaster))
+            //    {
+            //        ApplyDisaster ret = (ApplyDisaster)change;
 
-                    if (ret.disaster == CTDisasters.None)
-                        return null;
+            //        if (ret.disaster == CTDisasters.None)
+            //            return null;
 
-                    return ret;
-                }
-            }
+            //        return ret;
+            //    }
+            //}
 
-            return null;
+            //return null;
+            return disaster_timeline[current_turn];
         }
 
         public float GetDisasterIntensityAtTurn(uint _turn)
