@@ -184,6 +184,50 @@ namespace CT
             return ret;
         }
 
+        public List<CTTurnData> GetTimelineData()
+        {
+            List<CTTurnData> ret = new List<CTTurnData>();
+
+            CTTurnData init = new CTTurnData(initial_year);            
+
+            for (int i = 0; i <= DataSheet.TURNS_NUMBER; i++)
+            {
+                init.turn = (uint)i;
+
+                // Game Changes for year
+                foreach (CTChange change in game_changes[i])
+                    change.ApplyChange(ref init);
+
+                // User Changes for year
+                foreach (CTChange change in user_changes[i])
+                    change.ApplyChange(ref init);
+
+                // Get Total Modifiers for turn
+                //ret.ApplyModifiers();                
+
+                // Apply net resource worth of each assigned population member for each turn between zero and requested turn
+                CTCost net_total = new CTCost(0, 0, 0, 0);
+                net_total += (DataSheet.WORKER_NET * init.Workers);
+                net_total += (DataSheet.SCIENTIST_NET * init.Scientists);
+                net_total += (DataSheet.FARMERS_NET * init.Farmers);
+                net_total += (DataSheet.PLANNERS_NET * init.Planners);
+                net_total += (DataSheet.UNEMPLOYED_NET * init.UnassignedPopulation);
+
+                if (init.Food >= init.Population) { init.GrowPopulation(i); }
+                else { init.DecayPopulation(net_total.food); }
+
+                // Apply net faction produce/consumption
+                init.ApplyCosts(net_total, CTCostType.Upkeep);
+
+                // Apply disaster events
+                disaster_timeline[i]?.ApplyChange(ref init);
+
+                ret.Add(init);
+            }
+
+            return ret;
+        }
+
         public void AIPlayFromTurn(uint _turn)
         {
             // Get Year Data after changes
@@ -690,6 +734,8 @@ namespace CT
                 return false; // return false;
 
             return true;
+
+            
         }
 
         public List<CTTechnologies> GetUnlockedTechnologiesInTurn()
