@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using CT;
 using CT.Lookup;
 using CT.Data;
+using CT.Enumerations;
 
 public enum ComputerState
 {
@@ -485,15 +486,38 @@ public class ComputerController : MonoBehaviour
             yearText.color = desiredNotEqualCurrentColour;
 
 
-        // Updates counters depending on the desired year in graph mode
+        // Updates counters & pips depending on the desired year in graph mode
+        ChangeCountersToGraphMode();
+    }
+
+    private void ChangeCountersToGraphMode()
+    {
         if (!showGraph)
             return;
 
-        currencyText.text = turns[(int)((desiredYear - DataSheet.STARTING_YEAR) / 5)].Money.ToString();
-        rpText.text = turns[(int)((desiredYear - DataSheet.STARTING_YEAR) / 5)].Science.ToString();
-        foodText.text = turns[(int)((desiredYear - DataSheet.STARTING_YEAR) / 5)].Food.ToString();
+        int lookupTurn = (int)((desiredYear - DataSheet.STARTING_YEAR) / 5);
+        currencyText.text = turns[lookupTurn].Money.ToString();
+        rpText.text = turns[lookupTurn].Science.ToString();
+        foodText.text = turns[lookupTurn].Food.ToString();
+        populationText.text = turns[lookupTurn].Population.ToString();
 
-        populationText.text = turns[(int)((desiredYear - DataSheet.STARTING_YEAR) / 5)].Population.ToString();
+        currencyText.color = DataSheet.WORKER_COLOUR;
+        rpText.color = DataSheet.SCIENTIST_COLOUR;
+        foodText.color = DataSheet.FARMER_COLOUR;
+        populationText.color = Color.white;
+
+        // Sci
+        pointSelectors[0].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Scientist, turns[lookupTurn]) * 10);
+        pointSelectors[0].pipMat.SetInt("_isGraph", 1);
+        // Plan
+        pointSelectors[1].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Planner, turns[lookupTurn]) * 10);
+        pointSelectors[1].pipMat.SetInt("_isGraph", 1);
+        // Farmer
+        pointSelectors[3].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Farmer, turns[lookupTurn]) * 10);
+        pointSelectors[3].pipMat.SetInt("_isGraph", 1);
+        // Worker
+        pointSelectors[2].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Worker, turns[lookupTurn]) * 10);
+        pointSelectors[2].pipMat.SetInt("_isGraph", 1);
     }
 
     public void CheckPoints(PointSelector excluded)

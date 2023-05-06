@@ -13,7 +13,7 @@ public enum SelectorType
 public class PointSelector : MonoBehaviour
 {
     public GameObject pip;
-    private Material pipMat;
+    public Material pipMat;
 
     //[HideInInspector]
     public float pointValue;

@@ -628,21 +628,21 @@ namespace CT
 
 
 
-        private float GetFactionDistribtion(CTFaction _faction, CTTurnData _turn)
+        public float GetFactionDistribtion(CTFaction _faction, CTTurnData _turn)
         {
             switch (_faction)
             {
                 case CTFaction.Scientist:
-                    return (turn_data.GetFactionDistribution().y);
+                    return (_turn.GetFactionDistribution().y);
 
                 case CTFaction.Planner:
-                    return (turn_data.GetFactionDistribution().w);
+                    return (_turn.GetFactionDistribution().w);
 
                 case CTFaction.Farmer:
-                    return (turn_data.GetFactionDistribution().z);
+                    return (_turn.GetFactionDistribution().z);
 
                 case CTFaction.Worker:
-                    return (turn_data.GetFactionDistribution().x);
+                    return (_turn.GetFactionDistribution().x);
 
                 // Default at impossible error value
                 default:
