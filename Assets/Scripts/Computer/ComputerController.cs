@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using CT;
 using CT.Lookup;
+using CT.Data;
 
 public enum ComputerState
 {
@@ -104,6 +105,7 @@ public class ComputerController : MonoBehaviour
     private bool yearSliding = false;
     private float minYearSlider = 0f;
     private float maxYearSlider = 1.98f;
+    public List<CTTurnData> turns = new List<CTTurnData>();
     #endregion
 
     #region UI
@@ -481,6 +483,17 @@ public class ComputerController : MonoBehaviour
             yearText.color = desiredEqualCurrentColour;
         else
             yearText.color = desiredNotEqualCurrentColour;
+
+
+        // Updates counters depending on the desired year in graph mode
+        if (!showGraph)
+            return;
+
+        currencyText.text = turns[(int)((desiredYear - DataSheet.STARTING_YEAR) / 5)].Money.ToString();
+        rpText.text = turns[(int)((desiredYear - DataSheet.STARTING_YEAR) / 5)].Science.ToString();
+        foodText.text = turns[(int)((desiredYear - DataSheet.STARTING_YEAR) / 5)].Food.ToString();
+
+        populationText.text = turns[(int)((desiredYear - DataSheet.STARTING_YEAR) / 5)].Population.ToString();
     }
 
     public void CheckPoints(PointSelector excluded)
