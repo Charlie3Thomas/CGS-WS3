@@ -388,8 +388,7 @@ namespace CT
 
             Debug.Log($"{turn_data.turn} Planners ratio: {turn_data.GetFactionDistribution().w} SafetyFactor: {turn_data.GetSafetyFactor()}");
 
-
-            
+            PolicyManager.instance.LoadPoliciesAtCurrentScope(current_turn);
         }
 
         private void UpdateFactionDistributionPips()
@@ -805,6 +804,52 @@ namespace CT
             ApplyDisaster ret = GetDisasterDataAtTurn(_turn);
             
             return ret?.intensity ?? -1.0f; // Return error value
+        }
+
+        /// <summary>
+        /// Returns a list of set policies between the start of the game and the current turn
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<SetPolicy, int> GetAllSetPoliciesInScope()
+        {
+            Dictionary<SetPolicy, int> ret = new Dictionary<SetPolicy, int>();
+
+            for (int i = 0; i <= current_turn; i++)
+            {
+                foreach (CTChange c in user_changes[i])
+                {
+                    if (c.GetType() == typeof(SetPolicy))
+                    {
+                        SetPolicy sp = (SetPolicy)c;
+                        ret[sp] = i;
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Returns a list of revoked policies between the start of the game and the current turn
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<RevokePolicy, int> GetAllRevokedPoliciesInScope()
+        {
+            Dictionary<RevokePolicy, int> ret = new Dictionary<RevokePolicy, int>();
+
+            for (int i = 0; i <= current_turn; i++)
+            {
+                foreach (CTChange c in user_changes[i])
+                {
+                    if (c.GetType() == typeof(RevokePolicy))
+                    {
+                        RevokePolicy rp = (RevokePolicy)c;
+                        ret[rp] = i;
+                    }
+                }
+            }
+
+            return ret;
         }
 
         private void LogChangesInCurrentTurn()

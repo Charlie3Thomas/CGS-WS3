@@ -66,6 +66,47 @@ public class PolicyManager : MonoBehaviour
 
 
     #region Methods
+
+    public void LoadPoliciesAtCurrentScope(uint _turn)
+    {
+        // Get all set policies at current scope
+        Dictionary<SetPolicy, int> s_policies = GameManager._INSTANCE.GetAllSetPoliciesInScope();
+        // Get all revoked policies at current scope
+        Dictionary<RevokePolicy, int> r_policies = GameManager._INSTANCE.GetAllRevokedPoliciesInScope();
+        
+        // Create list of policies active at current scope
+        List<CTPolicyCard> policies = new List<CTPolicyCard>();
+
+        // Add all set policies to list
+        foreach (KeyValuePair<SetPolicy, int> set in s_policies)
+        {
+            // Add to the list
+            policies.Add(set.Key.policy);
+
+            foreach (KeyValuePair<RevokePolicy, int> rev in r_policies)
+            {
+                // Remove from the list if revoked
+                if (set.Key.policy.ID == rev.Key.policy.ID || 
+                    set.Value > _turn) // Or the policy is outside the scope of the current turn
+                    policies.Remove(set.Key.policy);
+            }
+        }
+
+        if (policies.Count > 3) // This should never happen, but just in case
+        {
+            Debug.LogError("PolicyManager.LoadPoliciesAtCurrentScope: Has exceeded three policies at current scope!");
+            return;
+        }
+
+        current_policies = new CTPolicyCard[3];
+
+        // Set current policies based on scope
+        for (int i = 0; i < policies.Count; i++)
+        {
+            current_policies[i] = new CTPolicyCard(policies[i]);
+        }
+    }
+
     /// <summary>
     /// Generates seven policy cards
     /// </summary>
