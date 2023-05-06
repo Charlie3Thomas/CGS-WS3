@@ -604,15 +604,17 @@ namespace CT
             for (uint i = 0; i < DataSheet.TURNS_NUMBER - 1; i++)
             {
                 data = GetYearData(i);
-                moneys.Add(data.Money);
-                sciences.Add(data.Science);
-                foods.Add(data.Food);
+                moneys.Add(data.Money / 10f);
+                sciences.Add(data.Science / 10f);
+                foods.Add(data.Food / 10f);
                 populations.Add(data.Population);
                 //Debug.Log($"Year {i} has {data.Money} money, {data.Science} science, {data.Food} food, {data.Population} population");
             }
 
             return new RAUtility.Vector4List(moneys, sciences, foods, populations);
         }
+
+
 
         private float GetFactionDistribtion(CTFaction _faction, CTTurnData _turn)
         {

@@ -32,7 +32,6 @@ public class WindowGraph : MonoBehaviour
    //Example data set
    List<float> valueList;
 
-   //private bool isBarChartActive = false;
    private bool isLineChartActive = true;
 
 
@@ -42,7 +41,6 @@ public class WindowGraph : MonoBehaviour
     IGraphVisual moneyLineGraphVisual;
     IGraphVisual foodLineGraphVisual;
     IGraphVisual scienceLineGraphVisual;
-    //IGraphVisual barChartVisual;
 
 
     private void Awake()
@@ -59,152 +57,22 @@ public class WindowGraph : MonoBehaviour
        gameObjectList = new List<GameObject>();
        graphVisualObjectList = new List<IGraphVisualObject>();
 
-       //Example data set used for all buttons, as in my GRD project data sets were being handled outside of this script. All graph visual data set are set to this dummy list
-       //valueList = new List<float>() {0, 5000, 900, 8000, 600, 7000, 10000};
-
-
-
         //Intitialise different chart visuals (For multiple Displays) 
 
         //Population graph
         popLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.white, Color.white);
-       //barChartVisual = new BarChartVisual(graphContainer, Color.red, .8f);
        
        //Money graph
        moneyLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, DataSheet.WORKER_COLOUR, DataSheet.WORKER_COLOUR);
-       //IGraphVisual moneyBarChartVisual = new BarChartVisual(graphContainer, Color.green, .8f);
 
        //Food Graph
        foodLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, DataSheet.FARMER_COLOUR, DataSheet.FARMER_COLOUR);
-       //IGraphVisual co2BarChartVisual = new BarChartVisual(graphContainer, Color.red, .8f);
 
        //Science Graph
        scienceLineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, DataSheet.SCIENTIST_COLOUR, DataSheet.SCIENTIST_COLOUR);
-        //IGraphVisual treesBarChartVisual = new BarChartVisual(graphContainer, Color.blue, .8f);
-
-
-
-
-
-
-
-        //ShowGraph(valueList, barChartVisual, -1, (int _i) => "Day " + (_i + 1), (float _f) => "$" + _f);
-
-        //Graph functionality button listner and delegate set up
-        /*
-        transform.Find("BarChartButton").GetComponent<Button_UI>().ClickFunc = () => 
-        {
-          isBarChartActive = true;
-          isLineChartActive = false;
-          SetGraphVisual(barChartVisual);
-        };
-        */
 
         isLineChartActive = true;
-
-        /*
-       transform.Find("LineGraphButton").GetComponent<Button_UI>().ClickFunc = () => 
-       {
-         //isBarChartActive = false;
-         isLineChartActive = true;
-         SetGraphVisual(lineGraphVisual);
-       };
-       */
-
-        /*
-        transform.Find("DecreaseVisibleAmountBtn").GetComponent<Button_UI>().ClickFunc = () =>
-       {
-          DecreaseVisibleAmount();
-       };
-
-       transform.Find("IncreaseVisibleAmountBtn").GetComponent<Button_UI>().ClickFunc = () =>
-       {
-          IncreaseVisibleAmount();
-       };
-       */
-
-        /*
-       //Value set toggle buttons listener and delegate set up
-        transform.Find("MoneyValueListToggleBtn").GetComponent<Button_UI>().ClickFunc = () =>
-       {
-           if(isLineChartActive && valueList[0] != null)
-           {
-              ShowGraph(valueList, moneyLineGraphVisual, -1, (int _i) => "Year " + (_i + 1), (float _f) => "$" + Mathf.RoundToInt(_f) + "M");
-              lineGraphVisual = moneyLineGraphVisual;
-           }
-
-           else if (isBarChartActive && valueList[0] != null)
-           {
-              ShowGraph(valueList, moneyBarChartVisual, -1, (int _i) => "Year " + (_i + 1), (float _f) => "$" + Mathf.RoundToInt(_f) + "M");
-              barChartVisual = moneyBarChartVisual;
-           }
-       };
-
-        transform.Find("GlobalCo2ValueListToggleBtn").GetComponent<Button_UI>().ClickFunc = () =>
-       {
-           if(isLineChartActive && valueList[0] != null)
-           {
-              ShowGraph(valueList, co2LineGraphVisual, -1, (int _i) => "Year " + (_i + 1), (float _f) => "°C" + _f);
-              lineGraphVisual = co2LineGraphVisual;
-           }
-           else if (isBarChartActive && valueList[0] != null)
-           {
-              ShowGraph(valueList, co2BarChartVisual, -1, (int _i) => "Year " + (_i + 1), (float _f) => "°C" + _f);
-              barChartVisual = co2BarChartVisual;
-           }
-       };
-
-        transform.Find("TreesPlantedValueListToggleBtn").GetComponent<Button_UI>().ClickFunc = () =>
-       {
-            if(isLineChartActive && valueList[0] != null)
-           {
-              ShowGraph(valueList, treesLineGraphVisual, -1, (int _i) => "Year " + (_i + 1), (float _f) => "Trees" + Mathf.RoundToInt(_f));
-              lineGraphVisual = treesLineGraphVisual;
-           }
-           else if (isBarChartActive && valueList[0] != null)
-           {
-              ShowGraph(valueList, treesBarChartVisual, -1, (int _i) => "Year " + (_i + 1), (float _f) => "Trees" + Mathf.RoundToInt(_f));
-              barChartVisual = treesBarChartVisual;
-           }
-       };
-       */
-
-
-        /////////TESTING PURPOSES WILL CREATE RANDOM CHART VALUES EVERY .5 OF A SECOND TO SHOW DYNAMIC GRAPH AT WORK////////////
-        /*
-         FunctionPeriodic.Create(() => {
-              valueList.Clear();
-              for(int i = 0; i < UnityEngine.Random.Range(5, 25); i++)
-              {
-                  valueList.Add(UnityEngine.Random.Range(0,500));
-              }
-
-              ShowGraph(valueList, graphVisual, -1, (int _i) => "Year: " + (_i + 10), (float _f) => Mathf.RoundToInt(_f) + "Tons");
-         }, .5f);  
-         */
-
     }
-  
-  public static void ShowToolTip_Static(string tooltipText, Vector2 anchoredPosition)
-  {
-    // instance.ShowToolTip(tooltipText, anchoredPosition);
-  }
-  private void ShowToolTip(string tooltipText, Vector2 anchoredPosition)
-  {
-    //tooltipGameObject.SetActive(true);
-    
-    //tooltipGameObject.GetComponent<RectTransform>().anchoredPosition = anchoredPosition;
-    //Text tooltipUIText = tooltipGameObject.transform.Find("Text").GetComponent<Text>();
-    //tooltipUIText.text = tooltipText;
-
-    //float textPaddingSize = 4f;
-
-    //Vector2 backgroundSize = new Vector2(tooltipUIText.preferredWidth + textPaddingSize * 2f, tooltipUIText.preferredHeight + textPaddingSize * 2f);
-
-  //  tooltipGameObject.transform.Find("Background").GetComponent<RectTransform>().sizeDelta = backgroundSize;
-    
-    //tooltipGameObject.transform.SetAsLastSibling(); //So it shows up on top of graph
-  }
 
     public void UpdateAndShowGraphs(List<float> moneyValues, List<float> scienceValues, List<float> foodValues, List<float> popValues)
     {
@@ -229,10 +97,13 @@ public class WindowGraph : MonoBehaviour
         foodLineGraphVisual.CleanUp();
         scienceLineGraphVisual.CleanUp();
 
-        SetGraphVisual(moneyLineGraphVisual, moneyValues);
-        SetGraphVisual(scienceLineGraphVisual, scienceValues);
-        SetGraphVisual(foodLineGraphVisual, foodValues);
-        SetGraphVisual(popLineGraphVisual, popValues);
+        List<float> biggestList = RAUtility.GetListWithMaxValue(moneyValues, scienceValues, foodValues, popValues);
+        biggestList.Add(0);
+
+        SetGraphVisual(moneyLineGraphVisual, moneyValues, biggestList);
+        SetGraphVisual(scienceLineGraphVisual, scienceValues, biggestList);
+        SetGraphVisual(foodLineGraphVisual, foodValues, biggestList);
+        SetGraphVisual(popLineGraphVisual, popValues, biggestList);
     }
 
   public static void HideToolTip_Static()
@@ -240,38 +111,12 @@ public class WindowGraph : MonoBehaviour
    // instance.HideToolTip();
   }
 
-  private void HideToolTip()
+  private void SetGraphVisual(IGraphVisual graphVisual, List<float> _valueList, List<float> _scaleList)
   {
-    //tooltipGameObject.SetActive(false);
+      ShowGraph(_valueList, _scaleList, graphVisual, this.maxVisibleValueAmount, this.getAxisLabelX, this.getAxisLabelY);
   }
 
-  private void SetAxisLabelX(Func<int, string> getAxisLabelX)
-  {
-    //  ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount, getAxisLabelX, this.getAxisLabelY);
-  }
-  
-  private void SetAxisLabelY(Func<float, string> getAxisLabelY)
-  {
-     // ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount, this.getAxisLabelX, getAxisLabelY);
-  }
-
-  private void IncreaseVisibleAmount()
-  {
-     /// ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount + 1, this.getAxisLabelX, this.getAxisLabelY);
-  }
-
-  private void DecreaseVisibleAmount()
-  {
-    ///  ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount - 1, this.getAxisLabelX, this.getAxisLabelY);
-  }
-
-
-  private void SetGraphVisual(IGraphVisual graphVisual, List<float> _valueList)
-  {
-      ShowGraph(_valueList, graphVisual, this.maxVisibleValueAmount, this.getAxisLabelX, this.getAxisLabelY);
-  }
-
-   private void ShowGraph(List<float> valueList, IGraphVisual graphVisual, int maxVisibleValueAmount = -1, Func<int, string> getAxisLabelX = null, Func<float, string> getAxisLabelY = null)
+   private void ShowGraph(List<float> valueList, List<float> scaleList, IGraphVisual graphVisual, int maxVisibleValueAmount = -1, Func<int, string> getAxisLabelX = null, Func<float, string> getAxisLabelY = null)
    {
       //Cache values whenever this function is called
       this.valueList = valueList;
@@ -306,13 +151,13 @@ public class WindowGraph : MonoBehaviour
       float graphHeight = graphContainer.sizeDelta.y;
       float graphWidth = graphContainer.sizeDelta.x;
       
-      float yMaximum = valueList[0]; //Would be used for what data you want to show value for e.g. carbon captured
-      float yMinimum = valueList[0]; //Setting minimum and max values based off first element of values list
+      float yMaximum = scaleList[0]; //Would be used for what data you want to show value for e.g. carbon captured
+      float yMinimum = scaleList[0]; //Setting minimum and max values based off first element of values list
 
       //Set Y graph values dynamically 
-      for (int i = Mathf.Max(valueList.Count - maxVisibleValueAmount, 0); i < valueList.Count; i++)
+      for (int i = Mathf.Max(scaleList.Count - maxVisibleValueAmount, 0); i < scaleList.Count; i++)
       {
-        float value = valueList[i];
+        float value = scaleList[i];
         if(value > yMaximum)
         {
             yMaximum = value;
@@ -324,42 +169,26 @@ public class WindowGraph : MonoBehaviour
         }
       }
 
-      float yDifference = yMaximum - yMinimum;
-      if(yDifference <= 0)
-      {
-        yDifference = 5f;
-      }
-      yMaximum = yMaximum + (yDifference * 0.2f); //Set max size with 20 percent leway
-      yMinimum = yMinimum - (yDifference * 0.2f); //Set min size with 20 percent leway
+        float yDifference = yMaximum - yMinimum;
+        if (yDifference <= 0)
+        {
+            yDifference = 5f;
+        }
+        yMaximum = yMaximum + (yDifference * 0.2f); //Set max size with 20 percent leway
+        yMinimum = yMinimum - (yDifference * 0.2f); //Set min size with 20 percent leway
 
-      float xSize = graphWidth / (maxVisibleValueAmount + 1); //Would be used for time frame e.g. year or month
+        float xSize = graphWidth / (maxVisibleValueAmount + 1); //Would be used for time frame e.g. year or month
       int xIndex = 0;
       
-      //LineGraphVisual lineGraphVisual = new LineGraphVisualC
-      //BarChartVisual barChartVisual = new BarChartVisual(graphContainer, Color.green, .8f);
-      
-      //GameObject lastdotGameObject = null;
-
-      //Setting up X axis e.g. time period
       for(int i = Mathf.Max(valueList.Count - maxVisibleValueAmount, 0); i < valueList.Count; i++)
       {
         float xPosition = xSize + xIndex * xSize;
-        float yPosition = ((valueList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight; //Nomralise value based off graph container
+            float yPosition = (((valueList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight);
           
         //Set data point
         string tooltipText = getAxisLabelY(valueList[i]);
         graphVisualObjectList.Add(graphVisual.CreateGraphVisualObject(new Vector2(xPosition, yPosition), xSize, tooltipText));
        
-        
-        //Set up X axis labels for graph values
-       // RectTransform labelX = Instantiate(labelTemplateX);
-        //labelX.SetParent(graphContainer, false);
-        //labelX.gameObject.SetActive(true);
-       // labelX.anchoredPosition = new Vector2(xPosition - 5f, 0f);
-       // labelX.GetComponent<Text>().text = getAxisLabelX(i);
-       // gameObjectList.Add(labelX.gameObject);
-
-        //Setting the positions for dash sprites for Y axis (Yes it is supposed to be here even tho X labels are made here)
         RectTransform dashY = Instantiate(dashTemplateY);
         dashY.SetParent(graphContainer, false);
         dashY.gameObject.SetActive(true);
@@ -375,16 +204,7 @@ public class WindowGraph : MonoBehaviour
       int serpratorCount = 10; //The number of labels for y axis graph values
       for(int i = 0; i <= serpratorCount; i++)
       {
-        //Set up Y axis labels for graph values
-        //RectTransform labelY = Instantiate(labelTemplateY);
-       // labelY.SetParent(graphContainer, false);
-       // labelY.gameObject.SetActive(true);
        float normalizedValue = i * 1f / serpratorCount; 
-       // labelY.anchoredPosition = new Vector2(-10f, (normalizedValue * graphHeight));
-       // labelY.GetComponent<Text>().text = getAxisLabelY(yMinimum + (normalizedValue * (yMaximum - yMinimum)));
-       // gameObjectList.Add(labelY.gameObject);
-
-        //Setting the positions for dash sprites for X axis (Yes it is supposed to be here even tho Y labels are made here)
         RectTransform dashX = Instantiate(dashTemplateX);
         dashX.SetParent(graphContainer, false);
         dashX.gameObject.SetActive(true);
@@ -407,93 +227,6 @@ private interface IGraphVisualObject
    void SetGraphVisualObjectInfo(Vector2 graphPosition, float graphPositionWidth, string HideToolTip);
    void CleanUp();
 }   
-
-private class BarChartVisual : IGraphVisual
-{
-   private RectTransform graphContainer;
-   private Color barColor;
-   float barWidthMultiplier;
-
-   //contstructor for bar chart class
-   public BarChartVisual(RectTransform graphContainer, Color barColor, float barWidthMultiplier) 
-   {
-      //Set up propterties of bar chart, based on param values passed in 
-      this.graphContainer = graphContainer;
-      this.barColor = barColor;
-      this.barWidthMultiplier = barWidthMultiplier;
-   }
-
-    public void CleanUp() {
-        }
-
-   public IGraphVisualObject CreateGraphVisualObject(Vector2 graphPosition, float graphPositionWidth, string tooltipText)
-   {
-      GameObject barGameObject = CreateBar(graphPosition, graphPositionWidth); //Set up bar positions with gap offset
-      
-      BarChartVisualObject BarChartVisualObject = new BarChartVisualObject(barGameObject, barWidthMultiplier);
-      BarChartVisualObject.SetGraphVisualObjectInfo(graphPosition, graphPositionWidth, tooltipText);
-      
-
-      
-      return BarChartVisualObject;
-      
-   }
-   private GameObject CreateBar(Vector2 graphPosition, float barWidth)
-   { 
-      GameObject gameObject = new GameObject("bar", typeof(Image));
-      gameObject.transform.SetParent(graphContainer, false);
-      gameObject.GetComponent<Image>().color = barColor;
-      RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
-      rectTransform.anchoredPosition =new Vector2(graphPosition.x, 0f);
-      rectTransform.sizeDelta = new Vector2(barWidth * barWidthMultiplier, graphPosition.y);
-      rectTransform.anchorMin = new Vector2(0, 0);
-      rectTransform.anchorMax = new Vector2(0, 0);
-      rectTransform.pivot = new Vector2(.5f, 0f);
-     
-      //Show tooltip of value when mouse hovers over a bar 
-      Button_UI barButtonUI = gameObject.AddComponent<Button_UI>();
-
-      return gameObject;
-   }
-   
-      public class BarChartVisualObject : IGraphVisualObject
-      {
-        
-        private GameObject barGameObject;
-        private float barWidthMultiplier;
-
-        public BarChartVisualObject(GameObject barGameObject, float barWidthMultiplier)
-        {
-          this.barGameObject = barGameObject;
-          this.barWidthMultiplier = barWidthMultiplier;
-        }
-        public void SetGraphVisualObjectInfo(Vector2 graphPosition, float graphPositionWidth, string tooltipText)
-        {
-           RectTransform rectTransform = barGameObject.GetComponent<RectTransform>();
-           rectTransform.anchoredPosition = new Vector2(graphPosition.x, 0f);
-           rectTransform.sizeDelta = new Vector2(graphPositionWidth * barWidthMultiplier, graphPosition.y);
-           
-
-           Button_UI barButtonUI = barGameObject.GetComponent<Button_UI>();
-           barButtonUI.MouseOverOnceFunc += () =>
-           {
-             ShowToolTip_Static(tooltipText, graphPosition);
-           };
-      
-          //Hide tooltip
-           barButtonUI.MouseOutOnceFunc += () =>
-           {
-            HideToolTip_Static();
-           };
-      
-          }
-  
-        public void CleanUp()
-        {
-          Destroy(barGameObject);
-        }
-      }
-   }
    
 
    private class LineGraphVisual : IGraphVisual
@@ -619,17 +352,6 @@ private class BarChartVisual : IGraphVisual
            UpdateDotConnection();
            
            Button_UI dotButtonUI = dotGameObject.GetComponent<Button_UI>();
-
-           dotButtonUI.MouseOverOnceFunc += () =>
-           {
-             ShowToolTip_Static(tooltipText, graphPosition);
-           };
-       
-           //Hide tooltip
-          dotButtonUI.MouseOutOnceFunc += () =>
-          {
-            HideToolTip_Static();
-          };
 
            if(OnChangedGraphVisualObjectInfo != null) OnChangedGraphVisualObjectInfo(this, EventArgs.Empty);
            
