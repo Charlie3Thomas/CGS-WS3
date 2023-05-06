@@ -94,7 +94,7 @@ namespace CT
 
         private void FixedUpdate()
         {
-            UpdateResourceCounters();
+            //UpdateResourceCounters();
         }
         #endregion
 
@@ -193,7 +193,6 @@ namespace CT
             for (int i = 0; i <= DataSheet.TURNS_NUMBER; i++)
             {
                 init.turn = (uint)i;
-                CTTurnData data = new CTTurnData(init);
 
                 // Game Changes for year
                 foreach (CTChange change in game_changes[i])
@@ -222,6 +221,8 @@ namespace CT
 
                 // Apply disaster events
                 disaster_timeline[i]?.ApplyChange(ref init);
+
+                CTTurnData data = new CTTurnData(init);
 
                 ret.Add(data);
             }
@@ -608,14 +609,10 @@ namespace CT
                 sciences.Add(turns[i].Science / 10f);
                 foods.Add(turns[i].Food / 10f);
                 populations.Add(turns[i].Population);
-                //Debug.Log($"Year {i} has {turns[i].Money} money, {turns[i].Science} science, {turns[i].Food} food, {turns[i].Population} population");
+                Debug.Log($"Year {turns[i].turn} has {turns[i].Money} money, {turns[i].Science} science, {turns[i].Food} food, {turns[i].Population} population");
             }
 
             // Force last year to be 0 to simulate big disaster
-            moneys.RemoveAt((int)DataSheet.TURNS_NUMBER - 1);
-            sciences.RemoveAt((int)DataSheet.TURNS_NUMBER - 1);
-            foods.RemoveAt((int)DataSheet.TURNS_NUMBER -1);
-            populations.RemoveAt((int)DataSheet.TURNS_NUMBER - 1);
             moneys.Add(0f);
             sciences.Add(0f);
             foods.Add(0f);

@@ -189,11 +189,11 @@ public class WindowGraph : MonoBehaviour
         string tooltipText = getAxisLabelY(valueList[i]);
         graphVisualObjectList.Add(graphVisual.CreateGraphVisualObject(new Vector2(xPosition, yPosition), xSize, tooltipText));
        
-        RectTransform dashY = Instantiate(dashTemplateY);
-        dashY.SetParent(graphContainer, false);
-        dashY.gameObject.SetActive(true);
-        dashY.anchoredPosition = new Vector2(xPosition, 0f);
-        gameObjectList.Add(dashY.gameObject);
+        //RectTransform dashY = Instantiate(dashTemplateY);
+        //dashY.SetParent(graphContainer, false);
+        //dashY.gameObject.SetActive(true);
+        //dashY.anchoredPosition = new Vector2(xPosition, 0f);
+        //gameObjectList.Add(dashY.gameObject);
 
         xIndex++;
         
@@ -201,16 +201,16 @@ public class WindowGraph : MonoBehaviour
 
       }
 
-      int serpratorCount = 10; //The number of labels for y axis graph values
-      for(int i = 0; i <= serpratorCount; i++)
-      {
-       float normalizedValue = i * 1f / serpratorCount; 
-        RectTransform dashX = Instantiate(dashTemplateX);
-        dashX.SetParent(graphContainer, false);
-        dashX.gameObject.SetActive(true);
-        dashX.anchoredPosition = new Vector2(0f, normalizedValue * graphHeight);
-        gameObjectList.Add(dashX.gameObject);
-      }
+      //int serpratorCount = 10; //The number of labels for y axis graph values
+      //for(int i = 0; i <= serpratorCount; i++)
+      //{
+      // float normalizedValue = i * 1f / serpratorCount; 
+      //  RectTransform dashX = Instantiate(dashTemplateX);
+      //  dashX.SetParent(graphContainer, false);
+      //  dashX.gameObject.SetActive(true);
+      //  dashX.anchoredPosition = new Vector2(0f, normalizedValue * graphHeight);
+      //  gameObjectList.Add(dashX.gameObject);
+      //}
    }
 
    

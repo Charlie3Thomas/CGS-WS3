@@ -506,6 +506,7 @@ public class ComputerController : MonoBehaviour
         foodText.color = DataSheet.FARMER_COLOUR;
         populationText.color = Color.white;
 
+        //Debug.Log(turns[lookupTurn].turn);
         // Sci
         pointSelectors[0].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Scientist, turns[lookupTurn]) * 10);
         pointSelectors[0].pipMat.SetInt("_isGraph", 1);
