@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class RAUtility
@@ -23,5 +24,28 @@ public static class RAUtility
             this.z = z;
             this.w = w;
         }
+    }
+
+    public static List<float> GetListWithMaxValue(List<float> list1, List<float> list2, List<float> list3, List<float> list4)
+    {
+        List<float> lists = new List<float>();
+        lists.AddRange(list1);
+        lists.AddRange(list2);
+        lists.AddRange(list3);
+        lists.AddRange(list4);
+
+        float maxVal = lists.Max();
+        List<float> maxList = null;
+
+        if (list1.Contains(maxVal))
+            maxList = list1;
+        else if (list2.Contains(maxVal))
+            maxList = list2;
+        else if (list3.Contains(maxVal))
+            maxList = list3;
+        else if (list4.Contains(maxVal))
+            maxList = list4;
+
+        return maxList;
     }
 }

@@ -97,10 +97,13 @@ public class WindowGraph : MonoBehaviour
         foodLineGraphVisual.CleanUp();
         scienceLineGraphVisual.CleanUp();
 
-        SetGraphVisual(moneyLineGraphVisual, moneyValues, moneyValues);
-        SetGraphVisual(scienceLineGraphVisual, scienceValues, moneyValues);
-        SetGraphVisual(foodLineGraphVisual, foodValues, moneyValues);
-        SetGraphVisual(popLineGraphVisual, popValues, moneyValues);
+        List<float> biggestList = RAUtility.GetListWithMaxValue(moneyValues, scienceValues, foodValues, popValues);
+        biggestList.Add(0);
+
+        SetGraphVisual(moneyLineGraphVisual, moneyValues, biggestList);
+        SetGraphVisual(scienceLineGraphVisual, scienceValues, biggestList);
+        SetGraphVisual(foodLineGraphVisual, foodValues, biggestList);
+        SetGraphVisual(popLineGraphVisual, popValues, biggestList);
     }
 
   public static void HideToolTip_Static()
@@ -180,7 +183,7 @@ public class WindowGraph : MonoBehaviour
       for(int i = Mathf.Max(valueList.Count - maxVisibleValueAmount, 0); i < valueList.Count; i++)
       {
         float xPosition = xSize + xIndex * xSize;
-            float yPosition = (((valueList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight) + 10;
+            float yPosition = (((valueList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight);
           
         //Set data point
         string tooltipText = getAxisLabelY(valueList[i]);

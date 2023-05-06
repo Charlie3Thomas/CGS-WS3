@@ -516,6 +516,8 @@ namespace CT
             return new RAUtility.Vector4List(moneys, sciences, foods, populations);
         }
 
+
+
         private float GetFactionDistribtion(CTFaction _faction, CTTurnData _turn)
         {
             switch (_faction)
