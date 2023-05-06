@@ -94,7 +94,7 @@ namespace CT
 
         private void FixedUpdate()
         {
-            UpdateResourceCounters();
+            //UpdateResourceCounters();
         }
         #endregion
 
@@ -188,7 +188,7 @@ namespace CT
         {
             List<CTTurnData> ret = new List<CTTurnData>();
 
-            CTTurnData init = new CTTurnData(initial_year);            
+            CTTurnData init = new CTTurnData(initial_year);
 
             for (int i = 0; i <= DataSheet.TURNS_NUMBER; i++)
             {
@@ -222,7 +222,9 @@ namespace CT
                 // Apply disaster events
                 disaster_timeline[i]?.ApplyChange(ref init);
 
-                ret.Add(init);
+                CTTurnData data = new CTTurnData(init);
+
+                ret.Add(data);
             }
 
             return ret;
@@ -594,42 +596,49 @@ namespace CT
 
         public RAUtility.Vector4List GetResourcesAcrossYears()
         {
-            CTTurnData data = new CTTurnData(initial_year);
+            List<CTTurnData> turns = GetTimelineData();
             List<float> moneys = new List<float>();
             List<float> sciences = new List<float>();
             List<float> foods = new List<float>();
             List<float> populations = new List<float>();
 
-            for (uint i = 0; i < DataSheet.TURNS_NUMBER - 1; i++)
+            for (int i = 0; i < DataSheet.TURNS_NUMBER; i++)
             {
-                data = GetYearData(i);
-                moneys.Add(data.Money / 10f);
-                sciences.Add(data.Science / 10f);
-                foods.Add(data.Food / 10f);
-                populations.Add(data.Population);
-                //Debug.Log($"Year {i} has {data.Money} money, {data.Science} science, {data.Food} food, {data.Population} population");
+                moneys.Add(turns[i].Money / 10f);
+                sciences.Add(turns[i].Science / 10f);
+                foods.Add(turns[i].Food / 10f);
+                populations.Add(turns[i].Population);
+                Debug.Log($"Year {turns[i].turn} has {turns[i].Money} money, {turns[i].Science} science, {turns[i].Food} food, {turns[i].Population} population");
             }
+
+            // Force last year to be 0 to simulate big disaster
+            moneys.Add(0f);
+            sciences.Add(0f);
+            foods.Add(0f);
+            populations.Add(0f);
+
+            ComputerController.Instance.turns = turns;
 
             return new RAUtility.Vector4List(moneys, sciences, foods, populations);
         }
 
 
 
-        private float GetFactionDistribtion(CTFaction _faction, CTTurnData _turn)
+        public float GetFactionDistribtion(CTFaction _faction, CTTurnData _turn)
         {
             switch (_faction)
             {
                 case CTFaction.Scientist:
-                    return (turn_data.GetFactionDistribution().y);
+                    return (_turn.GetFactionDistribution().y);
 
                 case CTFaction.Planner:
-                    return (turn_data.GetFactionDistribution().w);
+                    return (_turn.GetFactionDistribution().w);
 
                 case CTFaction.Farmer:
-                    return (turn_data.GetFactionDistribution().z);
+                    return (_turn.GetFactionDistribution().z);
 
                 case CTFaction.Worker:
-                    return (turn_data.GetFactionDistribution().x);
+                    return (_turn.GetFactionDistribution().x);
 
                 // Default at impossible error value
                 default:

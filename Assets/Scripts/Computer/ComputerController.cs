@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using CT;
 using CT.Lookup;
+using CT.Data;
+using CT.Enumerations;
 
 public enum ComputerState
 {
@@ -33,6 +35,8 @@ public class ComputerController : MonoBehaviour
     [HideInInspector]
     public GameObject[] policyCards = new GameObject[7];
     [HideInInspector]
+    public GameObject[] myPolicyCards = new GameObject[3];
+    [HideInInspector]
     public List<PointSelector> pointSelectors;
     [HideInInspector]
     public GameObject graphGO;
@@ -47,6 +51,8 @@ public class ComputerController : MonoBehaviour
     // Anims
     [HideInInspector]
     public Animator[] pCardAnims = new Animator[7];
+    [HideInInspector]
+    public Animator[] myPCardAnims = new Animator[3];
     private Animator yearKnobAnim;
     private Animator buttonAnim;
     private Animator pointsSelectorAnim;
@@ -81,6 +87,8 @@ public class ComputerController : MonoBehaviour
     public TMP_Text populationText;
     [HideInInspector]
     public TMP_Text[] pCardTexts = new TMP_Text[7];
+    [HideInInspector]
+    public TMP_Text[] myPCardTexts = new TMP_Text[3];
     #endregion
 
     #region Interactables
@@ -104,6 +112,7 @@ public class ComputerController : MonoBehaviour
     private bool yearSliding = false;
     private float minYearSlider = 0f;
     private float maxYearSlider = 1.98f;
+    public List<CTTurnData> turns = new List<CTTurnData>();
     #endregion
 
     #region UI
@@ -334,10 +343,16 @@ public class ComputerController : MonoBehaviour
         }
 
         // Policy cards hover
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < policyCards.Length; i++)
         {
             if (pCardAnims[i] != null && policyCards[i] != null)
-                pCardAnims[i].SetBool("IsOver", _hit.transform.name == policyCards[i].name);
+                pCardAnims[i].SetBool("Right", _hit.transform.name == policyCards[i].name);
+        }
+
+        for (int i = 0; i < myPolicyCards.Length; i++)
+        {
+            if (myPCardAnims[i] != null && myPolicyCards[i] != null)
+                myPCardAnims[i].SetBool("Left", _hit.transform.name == myPolicyCards[i].name);
         }
     }
 
@@ -430,10 +445,16 @@ public class ComputerController : MonoBehaviour
 
         // Policy Cards Setup
         policyCards = GameObject.FindGameObjectsWithTag("PolicyCard");
+        myPolicyCards = GameObject.FindGameObjectsWithTag("MyPolicyCard");
         for (int i = 0; i < policyCards.Length; i++)
         {
             pCardTexts[i] = policyCards[i].transform.GetChild(0).GetComponent<TMP_Text>();
             pCardAnims[i] = policyCards[i].GetComponent<Animator>();
+        }
+        for (int i = 0; i < myPolicyCards.Length; i++)
+        {
+            myPCardTexts[i] = myPolicyCards[i].transform.GetChild(0).GetComponent<TMP_Text>();
+            myPCardAnims[i] = myPolicyCards[i].GetComponent<Animator>();
         }
 
         // Set States
@@ -481,6 +502,41 @@ public class ComputerController : MonoBehaviour
             yearText.color = desiredEqualCurrentColour;
         else
             yearText.color = desiredNotEqualCurrentColour;
+
+
+        // Updates counters & pips depending on the desired year in graph mode
+        ChangeCountersToGraphMode();
+    }
+
+    private void ChangeCountersToGraphMode()
+    {
+        if (!showGraph)
+            return;
+
+        int lookupTurn = (int)((desiredYear - DataSheet.STARTING_YEAR) / 5);
+        currencyText.text = turns[lookupTurn].Money.ToString();
+        rpText.text = turns[lookupTurn].Science.ToString();
+        foodText.text = turns[lookupTurn].Food.ToString();
+        populationText.text = turns[lookupTurn].Population.ToString();
+
+        currencyText.color = DataSheet.WORKER_COLOUR;
+        rpText.color = DataSheet.SCIENTIST_COLOUR;
+        foodText.color = DataSheet.FARMER_COLOUR;
+        populationText.color = Color.white;
+
+        //Debug.Log(turns[lookupTurn].turn);
+        // Sci
+        pointSelectors[0].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Scientist, turns[lookupTurn]) * 10);
+        pointSelectors[0].pipMat.SetInt("_isGraph", 1);
+        // Plan
+        pointSelectors[1].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Planner, turns[lookupTurn]) * 10);
+        pointSelectors[1].pipMat.SetInt("_isGraph", 1);
+        // Farmer
+        pointSelectors[3].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Farmer, turns[lookupTurn]) * 10);
+        pointSelectors[3].pipMat.SetInt("_isGraph", 1);
+        // Worker
+        pointSelectors[2].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Worker, turns[lookupTurn]) * 10);
+        pointSelectors[2].pipMat.SetInt("_isGraph", 1);
     }
 
     public void CheckPoints(PointSelector excluded)
