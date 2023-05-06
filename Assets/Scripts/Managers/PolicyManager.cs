@@ -21,6 +21,9 @@ public class PolicyManager : MonoBehaviour
     private int first_out_index = 0; // Index for first out policy
 
     public CTPolicyCard[] current_policies; // Purchased policies
+    public GameObject[] current_policies_go; // Game objects for purchased policies
+    public GameObject ZoomedPolicy;
+    public TMP_Text policyTextZoomed;
 
     private Vector2 scroll;
 
@@ -66,6 +69,38 @@ public class PolicyManager : MonoBehaviour
 
 
     #region Methods
+
+    public void ShowAllCurrentPoliciesAtTurn()
+    {
+        if(current_policies_go == null)
+            return;
+
+        for (int i = 0; i < current_policies_go.Length; i++)
+        {
+            current_policies_go[i].SetActive(false);
+        }
+
+        if (current_policies == null)
+            return;
+
+        for (int i = 0; i < current_policies_go.Length; i++)
+        {
+            if (current_policies[i] != null)
+            {
+                if (current_policies[i].ID != null)
+                {
+                    current_policies_go[i].SetActive(true);
+                    current_policies_go[i].transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = 
+                        current_policies[i].info_text + current_policies[i].cost.GetString();
+                }
+            }
+        }
+    }
+
+    public void ZoomPolicy()
+    {
+
+    }
 
     public void LoadPoliciesAtCurrentScope(uint _turn)
     {
@@ -125,6 +160,8 @@ public class PolicyManager : MonoBehaviour
         {
             UpdatePolicyCardText(i, policies_at_current_turn[i]);
         }
+
+        ShowAllCurrentPoliciesAtTurn();
     }
 
     public void SelectPolicy(string _ID)
@@ -178,6 +215,7 @@ public class PolicyManager : MonoBehaviour
         current_policies = new CTPolicyCard[3];
         for (int i = 0; i < current_policies.Length; i++)
         {
+            current_policies_go[i].SetActive(false);
             current_policies[i] = new CTPolicyCard();
         }
 

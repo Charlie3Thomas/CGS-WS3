@@ -608,7 +608,7 @@ namespace CT
                 sciences.Add(turns[i].Science / 10f);
                 foods.Add(turns[i].Food / 10f);
                 populations.Add(turns[i].Population);
-                Debug.Log($"Year {turns[i].turn} has {turns[i].Money} money, {turns[i].Science} science, {turns[i].Food} food, {turns[i].Population} population");
+                //Debug.Log($"Year {turns[i].turn} has {turns[i].Money} money, {turns[i].Science} science, {turns[i].Food} food, {turns[i].Population} population");
             }
 
             // Force last year to be 0 to simulate big disaster
