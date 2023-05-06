@@ -133,7 +133,12 @@ public class PolicyManager : MonoBehaviour
             return;
         }
 
+        // Reset current_policies
         current_policies = new CTPolicyCard[3];
+        for (int i = 0; i < current_policies.Length; i++)
+        {
+            current_policies[i] = new CTPolicyCard();
+        }
 
         // Set current policies based on scope
         for (int i = 0; i < policies.Count; i++)
@@ -239,6 +244,9 @@ public class PolicyManager : MonoBehaviour
     {
         for (int i = 0; i < current_policies.Length; i++)
         {
+            if (current_policies[i] == null)
+                return false;
+
             if (current_policies[i].ID == _ID)
             {
                 return true;

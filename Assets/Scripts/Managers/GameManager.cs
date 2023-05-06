@@ -161,7 +161,7 @@ namespace CT
                     change.ApplyChange(ref ret);
 
                 // Get Total Modifiers for turn
-                //ret.ApplyModifiers();                
+                ret.ApplyModifiers();                
 
                 // Apply net resource worth of each assigned population member for each turn between zero and requested turn
                 CTCost net_total = new CTCost(0, 0, 0, 0);
@@ -184,7 +184,7 @@ namespace CT
             return ret;
         }
 
-        public List<CTTurnData> GetTimelineData()
+        public List<CTTurnData> GetTimelineData() 
         {
             List<CTTurnData> ret = new List<CTTurnData>();
 
@@ -388,9 +388,9 @@ namespace CT
 
             //LogChangesInCurrentTurn();
 
-            Debug.Log($"{turn_data.turn} Planners ratio: {turn_data.GetFactionDistribution().w} SafetyFactor: {turn_data.GetSafetyFactor()}");
+            //Debug.Log($"{turn_data.turn} Planners ratio: {turn_data.GetFactionDistribution().w} SafetyFactor: {turn_data.GetSafetyFactor()}");
 
-            Debug.Log("TechTotal:" + GetActiveTechnologyTotal(current_turn));
+            //Debug.Log("TechTotal:" + GetActiveTechnologyTotal(current_turn));
         }
 
         private void UpdateFactionDistributionPips()
