@@ -35,6 +35,8 @@ public class ComputerController : MonoBehaviour
     [HideInInspector]
     public GameObject[] policyCards = new GameObject[7];
     [HideInInspector]
+    public GameObject[] myPolicyCards = new GameObject[3];
+    [HideInInspector]
     public List<PointSelector> pointSelectors;
     [HideInInspector]
     public GameObject graphGO;
@@ -49,6 +51,8 @@ public class ComputerController : MonoBehaviour
     // Anims
     [HideInInspector]
     public Animator[] pCardAnims = new Animator[7];
+    [HideInInspector]
+    public Animator[] myPCardAnims = new Animator[3];
     private Animator yearKnobAnim;
     private Animator buttonAnim;
     private Animator pointsSelectorAnim;
@@ -83,6 +87,8 @@ public class ComputerController : MonoBehaviour
     public TMP_Text populationText;
     [HideInInspector]
     public TMP_Text[] pCardTexts = new TMP_Text[7];
+    [HideInInspector]
+    public TMP_Text[] myPCardTexts = new TMP_Text[3];
     #endregion
 
     #region Interactables
@@ -337,10 +343,16 @@ public class ComputerController : MonoBehaviour
         }
 
         // Policy cards hover
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < policyCards.Length; i++)
         {
             if (pCardAnims[i] != null && policyCards[i] != null)
-                pCardAnims[i].SetBool("IsOver", _hit.transform.name == policyCards[i].name);
+                pCardAnims[i].SetBool("Right", _hit.transform.name == policyCards[i].name);
+        }
+
+        for (int i = 0; i < myPolicyCards.Length; i++)
+        {
+            if (myPCardAnims[i] != null && myPolicyCards[i] != null)
+                myPCardAnims[i].SetBool("Left", _hit.transform.name == myPolicyCards[i].name);
         }
     }
 
@@ -433,10 +445,16 @@ public class ComputerController : MonoBehaviour
 
         // Policy Cards Setup
         policyCards = GameObject.FindGameObjectsWithTag("PolicyCard");
+        myPolicyCards = GameObject.FindGameObjectsWithTag("MyPolicyCard");
         for (int i = 0; i < policyCards.Length; i++)
         {
             pCardTexts[i] = policyCards[i].transform.GetChild(0).GetComponent<TMP_Text>();
             pCardAnims[i] = policyCards[i].GetComponent<Animator>();
+        }
+        for (int i = 0; i < myPolicyCards.Length; i++)
+        {
+            myPCardTexts[i] = myPolicyCards[i].transform.GetChild(0).GetComponent<TMP_Text>();
+            myPCardAnims[i] = myPolicyCards[i].GetComponent<Animator>();
         }
 
         // Set States
