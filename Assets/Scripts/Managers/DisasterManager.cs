@@ -38,16 +38,6 @@ public class DisasterManager : MonoBehaviour
         //WriteSafetyInJournal();  // To implement - Display safety value in journal when show_safetyunlocked
     }
 
-    //public void WriteSafetyInJournal()
-    //{
-
-    //    if (showSafety)
-    //    {
-            
-    //    }
-    //}
-    // Call this to update the list visually whenever something new happens
-
     public void Generate()
     {
         CreateDisasterList();
@@ -86,7 +76,7 @@ public class DisasterManager : MonoBehaviour
         {
             Disaster dis = new Disaster();
             //dis.type = (CTDisasters)Random.Range(0, System.Enum.GetValues(typeof(CTDisasters)).Length);
-            dis.type = (CTDisasters)CTSeed.RandFromSeed((uint)i, "dis.type").Next(System.Enum.GetValues(typeof(CTDisasters)).Length);
+            dis.type = (CTDisasters)CTSeed.RandFromSeed((uint)i, "dis.type").Next(System.Enum.GetValues(typeof(CTDisasters)).Length - 1); // -1 to exclude the .NONE type
             //dis.year = (Random.Range((YearData._INSTANCE.earliest_year / 5), (YearData._INSTANCE.latest_year / 5) + 1) * 5);
             //while (!uniqueYears.Add(dis.year))
             //{
@@ -119,9 +109,11 @@ public class DisasterManager : MonoBehaviour
 
     private void WriteDisastersToGameManager()
     {
-        foreach (Disaster d in disasterList)
-        {
-            GameManager._INSTANCE.AddDisastersToGameChanges(d);
-        }
+        GameManager._INSTANCE.AddDisastersToGameChanges(disasterList);
+        //foreach (Disaster d in disasterList)
+        //{
+        //    GameManager._INSTANCE.AddDisastersToGameChanges(disasterList);
+        //    //GameManager._INSTANCE.
+        //}
     }
 }

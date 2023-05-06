@@ -1,10 +1,6 @@
 using CT.Data;
 using CT.Data.Changes;
 using CT.Lookup;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
 
 /// <summary>
 /// This is a template disaster class for testing, which can be made for each disaster type in the game.

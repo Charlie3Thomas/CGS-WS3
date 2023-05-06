@@ -15,5 +15,6 @@ public class AmbienceFmodReferences : MonoBehaviour
     public EventReference tsunamiDisaster;
     public EventReference volcanoDisaster;
     public EventReference tornadoDisaster;
+    public EventReference screamingEvent;
 
 }
