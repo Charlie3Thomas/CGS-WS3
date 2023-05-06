@@ -36,7 +36,6 @@ public class CTPolicyContainer : MonoBehaviour
         return current_policy;
     }
 
-
     public void PlayShowSound()
     {
         AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.policyCardShowEvent, null);

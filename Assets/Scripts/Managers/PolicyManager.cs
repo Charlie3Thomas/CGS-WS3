@@ -18,9 +18,19 @@ public class PolicyManager : MonoBehaviour
     private CTPolicyContainer[] policy_containers; // Container objects for policies
     public CTPolicyCard[] policies_at_current_turn; // Policies show in current turn
     public CTPolicyCard first_out_policy; // Policy replaced when setting a new policy when policies = 3
-    private int first_out_index = 0; // Index for first out policy
+    public int first_out_index = 0; // Index for first out policy
 
     public CTPolicyCard[] current_policies; // Purchased policies
+    public GameObject[] current_policies_go; // Game objects for purchased policies
+    public GameObject policySelectScreen;
+    public GameObject policyExchangeScreen;
+    public TMP_Text policyTextZoomed;
+    [HideInInspector]
+    public CTPolicyCard aboutToBePurchasedCard;
+    [HideInInspector]
+    public string purchasable_id = "";
+    public GameObject policySelectButtons;
+    public GameObject policyExchangeButtons;
 
     private Vector2 scroll;
 
@@ -55,7 +65,7 @@ public class PolicyManager : MonoBehaviour
 
     private void Update()
     {
-        SelectCurrentPolicyWithScroll();
+        //SelectCurrentPolicyWithScroll();
     }
 
     private void Start()
@@ -66,6 +76,85 @@ public class PolicyManager : MonoBehaviour
 
 
     #region Methods
+
+    public void ShowAllCurrentPoliciesAtTurn()
+    {
+        if(current_policies_go == null)
+            return;
+
+        for (int i = 0; i < current_policies_go.Length; i++)
+        {
+            current_policies_go[i].SetActive(false);
+        }
+
+        if (current_policies == null)
+            return;
+
+        for (int i = 0; i < current_policies_go.Length; i++)
+        {
+            if (current_policies[i] != null)
+            {
+                if (current_policies[i].ID != null)
+                {
+                    current_policies_go[i].SetActive(true);
+                    current_policies_go[i].transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = 
+                        current_policies[i].info_text + current_policies[i].cost.GetString();
+                }
+            }
+        }
+    }
+
+    public void PurchasePolicy()
+    {
+        SelectPolicy(purchasable_id);
+        ShowAllCurrentPoliciesAtTurn();
+        HidePolicyPopup();
+    }
+
+    public void PolicySelect(CTPolicyCard pc)
+    {
+        first_out_index = 0;
+        purchasable_id = pc.ID;
+
+        for (int i = 0; i < current_policies.Length; i++)
+        {
+            if (current_policies[i].ID == purchasable_id)
+            {
+                // Play sound effect indicating that we have that purchased card
+
+                return;
+            }
+        }
+
+        if (current_policies[0].ID != null && current_policies[1].ID != null && current_policies[2].ID != null)
+            ShowPolicyExchangeScreen();
+        else
+            ShowPolicySelectScreen(pc);
+    }
+
+    public void ShowPolicySelectScreen(CTPolicyCard pc)
+    {
+        policySelectScreen.SetActive(true);
+        policyTextZoomed.text = pc.info_text + pc.cost.GetString();
+        policySelectButtons.SetActive(true);
+    }
+
+    public void ShowPolicyExchangeScreen()
+    {
+        policyExchangeScreen.SetActive(true);
+        policyExchangeButtons.SetActive(true);
+    }
+
+    public void HidePolicyPopup()
+    {
+        purchasable_id = "";
+        aboutToBePurchasedCard = null;
+        policyTextZoomed.text = "";
+        policySelectButtons.SetActive(false);
+        policySelectScreen.SetActive(false);
+        policyExchangeScreen.SetActive(false);
+        policyExchangeButtons.SetActive(false);
+    }
 
     public void LoadPoliciesAtCurrentScope(uint _turn)
     {
@@ -130,6 +219,8 @@ public class PolicyManager : MonoBehaviour
         {
             UpdatePolicyCardText(i, policies_at_current_turn[i]);
         }
+
+        ShowAllCurrentPoliciesAtTurn();
     }
 
     public void SelectPolicy(string _ID)
@@ -183,6 +274,7 @@ public class PolicyManager : MonoBehaviour
         current_policies = new CTPolicyCard[3];
         for (int i = 0; i < current_policies.Length; i++)
         {
+            current_policies_go[i].SetActive(false);
             current_policies[i] = new CTPolicyCard();
         }
 
