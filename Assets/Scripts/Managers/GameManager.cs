@@ -368,7 +368,7 @@ namespace CT
             //GetChangesAtTurn();
             turn_data = GetYearData(_requested_turn);
             AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn(), GetDisasterIntensityAtTurn(current_turn));
-
+            PolicyManager.instance.LoadPoliciesAtCurrentScope(current_turn);
             empty_turn_resource_expenditure = new Vector3(0, 0, 0);
             UpdateResourceCounters();
             UpdateFactionDistributionPips();
@@ -388,7 +388,7 @@ namespace CT
 
             Debug.Log($"{turn_data.turn} Planners ratio: {turn_data.GetFactionDistribution().w} SafetyFactor: {turn_data.GetSafetyFactor()}");
 
-            PolicyManager.instance.LoadPoliciesAtCurrentScope(current_turn);
+            Debug.Log("TechTotal:" + GetActiveTechnologyTotal(current_turn));
         }
 
         private void UpdateFactionDistributionPips()
@@ -851,6 +851,22 @@ namespace CT
 
             return ret;
         }
+
+        public int GetActiveTechnologyTotal(uint _turn)
+        {
+            CTTurnData data = new CTTurnData(GetYearData(_turn));
+
+            int ret = 0;
+
+            foreach (KeyValuePair<CTTechnologies, bool> kvp in data.technologies)
+            {
+                if (kvp.Value == true)
+                    ret++;
+            }
+
+            return ret;
+        }
+
 
         private void LogChangesInCurrentTurn()
         {
