@@ -310,7 +310,7 @@ namespace CT.Data
                     // Loop through buff/nerf type
                     for (int bnt = 0; bnt < bn.type.Count; bnt++)
                     {
-                        OingoBoingo(bn.type[bnt], bn.amount[bnt]);
+                        ApplyBuffNerfModifier(bn.type[bnt], bn.amount[bnt]);
                     }
                 }
             }
@@ -343,14 +343,14 @@ namespace CT.Data
                     foreach (KeyValuePair<BuffsNerfsType, bool> kvp in  pc_app.buffs)
                     {
                         if (kvp.Value)
-                            OingoBoingo(kvp.Key, pc_app.buff_nerf_scale[kvp.Key]);
+                            ApplyBuffNerfModifier(kvp.Key, pc_app.buff_nerf_scale[kvp.Key]);
                     }
 
                     // For each nerf
                     foreach (KeyValuePair<BuffsNerfsType, bool> kvp in pc_app.debuffs)
                     {
                         if (kvp.Value)
-                            OingoBoingo(kvp.Key, pc_app.buff_nerf_scale[kvp.Key]);
+                            ApplyBuffNerfModifier(kvp.Key, pc_app.buff_nerf_scale[kvp.Key]);
                     }
                 }
             }
@@ -368,7 +368,7 @@ namespace CT.Data
             modified = true;
         }
 
-        private void OingoBoingo(BuffsNerfsType _t, float _degree)
+        private void ApplyBuffNerfModifier(BuffsNerfsType _t, float _degree)
         {
             //if (_degree == 0)
             //    return;
