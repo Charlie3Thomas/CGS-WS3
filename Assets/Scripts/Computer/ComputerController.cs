@@ -339,7 +339,9 @@ public class ComputerController : MonoBehaviour
         {
             //PolicyManager.instance.ReplacePolicyCard(_hit.transform.GetComponent<CTPolicyContainer>().GetCurrentPolicy().ID);
             CTPolicyContainer test = _hit.transform.GetComponent<CTPolicyContainer>();
-            PolicyManager.instance.SelectPolicy(test.GetCurrentPolicy().ID);
+            PolicyManager.instance.aboutToBePurchasedCard = test.GetCurrentPolicy();
+            PolicyManager.instance.PolicySelect(test.GetCurrentPolicy());
+            //PolicyManager.instance.SelectPolicy(test.GetCurrentPolicy().ID);
             //PolicyManager.instance.ShowAllCurrentPoliciesAtTurn();
         }
 
