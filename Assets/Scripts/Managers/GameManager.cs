@@ -150,8 +150,6 @@ namespace CT
 
             ret.turn = _year;
 
-            Vector4 net_mods = new Vector4(0, 0, 0, 0);
-
             for (int i = 0; i <= _year; i++)
             {
                 // Game Changes for year
@@ -165,26 +163,39 @@ namespace CT
                 // Get Total Modifiers for turn
                 ret.ApplyBuffNerfs();
 
-                // Apply net resource worth of each assigned population member for each turn between zero and requested turn
+                // Grow population check
+                if (ret.Food >= ret.Population) { ret.GrowPopulation(i); }
+
+                // Apply modifiers to base faction produce/consumption
+                Vector4 net_mods = ret.GetFactionNetModifiers();
+                CTCost mod_workers = new CTCost(DataSheet.WORKER_NET);
+                mod_workers.money *= net_mods.x;
+                CTCost mod_scientists = new CTCost(DataSheet.SCIENTIST_NET);
+                mod_scientists.science *= net_mods.y;
+                CTCost mod_farmers = new CTCost(DataSheet.FARMERS_NET);
+                mod_farmers.food *= net_mods.z;
+
+                // Apply net costs for each faction to a net total
                 CTCost net_total = new CTCost(0, 0, 0, 0);
-
-                net_mods = ret.GetFactionNetModifiers();
-
-                net_total += (DataSheet.WORKER_NET      * net_mods.x * ret.Workers);
-                net_total += (DataSheet.SCIENTIST_NET   * net_mods.y * ret.Scientists);
-                net_total += (DataSheet.FARMERS_NET     * net_mods.z * ret.Farmers);
+                net_total += (mod_workers               * ret.Workers);
+                net_total += (mod_scientists            * ret.Scientists);
+                net_total += (mod_farmers               * ret.Farmers);
                 net_total += (DataSheet.PLANNERS_NET    * net_mods.w * ret.Planners);
                 net_total += (DataSheet.UNEMPLOYED_NET  * ret.UnassignedPopulation);
 
-                if (ret.Food >= ret.Population) { ret.GrowPopulation(i); }
-                else { ret.DecayPopulation(net_total.food); }
+                // Decay population check
+                if (ret.Food < ret.Population) { ret.DecayPopulation(net_total.food); }
 
                 // Apply net faction produce/consumption
                 ret.ApplyCosts(net_total, CTCostType.Upkeep);
 
                 // Apply disaster events
                 disaster_timeline[i]?.ApplyChange(ref ret);
+
+                Debug.Log($"Turn {i} mods: {net_mods}");
             }
+
+            
 
             return ret;
         }

@@ -1,6 +1,7 @@
 using CT.Data.Resources;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 
@@ -17,6 +18,14 @@ public class CTCost
         science = _science;
         food = _food;
         population = _population;
+    }
+
+    public CTCost(CTCost _copy)
+    {
+        money = _copy.money;
+        science = _copy.science;
+        food = _copy.science;
+        population = _copy.population;
     }
 
 
