@@ -135,6 +135,7 @@ public class PolicyManager : MonoBehaviour
 
     public void PurchasePolicy()
     {
+        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.policyPurchasedEvent, null); //Trigger audio event
         SelectPolicy(purchasable_id);
         ShowAllCurrentPoliciesAtTurn();
         HidePolicyPopup();
@@ -150,6 +151,7 @@ public class PolicyManager : MonoBehaviour
             if (current_policies[i].ID == purchasable_id)
             {
                 // Play sound effect indicating that we have that purchased card
+                AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.policyAlreadyPurchasedEvent, null); //Trigger audio event
 
                 return;
             }
