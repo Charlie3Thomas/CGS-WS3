@@ -10,5 +10,10 @@ public class OceanEmitter : MonoBehaviour
         AudioManager.Instance.StartOceanAmbience(this.transform);
     }
 
+    void OnDestory()
+    {
+        AudioManager.Instance.StopOceanAmbience();
+    }
+
    
 }

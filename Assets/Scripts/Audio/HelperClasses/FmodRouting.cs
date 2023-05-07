@@ -25,5 +25,10 @@ public static class FmodRouting
         bus.setVolume(newVal);
     }
 
+    public static void StopMasterBus()
+    {
+       masterBus.stopAllEvents(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+    }
+
    
 }

@@ -51,13 +51,19 @@ public class AudioUIManager : MonoBehaviour
     private void ShowPopUp()
     {
         audioPanel.SetActive(true);
-        SnapshotHandler.instance.StartOptionsSnapShot();
+        if(SnapshotHandler.instance != null)
+        { 
+          SnapshotHandler.instance.StartOptionsSnapShot();
+        }
     }
 
     private void HidePopUp()
     {
-        audioPanel.SetActive(false);     
-        SnapshotHandler.instance.StopSnapShot(SnapshotHandler.instance.optionsSnapShotinstance);
+        audioPanel.SetActive(false);    
+        if(SnapshotHandler.instance != null)
+        { 
+           SnapshotHandler.instance.StopSnapShot(SnapshotHandler.instance.optionsSnapShotinstance);
+        }
      
     }
     
