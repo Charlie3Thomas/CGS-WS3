@@ -150,6 +150,8 @@ namespace CT
 
             ret.turn = _year;
 
+            Vector4 net_mods = new Vector4(0, 0, 0, 0);
+
             for (int i = 0; i <= _year; i++)
             {
                 // Game Changes for year
@@ -161,15 +163,18 @@ namespace CT
                     change.ApplyChange(ref ret);
 
                 // Get Total Modifiers for turn
-                ret.ApplyModifiers();                
+                ret.ApplyBuffNerfs();
 
                 // Apply net resource worth of each assigned population member for each turn between zero and requested turn
                 CTCost net_total = new CTCost(0, 0, 0, 0);
-                net_total += (DataSheet.WORKER_NET * ret.Workers);
-                net_total += (DataSheet.SCIENTIST_NET * ret.Scientists);
-                net_total += (DataSheet.FARMERS_NET * ret.Farmers);
-                net_total += (DataSheet.PLANNERS_NET * ret.Planners);
-                net_total += (DataSheet.UNEMPLOYED_NET * ret.UnassignedPopulation);
+
+                net_mods = ret.GetFactionNetModifiers();
+
+                net_total += (DataSheet.WORKER_NET      * net_mods.x * ret.Workers);
+                net_total += (DataSheet.SCIENTIST_NET   * net_mods.y * ret.Scientists);
+                net_total += (DataSheet.FARMERS_NET     * net_mods.z * ret.Farmers);
+                net_total += (DataSheet.PLANNERS_NET    * net_mods.w * ret.Planners);
+                net_total += (DataSheet.UNEMPLOYED_NET  * ret.UnassignedPopulation);
 
                 if (ret.Food >= ret.Population) { ret.GrowPopulation(i); }
                 else { ret.DecayPopulation(net_total.food); }

@@ -47,10 +47,6 @@ namespace CT.Data
 
         private Vector4 cost_modifier_totals = new Vector4(1, 1, 1, 1);
 
-        private bool modified = false;
-
-        //private float safety_factor = 1.0f;
-
         #region Resources
 
         #region Consumables
@@ -249,9 +245,9 @@ namespace CT.Data
                 // Apply costs with modifiers x, y, z
 
                 case CTCostType.Upkeep:
-                    Money       -= (int)(_cost.money        * (cost_modifier_totals.x));
-                    Science     -= (int)(_cost.science      * (cost_modifier_totals.y));
-                    Food        -= (int)(_cost.food         * (cost_modifier_totals.z));
+                    Money       -= (int)(_cost.money        * (GetFactionNetModifiers().x));
+                    Science     -= (int)(_cost.science      * (GetFactionNetModifiers().y));
+                    Food        -= (int)(_cost.food         * (GetFactionNetModifiers().z));
                     Population  -= (int)_cost.population;
                     break;
 
@@ -291,13 +287,9 @@ namespace CT.Data
             faction_distribution = _dist;
         }
 
-        public void ApplyModifiers()
+        public void ApplyBuffNerfs()
         {
-            //Debug.Log("CTTurnData.ApplyModifiers");
-
-            // Apply base safety modifier based on planner total
-            //safety_factor = (Population * faction_distribution.w) * DataSheet.PLANNER_SAFETY_FACTOR;
-            //Debug.Log(safety_factor);
+            Vector4 total_faction_mods = new Vector4(1, 1, 1, 1);
 
             // Technologies
             foreach (KeyValuePair<CTTechnologies, bool> kvp in technologies)
@@ -310,7 +302,7 @@ namespace CT.Data
                     // Loop through buff/nerf type
                     for (int bnt = 0; bnt < bn.type.Count; bnt++)
                     {
-                        ApplyBuffNerfModifier(bn.type[bnt], bn.amount[bnt]);
+                        BuffNerf(bn.type[bnt], bn.amount[bnt], ref total_faction_mods);
                     }
                 }
             }
@@ -343,62 +335,47 @@ namespace CT.Data
                     foreach (KeyValuePair<BuffsNerfsType, bool> kvp in  pc_app.buffs)
                     {
                         if (kvp.Value)
-                            ApplyBuffNerfModifier(kvp.Key, pc_app.buff_nerf_scale[kvp.Key]);
+                            BuffNerf(kvp.Key, pc_app.buff_nerf_scale[kvp.Key], ref total_faction_mods);
                     }
 
                     // For each nerf
                     foreach (KeyValuePair<BuffsNerfsType, bool> kvp in pc_app.debuffs)
                     {
                         if (kvp.Value)
-                            ApplyBuffNerfModifier(kvp.Key, pc_app.buff_nerf_scale[kvp.Key]);
+                            BuffNerf(kvp.Key, pc_app.buff_nerf_scale[kvp.Key], ref total_faction_mods);
                     }
                 }
             }
 
-            // Prevent overflow or costs become boons / free
-            if (cost_modifier_totals.x < DataSheet.MAX_MODIFIER_REDUCTION) cost_modifier_totals.x = DataSheet.MAX_MODIFIER_REDUCTION; // Prevent money modifier becoming zero cost / bonus
-            if (cost_modifier_totals.y < DataSheet.MAX_MODIFIER_REDUCTION) cost_modifier_totals.y = DataSheet.MAX_MODIFIER_REDUCTION; // Prevent science modifier becoming zero cost / bonus
-            if (cost_modifier_totals.z < DataSheet.MAX_MODIFIER_REDUCTION) cost_modifier_totals.z = DataSheet.MAX_MODIFIER_REDUCTION; // Prevent food modifier becoming zero cost / bonus
-            if (cost_modifier_totals.w < DataSheet.MAX_MODIFIER_REDUCTION) cost_modifier_totals.w = DataSheet.MAX_MODIFIER_REDUCTION; // Prevent safety modifier becoming zero cost / bonus
-
-            //// If planners do not have enough science, half their effectiveness
-            //if (Science < (Population * faction_distribution.w) * DataSheet.PLANNERS_NET.science)
-            //    safety_factor *= 0.5f;
-
-            modified = true;
+            cost_modifier_totals = total_faction_mods;
         }
 
-        private void ApplyBuffNerfModifier(BuffsNerfsType _t, float _degree)
+        private void BuffNerf(BuffsNerfsType _t, float _degree, ref Vector4 _total_mods)
         {
-            //if (_degree == 0)
-            //    return;
-
-            //Debug.Log(_degree);
-
             switch (_t)
             {
                 case BuffsNerfsType.MONEY_GAIN:
-                    ApplyCTCostModifer(CTModifierType.Money, _degree);
+                    ApplyCTCostModifer(CTModifierType.Money, _degree, ref _total_mods);
                     break;
 
                 case BuffsNerfsType.FOOD_GAIN:
-                    ApplyCTCostModifer(CTModifierType.Food, _degree);
+                    ApplyCTCostModifer(CTModifierType.Food, _degree, ref _total_mods);
                     break;
 
                 case BuffsNerfsType.SCIENCE_GAIN:
-                    ApplyCTCostModifer(CTModifierType.Science, _degree);
+                    ApplyCTCostModifer(CTModifierType.Science, _degree, ref _total_mods);
                     break;   
                     
                 case BuffsNerfsType.MONEY_UPKEEP:
-                    ApplyCTCostModifer(CTModifierType.Money, _degree);
+                    ApplyCTCostModifer(CTModifierType.Money, _degree, ref _total_mods);
                     break;    
                     
                 case BuffsNerfsType.FOOD_UPKEEP:
-                    ApplyCTCostModifer(CTModifierType.Food, _degree);
+                    ApplyCTCostModifer(CTModifierType.Food, _degree, ref _total_mods);
                     break;    
                     
                 case BuffsNerfsType.SCIENCE_UPKEEP:
-                    ApplyCTCostModifer(CTModifierType.Science, _degree);
+                    ApplyCTCostModifer(CTModifierType.Science, _degree, ref _total_mods);
                     break;   
                     
                 case BuffsNerfsType.SAFETY_FACTOR:
@@ -453,24 +430,27 @@ namespace CT.Data
         }
 
         // Apply modifier to costs
-        private void ApplyCTCostModifer(CTModifierType _t, float _value)
+        private void ApplyCTCostModifer(CTModifierType _t, float _value, ref Vector4 _mods)
         {
+            // Normalise _value to a float between zero and one
+            float adjusted_modifier = RAUtility.Remap(_value, DataSheet.POLICY_CARD_MIN_SCALE, DataSheet.POLICY_CARD_MAX_SCALE, 0.0f, 1.0f);
+
             switch (_t)
             {
                 case CTModifierType.Money:
-                    cost_modifier_totals.x += 1;
+                    _mods.x += adjusted_modifier;
                     break;
 
                 case CTModifierType.Science:
-                    cost_modifier_totals.y += 1;
+                    _mods.y += adjusted_modifier;
                     break;
 
                 case CTModifierType.Food:
-                    cost_modifier_totals.z += 1;
+                    _mods.z += adjusted_modifier;
                     break;
 
                 case CTModifierType.Population:
-                    cost_modifier_totals.w += 1;
+                    _mods.w += adjusted_modifier;
                     break;
 
                 default:
@@ -593,6 +573,11 @@ namespace CT.Data
                 ret = 0.95f;
 
             return 1.0f - ret;
+        }
+
+        public Vector4 GetFactionNetModifiers()
+        {
+            return cost_modifier_totals;
         }
 
         public void Logs()

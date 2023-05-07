@@ -38,11 +38,14 @@ public static class PolicyGen
         //    (UnityEngine.Random.Range(1, 21) * 250) * Convert.ToInt32(t[2]),
         //    (UnityEngine.Random.Range(1, 21) * 250) * Convert.ToInt32(t[3]));
 
-        return new CTCost(
+        CTCost ret = new CTCost(
             (CTSeed.RandFromSeed(seed + 0, $"{id}{"PGGC0"}").Next(1, 21) * 250) * Convert.ToInt32(t[0]),
             (CTSeed.RandFromSeed(seed + 1, $"{id}{"PGGC1"}").Next(1, 21) * 250) * Convert.ToInt32(t[1]),
             (CTSeed.RandFromSeed(seed + 2, $"{id}{"PGGC2"}").Next(1, 21) * 250) * Convert.ToInt32(t[2]),
-            (CTSeed.RandFromSeed(seed + 3, $"{id}{"PGGC3"}").Next(1, 21) * 250) * Convert.ToInt32(t[3]));
+            (CTSeed.RandFromSeed(seed + 3, $"{id}{"PGGC3"}").Next(1, 21) *  25) * Convert.ToInt32(t[3]));
+
+
+        return ret;
     }
 
     private static SetFactionDistribution GenerateRequirements()
