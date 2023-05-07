@@ -1,5 +1,6 @@
 using CT;
 using CT.Data;
+using CT.Enumerations;
 using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
@@ -51,6 +52,45 @@ public class ComputerButton : MonoBehaviour
                     ComputerController.Instance.showGraph = !ComputerController.Instance.showGraph;
                     ComputerController.Instance.screen.SetActive(!ComputerController.Instance.showGraph);
                     ComputerController.Instance.graphGO.SetActive(ComputerController.Instance.showGraph);
+
+                    if(ComputerController.Instance.showGraph)
+                    {
+                        // Set Colours
+                        ComputerController.Instance.currencyText.color = DataSheet.WORKER_COLOUR;
+                        ComputerController.Instance.rpText.color = DataSheet.SCIENTIST_COLOUR;
+                        ComputerController.Instance.foodText.color = DataSheet.FARMER_COLOUR;
+                        ComputerController.Instance.pointSelectors[0].pipMat.SetInt("_isGraph", 1);
+                        ComputerController.Instance.pointSelectors[1].pipMat.SetInt("_isGraph", 1);
+                        ComputerController.Instance.pointSelectors[2].pipMat.SetInt("_isGraph", 1);
+                        ComputerController.Instance.pointSelectors[3].pipMat.SetInt("_isGraph", 1);
+                    }
+                    else
+                    {
+                        // Reset Colours
+                        ComputerController.Instance.currencyText.color = DataSheet.DEFAULT_COLOR;
+                        ComputerController.Instance.rpText.color = DataSheet.DEFAULT_COLOR;
+                        ComputerController.Instance.foodText.color = DataSheet.DEFAULT_COLOR;
+                        ComputerController.Instance.pointSelectors[0].pipMat.SetInt("_isGraph", 0);
+                        ComputerController.Instance.pointSelectors[1].pipMat.SetInt("_isGraph", 0);
+                        ComputerController.Instance.pointSelectors[2].pipMat.SetInt("_isGraph", 0);
+                        ComputerController.Instance.pointSelectors[3].pipMat.SetInt("_isGraph", 0);
+
+                        // Reset Pips
+
+                        // Scientist
+                        ComputerController.Instance.pointSelectors[0].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribution().y * 10);
+                        // Plan
+                        ComputerController.Instance.pointSelectors[1].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribution().w * 10);
+                        // Farmer
+                        ComputerController.Instance.pointSelectors[3].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribution().z * 10);
+                        // Worker
+                        ComputerController.Instance.pointSelectors[2].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribution().x * 10);
+
+                        // Reset Counters
+                        GameManager._INSTANCE.UpdateResourceCounters();
+
+                    }
+
                     AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
 
                     break;
@@ -76,6 +116,8 @@ public class ComputerButton : MonoBehaviour
                     ComputerController.Instance.UpdateSlider();
 
                     AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+
+                    ComputerController.Instance.journal.GetComponent<Journal>().UpdateFactionProductionText();
 
                     break;
                 }

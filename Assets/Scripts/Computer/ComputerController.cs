@@ -309,6 +309,8 @@ public class ComputerController : MonoBehaviour
             if (pointsSelectorAnim != null)
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.pipEvent, null, ("PipDirection", "Up"));
             pointsSelectorAnim.SetTrigger("PointsUp");
+
+            journal.GetComponent<Journal>().UpdateFactionProductionText();
         }
 
         if (isSelectingPressed && _hit.transform.CompareTag("PointsSelector"))
@@ -319,6 +321,8 @@ public class ComputerController : MonoBehaviour
             if (pointsSelectorAnim != null)
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.pipEvent, null, ("PipDirection", "Down"));
             pointsSelectorAnim.SetTrigger("PointsDown");
+
+            journal.GetComponent<Journal>().UpdateFactionProductionText();
         }
     }
 
@@ -341,6 +345,7 @@ public class ComputerController : MonoBehaviour
             CTPolicyContainer test = _hit.transform.GetComponent<CTPolicyContainer>();
             PolicyManager.instance.aboutToBePurchasedCard = test.GetCurrentPolicy();
             PolicyManager.instance.PolicySelect(test.GetCurrentPolicy());
+            journal.GetComponent<Journal>().UpdateFactionProductionText();
             //PolicyManager.instance.SelectPolicy(test.GetCurrentPolicy().ID);
             //PolicyManager.instance.ShowAllCurrentPoliciesAtTurn();
         }
@@ -388,8 +393,9 @@ public class ComputerController : MonoBehaviour
                     if (camHit.transform.CompareTag("TechNode"))
                     {
                         camHit.transform.GetComponent<TechNode>().Unlock();
+                        journal.GetComponent<Journal>().UpdateFactionProductionText();
                     }
-                        
+
                 }
 
                 if (cam == screenCam)
@@ -522,23 +528,20 @@ public class ComputerController : MonoBehaviour
         foodText.text = turns[lookupTurn].Food.ToString();
         populationText.text = turns[lookupTurn].Population.ToString();
 
-        currencyText.color = DataSheet.WORKER_COLOUR;
-        rpText.color = DataSheet.SCIENTIST_COLOUR;
-        foodText.color = DataSheet.FARMER_COLOUR;
-        populationText.color = Color.white;
+        //populationText.color = Color.white;
 
         //Debug.Log(turns[lookupTurn].turn);
         // Sci
-        pointSelectors[0].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Scientist, turns[lookupTurn]) * 10);
+        pointSelectors[0].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Scientist, turns[lookupTurn]) * 10);
         pointSelectors[0].pipMat.SetInt("_isGraph", 1);
         // Plan
-        pointSelectors[1].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Planner, turns[lookupTurn]) * 10);
+        pointSelectors[1].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Planner, turns[lookupTurn]) * 10);
         pointSelectors[1].pipMat.SetInt("_isGraph", 1);
         // Farmer
-        pointSelectors[3].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Farmer, turns[lookupTurn]) * 10);
+        pointSelectors[3].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Farmer, turns[lookupTurn]) * 10);
         pointSelectors[3].pipMat.SetInt("_isGraph", 1);
         // Worker
-        pointSelectors[2].SetPoints(GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Worker, turns[lookupTurn]) * 10);
+        pointSelectors[2].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribtion(CTFaction.Worker, turns[lookupTurn]) * 10);
         pointSelectors[2].pipMat.SetInt("_isGraph", 1);
     }
 
