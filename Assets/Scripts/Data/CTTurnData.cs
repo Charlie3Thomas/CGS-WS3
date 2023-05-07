@@ -458,19 +458,19 @@ namespace CT.Data
             switch (_t)
             {
                 case CTModifierType.Money:
-                    cost_modifier_totals.x += 1;
+                    cost_modifier_totals.x += 0;
                     break;
 
                 case CTModifierType.Science:
-                    cost_modifier_totals.y += 1;
+                    cost_modifier_totals.y += 0;
                     break;
 
                 case CTModifierType.Food:
-                    cost_modifier_totals.z += 1;
+                    cost_modifier_totals.z += 0;
                     break;
 
                 case CTModifierType.Population:
-                    cost_modifier_totals.w += 1;
+                    cost_modifier_totals.w += 0;
                     break;
 
                 default:
@@ -487,6 +487,11 @@ namespace CT.Data
 
 
         #region Utility
+
+        public Vector4 GetModifiers()
+        {
+            return cost_modifier_totals;
+        }
 
         private float ScalePopulationStarvation(float _v, float _p)
         {

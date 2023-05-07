@@ -407,7 +407,7 @@ namespace CT
             ComputerController.Instance.pointSelectors[3].pointValue = workers; // Worker
         }
 
-        private void UpdateResourceCounters()
+        public void UpdateResourceCounters()
         {
             ComputerController.Instance.currencyText.text = (turn_data.Money - (int)empty_turn_resource_expenditure.x).ToString();
             ComputerController.Instance.rpText.text = (turn_data.Science - (int)empty_turn_resource_expenditure.y).ToString();
