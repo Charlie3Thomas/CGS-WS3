@@ -286,6 +286,36 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4808538174874716336, guid: 301ea2c56be8c4947ab216c730199b78,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 89617425}
+    - target: {fileID: 4808538174874716336, guid: 301ea2c56be8c4947ab216c730199b78,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectStartGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808538175271594191, guid: 301ea2c56be8c4947ab216c730199b78,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808538175271594191, guid: 301ea2c56be8c4947ab216c730199b78,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 89617425}
+    - target: {fileID: 4808538175271594191, guid: 301ea2c56be8c4947ab216c730199b78,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnSelectSettings
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808538175271594191, guid: 301ea2c56be8c4947ab216c730199b78,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SceneChange, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 301ea2c56be8c4947ab216c730199b78, type: 3}
