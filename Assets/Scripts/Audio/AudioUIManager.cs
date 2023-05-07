@@ -56,8 +56,8 @@ public class AudioUIManager : MonoBehaviour
 
     private void HidePopUp()
     {
-        audioPanel.SetActive(false);     
-        SnapshotHandler.instance.StopSnapShot(SnapshotHandler.instance.optionsSnapShotinstance);
+            
+        // SnapshotHandler.instance.StopSnapShot(SnapshotHandler.instance.optionsSnapShotinstance);
      
     }
     
