@@ -6,6 +6,7 @@ namespace CT.Data
 {
     using CT.Enumerations;
     using Lookup;
+    using UnityEditor.ShaderGraph.Internal;
 
     public class CTTurnData
     {

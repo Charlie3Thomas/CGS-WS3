@@ -39,11 +39,11 @@ namespace CT.Lookup
         public static readonly CTCost FARMERS_NET    = new CTCost( 0.0f,  0.0f, -1.0f, 0.0f);
         public static readonly CTCost UNEMPLOYED_NET = new CTCost( 1.0f,  0.0f,  1.0f, 0.0f);
 
-        public static Color DEFAULT_COLOR = new Color(0.0f, 1.0f, 0.0f, 1.0f);       // GREEN
-        public static Color WORKER_COLOUR = new Color(1.0f, 0.0f, 0.0f, 1.0f);          // RED
+        public static Color DEFAULT_COLOR    = new Color(0.0f, 1.0f, 0.0f, 1.0f);       // GREEN
+        public static Color WORKER_COLOUR    = new Color(1.0f, 0.0f, 0.0f, 1.0f);       // RED
         public static Color SCIENTIST_COLOUR = new Color(0.0f, 1.0f, 1.0f, 1.0f);       // CYAN
-        public static Color PLANNER_COLOUR = new Color(1.0f, 1.0f, 0.0f, 1.0f);       // YELLOW
-        public static Color FARMER_COLOUR = new Color(0.0f, 1.0f, 0.0f, 1.0f);       // GREEN
+        public static Color PLANNER_COLOUR   = new Color(1.0f, 1.0f, 0.0f, 1.0f);       // YELLOW
+        public static Color FARMER_COLOUR    = new Color(0.0f, 1.0f, 0.0f, 1.0f);       // GREEN
 
 
         public static CTCost GetTechPrice(CTTechnologies _tech)
