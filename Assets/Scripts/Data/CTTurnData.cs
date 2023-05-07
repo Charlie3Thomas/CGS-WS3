@@ -468,6 +468,11 @@ namespace CT.Data
 
         #region Utility
 
+        public Vector4 GetModifiers()
+        {
+            return cost_modifier_totals;
+        }
+
         private float ScalePopulationStarvation(float _v, float _p)
         {
             float ret = (Mathf.Abs(_v) / _p);
