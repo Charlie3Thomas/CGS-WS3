@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class PolicyCardExchange : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PolicyCardExchange : MonoBehaviour
     }
 
     public CardState cs;
+    public VisualEffect[] othersEffects;
+    public VisualEffect effect;
     private TMP_Text text;
 
     private void Awake()
@@ -32,8 +35,18 @@ public class PolicyCardExchange : MonoBehaviour
         text.text = ctp.info_text + ctp.cost.GetString();
     }
 
+    private void OnDisable()
+    {
+        effect.Stop();
+    }
+
     private void OnMouseDown()
     {
+        foreach (var e in othersEffects)
+        {
+            e.Stop();
+        }
+        effect.Play();
         PolicyManager.instance.first_out_index = (int)cs;
     }
 }
