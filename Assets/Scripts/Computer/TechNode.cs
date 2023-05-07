@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
+using System;
+using System.Linq;
 
 //Nodes 23, 24, 46, 47, 48, 62 are unique and need their own implementations
 public class TechNode : MonoBehaviour
@@ -111,6 +113,55 @@ public class TechNode : MonoBehaviour
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "CantUnlock"));
             }
         }
+    }
+
+    string text = "";
+    public string GetDescription()
+    {
+        text = "";
+        text = tech.ToString();
+        text = string.Concat(text.Select(x => char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
+        text = string.Concat(text.Select(x => char.IsNumber(x) ? " " + x : x.ToString())).TrimStart(' ') + "\n";
+        switch(tech)
+        {
+            case CTTechnologies.Banking:
+                text += "Nothing";
+                break;
+            case CTTechnologies.Laboratory:
+                text += "Nothing";
+                break;
+            case CTTechnologies.TownPlanning:
+                text += "Nothing";
+                break;
+            case CTTechnologies.Granary:
+                text += "Nothing";
+                break;
+            case CTTechnologies.RiskAssessment:
+                text += "Disaster List now shows the Magnitude of the Disaster";
+                break;
+            case CTTechnologies.PopulationAssessment:
+                text += "Disaster List now shows the population lost during disaster";
+                break;
+            case CTTechnologies.Marketplace1:
+                text += "Allows User to Swap Money to Science (5: 1)";
+                break;
+            case CTTechnologies.Marketplace2:
+                text += "Allows User to Swap Science to Money (1: 2)";
+                break;
+            case CTTechnologies.SafetyRating:
+                text += "The Disaster list now shows your present Safety Rating against disaster";
+                break;
+            case CTTechnologies.MemoryFlash:
+                text += "Resets awareness";
+                break;
+            default:
+                for (int i = 0; i < tree.GetBuffs(tech).type.Count; i++)
+                {
+                    text += tree.GetBuffs(tech).type[i].ToString() + " " + tree.GetBuffs(tech).amount[i].ToString() + "\n";
+                }
+                break;
+        }
+        return text;
     }
 
     void SpecialCase()
