@@ -96,7 +96,7 @@ public class AudioManager : MonoBehaviour
         musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         musicInstance.release();
         
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(4f);
 
         FmodParameters.SetGlobalParamByName("Intensity", 0f);
         StartMusic();
