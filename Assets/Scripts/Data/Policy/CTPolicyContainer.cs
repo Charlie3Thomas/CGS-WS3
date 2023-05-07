@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CT.Lookup;
 using CT;
+using UnityEngine.VFX;
 
 [System.Serializable]
 public class CTPolicyContainer : MonoBehaviour
@@ -10,6 +11,7 @@ public class CTPolicyContainer : MonoBehaviour
     public int index;
     [SerializeField] private CTPolicyCard current_policy;
     [SerializeField] public CTPolicyCard[] policies;
+    public VisualEffect borderEffect;
 
     private void Start()
     {
