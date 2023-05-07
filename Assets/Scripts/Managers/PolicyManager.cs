@@ -82,6 +82,7 @@ public class PolicyManager : MonoBehaviour
         if(current_policies_go == null)
             return;
 
+        // Reset all policies visuals
         for (int i = 0; i < current_policies_go.Length; i++)
         {
             current_policies_go[i].SetActive(false);
@@ -90,6 +91,7 @@ public class PolicyManager : MonoBehaviour
         if (current_policies == null)
             return;
 
+        // Visually show current policies
         for (int i = 0; i < current_policies_go.Length; i++)
         {
             if (current_policies[i] != null)
@@ -100,6 +102,33 @@ public class PolicyManager : MonoBehaviour
                     current_policies_go[i].transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = 
                         current_policies[i].info_text + current_policies[i].cost.GetString();
                 }
+            }
+        }
+
+        // Blue border on set of policies that exist in current policies
+        for (int i = 0; i < policy_containers.Length; i++)
+        {
+            policy_containers[i].borderEffect.Stop();
+            for (int j = 0; j < current_policies.Length; j++)
+            {
+                if (policy_containers[i].GetCurrentPolicy().ID == current_policies[j].ID)
+                {
+                    policy_containers[i].borderEffect.Play();
+                }
+            }
+        }
+
+        // Orange border on current policies that meet requirements
+        for (int i = 0; i < current_policies.Length; i++)
+        {
+            current_policies_go[i].transform.GetChild(0).GetComponent<CTPolicyContainer>().borderEffect.Stop();
+
+            if (current_policies[i].fdist.worker_percentage <= GameManager._INSTANCE.GetFactionDistribution().x
+                && current_policies[i].fdist.scientist_percentage <= GameManager._INSTANCE.GetFactionDistribution().y
+                && current_policies[i].fdist.farmer_percentage <= GameManager._INSTANCE.GetFactionDistribution().z
+                && current_policies[i].fdist.planner_percentage <= GameManager._INSTANCE.GetFactionDistribution().w)
+            {
+                current_policies_go[i].transform.GetChild(0).GetComponent<CTPolicyContainer>().borderEffect.Play();
             }
         }
     }
@@ -329,22 +358,6 @@ public class PolicyManager : MonoBehaviour
         return first_out_index;
     }
 
-    private void ReplacePolicy(int _index)
-    {
-        // Replace policy in CTPolicyContainer.policies[CURRENT_TURN]
-        //PolicyGen.GeneratePolicy(policy_containers[_index].policies[(int)GameManager._INSTANCE.GetTurn().turn], _index));
-
-        policy_containers[_index].SetPolicyForTurn();
-
-        //// Replace policy at current turn
-        //PolicyGen.GeneratePolicy(policies_at_current_turn[_index]);
-
-        //// Replace policy in all_policy_cards
-        //all_policy_cards[_index][(int)GameManager._INSTANCE.GetTurn().turn] = policies_at_current_turn[_index];
-
-        UpdatePolicyCardText(_index, policies_at_current_turn[_index]);
-    }
-
     private void TrackApplyPolicy(CTPolicyCard _p)
     {
         Debug.Log(_p.ID);
@@ -377,24 +390,24 @@ public class PolicyManager : MonoBehaviour
         InputManager.onScroll -= ScrollInput;
     }
 
-    private void SelectCurrentPolicyWithScroll()
-    {
-        if (current_policies.Length > 0)
-        {
-            if (scroll.y > 0f)
-            {
-                first_out_index = (first_out_index + 1) % current_policies.Length;
-                first_out_policy = current_policies[first_out_index];
-            }
-            else if (scroll.y < 0f)
-            {
-                first_out_index--;
-                if (first_out_index < 0)
-                    first_out_index = current_policies.Length - 1;
-            }
-
-            first_out_policy = current_policies[first_out_index];
-        }
-    }
+    //private void SelectCurrentPolicyWithScroll()
+    //{
+    //    if (current_policies.Length > 0)
+    //    {
+    //        if (scroll.y > 0f)
+    //        {
+    //            first_out_index = (first_out_index + 1) % current_policies.Length;
+    //            first_out_policy = current_policies[first_out_index];
+    //        }
+    //        else if (scroll.y < 0f)
+    //        {
+    //            first_out_index--;
+    //            if (first_out_index < 0)
+    //                first_out_index = current_policies.Length - 1;
+    //        }
+    //
+    //        first_out_policy = current_policies[first_out_index];
+    //    }
+    //}
     #endregion
 }
