@@ -11,15 +11,19 @@ public class MenuAudioManager : MonoBehaviour
 
     public MainMenuAuidioRefs mainMenuRefs {get; private set;}
 
-     EventInstance menuMusicInstance;
+    EventInstance menuMusicInstance;
+    EventInstance computerAmbienceInstance;
 
-    
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         m_instance = this;
         mainMenuRefs = GetComponent<MainMenuAuidioRefs>();
+        AudioPlayback.PlayOneShot(mainMenuRefs.mainMenuStartEvent, null);
 
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
         FmodRouting.SetUpBuses();
 
         StartMenuMusic();
@@ -29,6 +33,9 @@ public class MenuAudioManager : MonoBehaviour
     {
         menuMusicInstance = RuntimeManager.CreateInstance(mainMenuRefs.mainMenuMusicEvent);
         menuMusicInstance.start();
+
+        computerAmbienceInstance = RuntimeManager.CreateInstance(mainMenuRefs.menuComputerEvent);
+        computerAmbienceInstance.start();
         
     }
 
@@ -37,6 +44,13 @@ public class MenuAudioManager : MonoBehaviour
         menuMusicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         menuMusicInstance.release();
     }
+
+    void OnDestroy()
+    {
+        ReleaseMenuMusic();
+
+    }
+    
 
     
 

@@ -19,4 +19,5 @@ public class UIFmodReferences : MonoBehaviour
     public EventReference nodeSelectorEvent;
     public EventReference policyPurchasedEvent;
     public EventReference policyAlreadyPurchasedEvent;
+    public EventReference staticGraphShowEvent;
 }

@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abb81d9460c47f340bda06baaa0142d0, type: 3}
   m_Name: CRTFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     rpe: 550
     curvature: 5
