@@ -28,6 +28,14 @@ public class CTPolicyContainer : MonoBehaviour
         SetPolicyForTurn();
     }
 
+    public void SetPolicyContainer(CTPolicyContainer ctpc)
+    {
+        this.index = ctpc.index;
+        this.policies = ctpc?.policies;
+        this.current_policy = ctpc?.current_policy;
+        //this.borderEffect = ctpc?.borderEffect;
+    }
+
     public void SetPolicyForTurn()
     {
         current_policy = policies[GameManager._INSTANCE.GetTurn().turn];

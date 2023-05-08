@@ -344,6 +344,7 @@ public class ComputerController : MonoBehaviour
             //PolicyManager.instance.ReplacePolicyCard(_hit.transform.GetComponent<CTPolicyContainer>().GetCurrentPolicy().ID);
             CTPolicyContainer test = _hit.transform.GetComponent<CTPolicyContainer>();
             PolicyManager.instance.aboutToBePurchasedCard = test.GetCurrentPolicy();
+            PolicyManager.instance.current_policy_container.SetPolicyContainer(_hit.transform.GetComponent<CTPolicyContainer>());
             PolicyManager.instance.PolicySelect(test.GetCurrentPolicy());
             journal.GetComponent<Journal>().UpdateFactionProductionText();
             //PolicyManager.instance.SelectPolicy(test.GetCurrentPolicy().ID);
@@ -355,6 +356,14 @@ public class ComputerController : MonoBehaviour
         {
             if (pCardAnims[i] != null && policyCards[i] != null)
                 pCardAnims[i].SetBool("Right", _hit.transform.name == policyCards[i].name);
+        }
+
+        // View current policy card selected
+        if (isInteractingPressed && _hit.transform.CompareTag("MyPolicyCard"))
+        {
+            CTPolicyContainer test = _hit.transform.GetComponent<CTPolicyContainer>();
+            PolicyManager.instance.current_policy_container.SetPolicyContainer(_hit.transform.GetComponent<CTPolicyContainer>());
+            PolicyManager.instance.ShowPolicyViewScreen(test.GetCurrentPolicy());
         }
 
         for (int i = 0; i < myPolicyCards.Length; i++)

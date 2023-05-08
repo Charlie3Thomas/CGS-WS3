@@ -27,6 +27,17 @@ public class PolicyCardExchange : MonoBehaviour
     private void OnEnable()
     {
         CTPolicyCard ctp = new CTPolicyCard();
+
+        if(cs == CardState.First)
+        {
+            foreach (var e in othersEffects)
+            {
+                e.Stop();
+            }
+            effect.Play();
+            PolicyManager.instance.first_out_index = (int)cs;
+        }
+
         if (cs == CardState.Purchasable)
             ctp = PolicyManager.instance.aboutToBePurchasedCard;
         else

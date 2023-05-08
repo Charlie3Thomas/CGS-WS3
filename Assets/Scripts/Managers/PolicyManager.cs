@@ -16,6 +16,8 @@ public class PolicyManager : MonoBehaviour
 
     private static readonly int policies_per_turn = 7; // Number of policies shown per turn
     private CTPolicyContainer[] policy_containers; // Container objects for policies
+    [HideInInspector]
+    public CTPolicyContainer current_policy_container;
     public CTPolicyCard[] policies_at_current_turn; // Policies show in current turn
     public CTPolicyCard first_out_policy; // Policy replaced when setting a new policy when policies = 3
     public int first_out_index = 0; // Index for first out policy
@@ -29,6 +31,7 @@ public class PolicyManager : MonoBehaviour
     public CTPolicyCard aboutToBePurchasedCard;
     [HideInInspector]
     public string purchasable_id = "";
+    public GameObject policyViewBackButton;
     public GameObject policySelectButtons;
     public GameObject policyExchangeButtons;
 
@@ -91,7 +94,7 @@ public class PolicyManager : MonoBehaviour
         if (current_policies == null)
             return;
 
-        // Visually show current policies
+        // Visually show current policies by setting them active
         for (int i = 0; i < current_policies_go.Length; i++)
         {
             if (current_policies[i] != null)
@@ -160,10 +163,17 @@ public class PolicyManager : MonoBehaviour
         if (current_policies[0].ID != null && current_policies[1].ID != null && current_policies[2].ID != null)
             ShowPolicyExchangeScreen();
         else
-            ShowPolicySelectScreen(pc);
+            ShowPolicyPurchaseScreen(pc);
     }
 
-    public void ShowPolicySelectScreen(CTPolicyCard pc)
+    public void ShowPolicyViewScreen(CTPolicyCard pc)
+    {
+        policySelectScreen.SetActive(true);
+        policyTextZoomed.text = pc.info_text + pc.cost.GetString();
+        policyViewBackButton.SetActive(true);
+    }
+
+    public void ShowPolicyPurchaseScreen(CTPolicyCard pc)
     {
         policySelectScreen.SetActive(true);
         policyTextZoomed.text = pc.info_text + pc.cost.GetString();
@@ -181,6 +191,7 @@ public class PolicyManager : MonoBehaviour
         purchasable_id = "";
         aboutToBePurchasedCard = null;
         policyTextZoomed.text = "";
+        policyViewBackButton.SetActive(false);
         policySelectButtons.SetActive(false);
         policySelectScreen.SetActive(false);
         policyExchangeScreen.SetActive(false);
@@ -271,6 +282,7 @@ public class PolicyManager : MonoBehaviour
                 if (free_slot != -1)
                 {
                     current_policies[free_slot] = policies_at_current_turn[policy];
+                    current_policies_go[free_slot].transform.GetChild(0).GetComponent<CTPolicyContainer>().SetPolicyContainer(current_policy_container);
                     TrackApplyPolicy(current_policies[free_slot]);
                     return;
                 }
@@ -280,6 +292,7 @@ public class PolicyManager : MonoBehaviour
                     int replace_slot = HandleNoFreeSlotCase();
                     TrackRevokePolicy(current_policies[replace_slot]);
                     current_policies[replace_slot] = policies_at_current_turn[policy];
+                    current_policies_go[replace_slot].transform.GetChild(0).GetComponent<CTPolicyContainer>().SetPolicyContainer(current_policy_container);
                     TrackApplyPolicy(current_policies[replace_slot]);
                     return;
                 }
@@ -302,6 +315,7 @@ public class PolicyManager : MonoBehaviour
     #region Utility
     private void Initialise()
     {
+        current_policy_container = new CTPolicyContainer();
         current_policies = new CTPolicyCard[3];
         for (int i = 0; i < current_policies.Length; i++)
         {
