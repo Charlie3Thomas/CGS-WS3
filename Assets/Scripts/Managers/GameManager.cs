@@ -196,7 +196,7 @@ namespace CT
                 // Apply disaster events
                 disaster_timeline[i]?.ApplyChange(ref ret);
 
-                Debug.Log($"Turn {i} mods: {net_mods}");
+                //Debug.Log($"Turn {i} mods: {net_mods}");
             }
 
             return ret;
