@@ -641,12 +641,6 @@ namespace CT
                 //Debug.Log($"Year {turns[i].turn} has {turns[i].Money} money, {turns[i].Science} science, {turns[i].Food} food, {turns[i].Population} population");
             }
 
-            // Force last year to be 0 to simulate big disaster
-            moneys.Add(0f);
-            sciences.Add(0f);
-            foods.Add(0f);
-            populations.Add(0f);
-
             ComputerController.Instance.turns = turns;
 
             return new RAUtility.Vector4List(moneys, sciences, foods, populations);
