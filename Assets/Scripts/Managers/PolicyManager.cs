@@ -132,6 +132,7 @@ public class PolicyManager : MonoBehaviour
                 && current_policies[i].fdist.planner_percentage <= GameManager._INSTANCE.GetFactionDistribution().w)
             {
                 current_policies_go[i].transform.GetChild(0).GetComponent<CTPolicyContainer>().borderEffect.Play();
+                
             }
         }
     }
@@ -184,6 +185,7 @@ public class PolicyManager : MonoBehaviour
     {
         policyExchangeScreen.SetActive(true);
         policyExchangeButtons.SetActive(true);
+        AudioManager.Instance.StartPolicyFireLoop();
     }
 
     public void HidePolicyPopup()
@@ -196,6 +198,7 @@ public class PolicyManager : MonoBehaviour
         policySelectScreen.SetActive(false);
         policyExchangeScreen.SetActive(false);
         policyExchangeButtons.SetActive(false);
+        AudioManager.Instance.StopPolicyFireLoop();
     }
 
     public void LoadPoliciesAtCurrentScope(uint _turn)

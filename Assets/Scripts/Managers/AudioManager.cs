@@ -16,6 +16,7 @@ public class AudioManager : MonoBehaviour
 
     private EventInstance oceanAmbienceInstance;
     private EventInstance volcanoAmbienceInstance;
+    private EventInstance fireCardAmbienceInstance;
 
 
     [Header("Event References Selector")]
@@ -157,6 +158,18 @@ public class AudioManager : MonoBehaviour
     {
         musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         musicInstance.release();
+    }
+
+    public void StartPolicyFireLoop()
+    {
+       fireCardAmbienceInstance = RuntimeManager.CreateInstance(ambienceEvents.fireCardLoopEvent);
+       fireCardAmbienceInstance.start();
+    }
+    
+    public void StopPolicyFireLoop()
+    {
+        fireCardAmbienceInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        fireCardAmbienceInstance.release();
     }
     /*
     public void Resume()

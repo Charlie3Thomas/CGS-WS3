@@ -42,7 +42,10 @@ public class MenuAudioManager : MonoBehaviour
     public void ReleaseMenuMusic()
     {
         menuMusicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        computerAmbienceInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+
         menuMusicInstance.release();
+        computerAmbienceInstance.release();
     }
 
     void OnDestroy()
