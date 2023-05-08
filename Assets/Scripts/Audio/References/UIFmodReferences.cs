@@ -20,4 +20,5 @@ public class UIFmodReferences : MonoBehaviour
     public EventReference policyPurchasedEvent;
     public EventReference policyAlreadyPurchasedEvent;
     public EventReference staticGraphShowEvent;
+    public EventReference fireCardEvent;
 }

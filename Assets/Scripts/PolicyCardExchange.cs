@@ -59,5 +59,6 @@ public class PolicyCardExchange : MonoBehaviour
         }
         effect.Play();
         PolicyManager.instance.first_out_index = (int)cs;
+        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.fireCardEvent, null);
     }
 }
