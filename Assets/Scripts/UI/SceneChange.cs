@@ -61,6 +61,7 @@ public class SceneChange : MonoBehaviour
     {
         FmodRouting.StopMasterBus(); //Sam on destory for audio stoppping not calling all stops before menu loads, just focefully stop master bus with fade 
         SceneManager.LoadScene(0);
+       
     }
 
     public void OnSelectBack() 
