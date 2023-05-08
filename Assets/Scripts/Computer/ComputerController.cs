@@ -334,7 +334,7 @@ public class ComputerController : MonoBehaviour
     {
         // Plot graph with necessary values when showing graph
         RefreshGraph();
-
+        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.staticGraphShowEvent, null);
         showGraph = !showGraph;
         canSwitch = false;
         staticScreenEffect.SetActive(true);

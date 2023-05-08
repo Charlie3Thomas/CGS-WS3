@@ -16161,6 +16161,7 @@ MonoBehaviour:
   graphGO: {fileID: 0}
   sliderRect: {fileID: 0}
   graph: {fileID: 0}
+  staticScreenEffect: {fileID: 0}
   screen: {fileID: 0}
   pCardAnims:
   - {fileID: 0}
@@ -16204,6 +16205,7 @@ MonoBehaviour:
   onScreen: 0
   onTech: 0
   showGraph: 0
+  canSwitch: 1
   totalPointsLimit: 10
   desiredYear: 1900
 --- !u!114 &1560431309
@@ -17084,6 +17086,13 @@ MonoBehaviour:
       Data3: 1836466605
       Data4: -268808588
     Path: event:/Music/MenuMusic
+  mainMenuStartEvent:
+    Guid:
+      Data1: -318698917
+      Data2: 1177717755
+      Data3: 1100891779
+      Data4: -556654554
+    Path: event:/MenuStart
   menuButtonSelectEvent:
     Guid:
       Data1: 845239054
@@ -17091,6 +17100,13 @@ MonoBehaviour:
       Data3: -1447320424
       Data4: -504359861
     Path: event:/UI/MainMenuSelect
+  menuComputerEvent:
+    Guid:
+      Data1: -1516257815
+      Data2: 1249226780
+      Data3: -773014888
+      Data4: 1367734767
+    Path: event:/Ambience/ComputerAmbience
 --- !u!114 &1648248404
 MonoBehaviour:
   m_ObjectHideFlags: 0
