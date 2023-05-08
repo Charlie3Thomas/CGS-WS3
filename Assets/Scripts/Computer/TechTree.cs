@@ -20,6 +20,16 @@ public class TechTree : MonoBehaviour
         }
     }
 
+    public BuffsNerfs GetBuffs(CTTechnologies _t)
+    {
+        List<BuffsNerfsType> types = DataSheet.technology_buffs[_t].type;
+        List<float> ammounts = DataSheet.technology_buffs[_t].amount;
+
+        BuffsNerfs bn = new BuffsNerfs(types, ammounts);
+
+        return bn;
+    }
+
     public void LookupBuffs(CTTechnologies _t)
     {
         List<BuffsNerfsType> types = DataSheet.technology_buffs[_t].type;

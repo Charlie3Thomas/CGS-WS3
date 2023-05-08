@@ -379,9 +379,29 @@ public class ComputerController : MonoBehaviour
         }
     }
 
+    public virtual void ShowMessage(string _dataToShow)
+    {
+
+        UIHoverManager.OnMouseHover(_dataToShow, Input.mousePosition);
+    }
+
+    protected IEnumerator StartTimer()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        ShowMessage(dataToShow);
+    }
+
+    private bool hitTech = false;
+    private string dataToShow = "";
     private void InteractWithScreen(RaycastHit hit, bool screen, Camera cam)
     {
-        if (isInteractingPressed && screen)
+        if (hitTech)
+        {
+            UIHoverManager.OnLoseFocus();
+            hitTech = false;
+        }
+        if (screen)
         {
             var localPoint = hit.textureCoord;
             Ray camRay = cam.ScreenPointToRay(new Vector2(localPoint.x * cam.pixelWidth, localPoint.y * cam.pixelHeight));
@@ -392,14 +412,25 @@ public class ComputerController : MonoBehaviour
                 {
                     if (camHit.transform.CompareTag("TechNode"))
                     {
-                        camHit.transform.GetComponent<TechNode>().Unlock();
-                        journal.GetComponent<Journal>().UpdateFactionProductionText();
+                        if(!hitTech)
+                        {
+                            dataToShow = camHit.transform.GetComponent<TechNode>().GetDescription();
+                            ShowMessage(dataToShow);
+                            hitTech = true;
+                        }
+                        if (isInteractingPressed)
+                        {
+                            camHit.transform.GetComponent<TechNode>().Unlock();
+                            journal.GetComponent<Journal>().UpdateFactionProductionText();
+                        }
                     }
-
                 }
 
                 if (cam == screenCam)
-                    newPos = camHit.transform.position;
+                {
+                    if(isInteractingPressed)
+                        newPos = camHit.transform.position;
+                }
             }
         }
     }
