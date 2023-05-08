@@ -170,7 +170,6 @@ GameObject:
   - component: {fileID: 16153729}
   - component: {fileID: 16153728}
   - component: {fileID: 16153727}
-  - component: {fileID: 16153726}
   m_Layer: 6
   m_Name: Policy_Card_7
   m_TagString: PolicyCard
@@ -195,24 +194,6 @@ Transform:
   m_Father: {fileID: 1846096857}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &16153726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 16153724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9605aef4c090a184890f0a90cafc31c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
-  current_policy:
-    ID: 
-    info_text: 
-  policies: []
-  borderEffect: {fileID: 413503089}
 --- !u!65 &16153727
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -234,7 +215,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 16153724}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e30071cacc92874bb387f9aca26e6fb, type: 2}
   m_CullingMode: 0
@@ -1430,7 +1411,6 @@ GameObject:
   - component: {fileID: 145902313}
   - component: {fileID: 145902312}
   - component: {fileID: 145902311}
-  - component: {fileID: 145902310}
   m_Layer: 6
   m_Name: Policy_Card_1
   m_TagString: PolicyCard
@@ -1455,24 +1435,6 @@ Transform:
   m_Father: {fileID: 241809885}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &145902310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 145902308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9605aef4c090a184890f0a90cafc31c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
-  current_policy:
-    ID: 
-    info_text: 
-  policies: []
-  borderEffect: {fileID: 303183290}
 --- !u!65 &145902311
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1494,7 +1456,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145902308}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e30071cacc92874bb387f9aca26e6fb, type: 2}
   m_CullingMode: 0
@@ -3625,7 +3587,6 @@ GameObject:
   - component: {fileID: 288336757}
   - component: {fileID: 288336756}
   - component: {fileID: 288336755}
-  - component: {fileID: 288336754}
   m_Layer: 6
   m_Name: My_Policy_Card_2
   m_TagString: MyPolicyCard
@@ -3650,24 +3611,6 @@ Transform:
   m_Father: {fileID: 1838995249}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &288336754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 288336752}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9605aef4c090a184890f0a90cafc31c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
-  current_policy:
-    ID: 
-    info_text: 
-  policies: []
-  borderEffect: {fileID: 1936083022}
 --- !u!65 &288336755
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3689,7 +3632,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 288336752}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e30071cacc92874bb387f9aca26e6fb, type: 2}
   m_CullingMode: 0
@@ -4273,7 +4216,6 @@ GameObject:
   - component: {fileID: 343933487}
   - component: {fileID: 343933486}
   - component: {fileID: 343933485}
-  - component: {fileID: 343933484}
   m_Layer: 6
   m_Name: Policy_Card_6
   m_TagString: PolicyCard
@@ -4298,24 +4240,6 @@ Transform:
   m_Father: {fileID: 867198098}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &343933484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 343933482}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9605aef4c090a184890f0a90cafc31c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
-  current_policy:
-    ID: 
-    info_text: 
-  policies: []
-  borderEffect: {fileID: 1516963468}
 --- !u!65 &343933485
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4337,7 +4261,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 343933482}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e30071cacc92874bb387f9aca26e6fb, type: 2}
   m_CullingMode: 0
@@ -4412,7 +4336,6 @@ GameObject:
   - component: {fileID: 344107638}
   - component: {fileID: 344107637}
   - component: {fileID: 344107636}
-  - component: {fileID: 344107635}
   m_Layer: 6
   m_Name: My_Policy_Card_3
   m_TagString: MyPolicyCard
@@ -4437,24 +4360,6 @@ Transform:
   m_Father: {fileID: 1355125077}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &344107635
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 344107633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9605aef4c090a184890f0a90cafc31c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
-  current_policy:
-    ID: 
-    info_text: 
-  policies: []
-  borderEffect: {fileID: 1411310535}
 --- !u!65 &344107636
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4476,7 +4381,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 344107633}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e30071cacc92874bb387f9aca26e6fb, type: 2}
   m_CullingMode: 0
@@ -6890,7 +6795,6 @@ GameObject:
   - component: {fileID: 494249366}
   - component: {fileID: 494249365}
   - component: {fileID: 494249364}
-  - component: {fileID: 494249363}
   m_Layer: 6
   m_Name: Policy_Card_2
   m_TagString: PolicyCard
@@ -6915,24 +6819,6 @@ Transform:
   m_Father: {fileID: 190949250}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &494249363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 494249361}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9605aef4c090a184890f0a90cafc31c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
-  current_policy:
-    ID: 
-    info_text: 
-  policies: []
-  borderEffect: {fileID: 107213110}
 --- !u!65 &494249364
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6954,7 +6840,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 494249361}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e30071cacc92874bb387f9aca26e6fb, type: 2}
   m_CullingMode: 0
@@ -8870,6 +8756,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &667480052 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8139481995969099412, guid: 25a2914e407ade942a90c21dfc813343,
+    type: 3}
+  m_PrefabInstance: {fileID: 6946349577554401309}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &686092892
 GameObject:
   m_ObjectHideFlags: 0
@@ -9165,7 +9063,6 @@ GameObject:
   - component: {fileID: 715499730}
   - component: {fileID: 715499729}
   - component: {fileID: 715499728}
-  - component: {fileID: 715499727}
   m_Layer: 6
   m_Name: My_Policy_Card_1
   m_TagString: MyPolicyCard
@@ -9190,24 +9087,6 @@ Transform:
   m_Father: {fileID: 562810879}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &715499727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 715499725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9605aef4c090a184890f0a90cafc31c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
-  current_policy:
-    ID: 
-    info_text: 
-  policies: []
-  borderEffect: {fileID: 754581211}
 --- !u!65 &715499728
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9229,7 +9108,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 715499725}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e30071cacc92874bb387f9aca26e6fb, type: 2}
   m_CullingMode: 0
@@ -11146,7 +11025,6 @@ GameObject:
   - component: {fileID: 916718181}
   - component: {fileID: 916718180}
   - component: {fileID: 916718179}
-  - component: {fileID: 916718178}
   m_Layer: 6
   m_Name: Policy_Card_5
   m_TagString: PolicyCard
@@ -11171,24 +11049,6 @@ Transform:
   m_Father: {fileID: 100691146}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &916718178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 916718176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9605aef4c090a184890f0a90cafc31c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
-  current_policy:
-    ID: 
-    info_text: 
-  policies: []
-  borderEffect: {fileID: 837640995}
 --- !u!65 &916718179
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11210,7 +11070,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 916718176}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e30071cacc92874bb387f9aca26e6fb, type: 2}
   m_CullingMode: 0
@@ -16836,7 +16696,6 @@ GameObject:
   - component: {fileID: 1400223490}
   - component: {fileID: 1400223489}
   - component: {fileID: 1400223488}
-  - component: {fileID: 1400223487}
   m_Layer: 6
   m_Name: Policy_Card_3
   m_TagString: PolicyCard
@@ -16861,24 +16720,6 @@ Transform:
   m_Father: {fileID: 1843362734}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1400223487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400223485}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9605aef4c090a184890f0a90cafc31c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
-  current_policy:
-    ID: 
-    info_text: 
-  policies: []
-  borderEffect: {fileID: 1217685608}
 --- !u!65 &1400223488
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16900,7 +16741,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1400223485}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e30071cacc92874bb387f9aca26e6fb, type: 2}
   m_CullingMode: 0
@@ -17807,7 +17648,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2057567512}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Journal, Assembly-CSharp
         m_MethodName: ReadStringInput
         m_Mode: 0
@@ -20299,7 +20140,6 @@ GameObject:
   - component: {fileID: 1662969609}
   - component: {fileID: 1662969608}
   - component: {fileID: 1662969607}
-  - component: {fileID: 1662969606}
   - component: {fileID: 1662969605}
   m_Layer: 0
   m_Name: ComputerCamera
@@ -20342,82 +20182,6 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1662969606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1662969604}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: feee658931014ca4eadc95c1f6c49adc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mat_awareness: {fileID: 0}
-  policyCards:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  myPolicyCards:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  pointSelectors: []
-  graphGO: {fileID: 0}
-  sliderRect: {fileID: 0}
-  graph: {fileID: 0}
-  staticScreenEffect: {fileID: 0}
-  screen: {fileID: 0}
-  pCardAnims:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  myPCardAnims:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  notepad: {fileID: 0}
-  journal: {fileID: 0}
-  disasterNameText: {fileID: 0}
-  disasterYearText: {fileID: 0}
-  disasterMagnitudeText: {fileID: 0}
-  disasterDeathTollText: {fileID: 0}
-  safetyText: {fileID: 0}
-  yearText: {fileID: 0}
-  foodText: {fileID: 0}
-  rpText: {fileID: 0}
-  currencyText: {fileID: 0}
-  populationText: {fileID: 0}
-  pCardTexts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  myPCardTexts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  newPos: {x: 0, y: 0, z: 0}
-  touchingScreen: 0
-  touchingTechScreen: 0
-  onScreen: 0
-  onTech: 0
-  showGraph: 0
-  canSwitch: 1
-  totalPointsLimit: 10
-  desiredYear: 1900
 --- !u!114 &1662969607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21203,7 +20967,6 @@ GameObject:
   - component: {fileID: 1713960394}
   - component: {fileID: 1713960393}
   - component: {fileID: 1713960392}
-  - component: {fileID: 1713960391}
   m_Layer: 6
   m_Name: Policy_Card_4
   m_TagString: PolicyCard
@@ -21228,24 +20991,6 @@ Transform:
   m_Father: {fileID: 1674296302}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1713960391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1713960389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9605aef4c090a184890f0a90cafc31c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: 0
-  current_policy:
-    ID: 
-    info_text: 
-  policies: []
-  borderEffect: {fileID: 1546578765}
 --- !u!65 &1713960392
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21267,7 +21012,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1713960389}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e30071cacc92874bb387f9aca26e6fb, type: 2}
   m_CullingMode: 0
@@ -26677,7 +26422,6 @@ GameObject:
   - component: {fileID: 2057567515}
   - component: {fileID: 2057567514}
   - component: {fileID: 2057567513}
-  - component: {fileID: 2057567512}
   m_Layer: 6
   m_Name: Journal
   m_TagString: Journal
@@ -26701,19 +26445,6 @@ Transform:
   m_Father: {fileID: 488935197}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
---- !u!114 &2057567512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2057567510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c14ba9a2d8012ae42b0f913d8bfe57fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  facText: {fileID: 1422158829}
 --- !u!64 &2057567513
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -28221,6 +27952,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 2270
       objectReference: {fileID: 0}
+    - target: {fileID: 4296210163724828631, guid: 25a2914e407ade942a90c21dfc813343,
+        type: 3}
+      propertyPath: popUpShowButton
+      value: 
+      objectReference: {fileID: 667480052}
     - target: {fileID: 4296210164238443533, guid: 25a2914e407ade942a90c21dfc813343,
         type: 3}
       propertyPath: m_AnchorMax.x
