@@ -45,6 +45,8 @@ public class ComputerController : MonoBehaviour
     [HideInInspector]
     public WindowGraph graph;
     [HideInInspector]
+    public GameObject staticScreenEffect;
+    [HideInInspector]
     public GameObject screen;
 
     #region Animations
@@ -105,6 +107,8 @@ public class ComputerController : MonoBehaviour
     public bool onTech = false;
     [HideInInspector]
     public bool showGraph = false;
+    [HideInInspector]
+    public bool canSwitch = true;
 
     // Year slider
     private GameObject yearSlider;
@@ -326,6 +330,60 @@ public class ComputerController : MonoBehaviour
         }
     }
 
+    public IEnumerator SwitchMainScreen()
+    {
+        // Plot graph with necessary values when showing graph
+        RefreshGraph();
+
+        showGraph = !showGraph;
+        canSwitch = false;
+        staticScreenEffect.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        screen.SetActive(!showGraph);
+        graphGO.SetActive(showGraph);
+        staticScreenEffect.SetActive(false);
+        canSwitch = true;
+
+        if (showGraph)
+        {
+            // Set Colours
+            currencyText.color = DataSheet.WORKER_COLOUR;
+            rpText.color = DataSheet.SCIENTIST_COLOUR;
+            foodText.color = DataSheet.FARMER_COLOUR;
+            pointSelectors[0].pipMat.SetInt("_isGraph", 1);
+            pointSelectors[1].pipMat.SetInt("_isGraph", 1);
+            pointSelectors[2].pipMat.SetInt("_isGraph", 1);
+            pointSelectors[3].pipMat.SetInt("_isGraph", 1);
+        }
+        else
+        {
+            // Reset Colours
+            currencyText.color = DataSheet.DEFAULT_COLOR;
+            rpText.color = DataSheet.DEFAULT_COLOR;
+            foodText.color = DataSheet.DEFAULT_COLOR;
+            pointSelectors[0].pipMat.SetInt("_isGraph", 0);
+            pointSelectors[1].pipMat.SetInt("_isGraph", 0);
+            pointSelectors[2].pipMat.SetInt("_isGraph", 0);
+            pointSelectors[3].pipMat.SetInt("_isGraph", 0);
+
+            // Reset Pips
+
+            // Scientist
+            pointSelectors[0].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribution().y * 10);
+            // Plan
+            pointSelectors[1].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribution().w * 10);
+            // Farmer
+            pointSelectors[3].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribution().z * 10);
+            // Worker
+            pointSelectors[2].pipMat.SetFloat("_FillAmount", GameManager._INSTANCE.GetFactionDistribution().x * 10);
+
+            // Reset Counters
+            GameManager._INSTANCE.UpdateResourceCounters();
+        }
+
+        yield return null;
+    }
+
     private void YearKnob(RaycastHit _hit)
     {
         // Year knob up/down
@@ -469,6 +527,7 @@ public class ComputerController : MonoBehaviour
         panDownButton = GameObject.Find("PanDownButton");
         panBackFromUpButton = GameObject.Find("PanBackButtonFromUp");
         panBackFromDownButton = GameObject.Find("PanBackButtonFromDown");
+        staticScreenEffect = GameObject.Find("StaticEffectScreen");
         screen = GameObject.FindGameObjectWithTag("Screen");
         notepad = GameObject.FindGameObjectWithTag("Notepad");
         journal = GameObject.FindGameObjectWithTag("Journal");
@@ -514,6 +573,8 @@ public class ComputerController : MonoBehaviour
         panDownButton.SetActive(true);
         panBackFromUpButton.SetActive(false);
         panBackFromDownButton.SetActive(false);
+        staticScreenEffect.SetActive(false);
+        screen.SetActive(true);
         graphGO.SetActive(false);
 
         // Set Values
