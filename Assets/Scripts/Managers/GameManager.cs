@@ -31,6 +31,10 @@ namespace CT
         private List<CTChange>[] user_changes;
         private List<CTChange>[] awareness_changes;
 
+        public List<CTChange>[] UserChanges { get { return user_changes; } }
+        public List<CTChange>[] GameChanges { get { return game_changes; } }
+        public List<CTChange>[] AwarenessChanges { get { return awareness_changes; } }
+
         private static readonly CTTurnData initial_year = new CTTurnData();
 
         public CTTurnData turn_data = new CTTurnData();
@@ -959,6 +963,15 @@ namespace CT
         }
 
         #endregion
+        #endregion
+
+        #region Load
+        public void LoadData(List<CTChange>[] _userChanges, List<CTChange>[] _gameChanges, List<CTChange>[] _awarenessChanges)
+        {
+            user_changes = _userChanges;
+            game_changes = _gameChanges;
+            awareness_changes = _awarenessChanges;
+        }
         #endregion
     }
 }

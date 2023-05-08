@@ -70,4 +70,12 @@ public class PointSelector : MonoBehaviour
         else
             Debug.LogError("pipMat is null");
     }
+    void OnMouseOver()
+    {
+        CustomCursor.Instance.OnHoverOverResourceSelector();
+    }
+    private void OnMouseExit()
+    {
+        CustomCursor.Instance.SetDefaultCursor();
+    }
 }

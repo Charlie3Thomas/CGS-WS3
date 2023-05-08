@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5658052719243977695
 MonoBehaviour:
@@ -44,9 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6798db9e0a8b33f449fc33151c5aed4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCursor: {fileID: 2800000, guid: a5f9cc9a5efbe894eb85de4851711ba8, type: 3}
-  clickedCursor: {fileID: 2800000, guid: 460b8c81943825c479af7ffbd80c9e5d, type: 3}
-  settingsCusrsor: {fileID: 2800000, guid: f6b5dd15dd6519e4aa3ad03b1da0876d, type: 3}
-  resourceCursor: {fileID: 0}
-  knobCursor: {fileID: 0}
-  horizontalSliderCursor: {fileID: 0}
+  mainCursor: {fileID: 2800000, guid: f418b453326c7d946b52410f3caed8df, type: 3}
+  clickedCursor: {fileID: 2800000, guid: b5e404d20410fc649b0a3384088e0d41, type: 3}
+  settingsCusrsor: {fileID: 2800000, guid: a7f1055d81998a948b8f50b2c1b0faf4, type: 3}
+  resourceCursor: {fileID: 2800000, guid: a7f1055d81998a948b8f50b2c1b0faf4, type: 3}
+  knobCursor: {fileID: 2800000, guid: 421880346599851489270e18c36902fe, type: 3}
+  horizontalSliderCursor: {fileID: 2800000, guid: 5e94f406111a33941bcd8c9c16152471,
+    type: 3}
