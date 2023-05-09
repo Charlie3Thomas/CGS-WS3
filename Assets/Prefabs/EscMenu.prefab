@@ -103,7 +103,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Quit Game
+  m_text: UNPLUG CABLE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bd7de7983f70db04c8b3c3c7db8dc285, type: 2}
   m_sharedMaterial: {fileID: 4461847764946356756, guid: bd7de7983f70db04c8b3c3c7db8dc285,
@@ -239,7 +239,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Back to Main Menu
+  m_text: RESTART COMPUTER
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bd7de7983f70db04c8b3c3c7db8dc285, type: 2}
   m_sharedMaterial: {fileID: 4461847764946356756, guid: bd7de7983f70db04c8b3c3c7db8dc285,
@@ -321,6 +321,7 @@ GameObject:
   - component: {fileID: 5586781620527050915}
   - component: {fileID: 5586781620527050917}
   - component: {fileID: 5586781620527050916}
+  - component: {fileID: 7955702379481376953}
   m_Layer: 5
   m_Name: AudioSettingsBtn
   m_TagString: Untagged
@@ -431,6 +432,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &7955702379481376953
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5586781620527050913}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 57c9c0ae14ee01841ac11060a208fb80, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5586781620901959768
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,7 +511,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.81960785, g: 0.39607844, b: 0.39607844, a: 1}
@@ -577,6 +598,7 @@ GameObject:
   - component: {fileID: 5586781621441787116}
   - component: {fileID: 5586781621441787118}
   - component: {fileID: 5586781621441787117}
+  - component: {fileID: 6758680230659615455}
   m_Layer: 5
   m_Name: QuitBtn
   m_TagString: Untagged
@@ -624,7 +646,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 3
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.81960785, g: 0.39607844, b: 0.39607844, a: 1}
@@ -699,6 +721,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &6758680230659615455
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5586781621441787114}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e67176d0ea5797448aaba0967313350f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5586781621596446149
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,14 +841,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.045539398, g: 0.8773585, b: 0.011587708, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 4673e0543ccf41e4292e2169f0d8a42d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -882,7 +924,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Audio Settings
+  m_text: ADJUST SPEAKERS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bd7de7983f70db04c8b3c3c7db8dc285, type: 2}
   m_sharedMaterial: {fileID: 4461847764946356756, guid: bd7de7983f70db04c8b3c3c7db8dc285,
