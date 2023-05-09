@@ -125,6 +125,11 @@ public class PolicyManager : MonoBehaviour
             }
         }
 
+        ShowPoliciesMetReq();
+    }
+
+    public void ShowPoliciesMetReq()
+    {
         // Orange border on current policies that meet requirements
         for (int i = 0; i < current_policies.Length; i++)
         {
@@ -136,7 +141,7 @@ public class PolicyManager : MonoBehaviour
                 && current_policies[i].fdist.planner_percentage <= GameManager._INSTANCE.GetFactionDistribution().w)
             {
                 current_policies_go[i].transform.GetChild(0).GetComponent<CTPolicyContainer>().borderEffect.Play();
-                
+
             }
         }
     }

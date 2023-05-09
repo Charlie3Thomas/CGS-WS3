@@ -632,6 +632,8 @@ namespace CT
             List<float> foods = new List<float>();
             List<float> populations = new List<float>();
 
+            ComputerController.Instance.turns = turns;
+
             for (int i = 0; i < DataSheet.TURNS_NUMBER; i++)
             {
                 moneys.Add(turns[i].Money / 10f);
@@ -640,8 +642,6 @@ namespace CT
                 populations.Add(turns[i].Population);
                 //Debug.Log($"Year {turns[i].turn} has {turns[i].Money} money, {turns[i].Science} science, {turns[i].Food} food, {turns[i].Population} population");
             }
-
-            ComputerController.Instance.turns = turns;
 
             return new RAUtility.Vector4List(moneys, sciences, foods, populations);
         }
