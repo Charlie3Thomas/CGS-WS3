@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
-
+using CT;
 
 public class ScorecardUI : MonoBehaviour
 {
@@ -39,8 +39,9 @@ public class ScorecardUI : MonoBehaviour
 
     private void Awake()
     {
-
-       totalPoints = awarenessPoints + disasterPoints + nodePoints + turnsPoints;
+        nodePoints = GameManager._INSTANCE.GetActiveTechnologyTotal(2100);
+        Debug.Log("TotalNodePoints : " + nodePoints);
+        totalPoints = awarenessPoints + disasterPoints + nodePoints + turnsPoints;
 
         incrementRate1 = awarenessPoints / (50 * 4);
         incrementRate2 = disasterPoints / (50 * 4);
