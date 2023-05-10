@@ -101,9 +101,13 @@ public class PolicyManager : MonoBehaviour
             {
                 if (current_policies[i].ID != null)
                 {
+                    string req = "Scientists: " + (current_policies[i].fdist.scientist_percentage * 100).ToString() + "%"
+                        + " Workers: " + (current_policies[i].fdist.worker_percentage * 100).ToString() + "%"
+                        + " Farmers: " + (current_policies[i].fdist.farmer_percentage * 100).ToString() + "%"
+                        + " Planners: " + (current_policies[i].fdist.planner_percentage * 100).ToString() + "%";
                     current_policies_go[i].SetActive(true);
                     current_policies_go[i].transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = 
-                        current_policies[i].info_text + current_policies[i].cost.GetString();
+                        current_policies[i].info_text + current_policies[i].cost.GetString() + "\n\nReq:\n" + req;
                 }
             }
         }
@@ -121,6 +125,11 @@ public class PolicyManager : MonoBehaviour
             }
         }
 
+        ShowPoliciesMetReq();
+    }
+
+    public void ShowPoliciesMetReq()
+    {
         // Orange border on current policies that meet requirements
         for (int i = 0; i < current_policies.Length; i++)
         {
@@ -132,7 +141,7 @@ public class PolicyManager : MonoBehaviour
                 && current_policies[i].fdist.planner_percentage <= GameManager._INSTANCE.GetFactionDistribution().w)
             {
                 current_policies_go[i].transform.GetChild(0).GetComponent<CTPolicyContainer>().borderEffect.Play();
-                
+
             }
         }
     }

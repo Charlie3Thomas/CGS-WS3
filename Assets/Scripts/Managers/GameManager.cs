@@ -196,7 +196,7 @@ namespace CT
                 // Apply disaster events
                 disaster_timeline[i]?.ApplyChange(ref ret);
 
-                Debug.Log($"Turn {i} mods: {net_mods}");
+                //Debug.Log($"Turn {i} mods: {net_mods}");
             }
 
             return ret;
@@ -632,6 +632,8 @@ namespace CT
             List<float> foods = new List<float>();
             List<float> populations = new List<float>();
 
+            ComputerController.Instance.turns = turns;
+
             for (int i = 0; i < DataSheet.TURNS_NUMBER; i++)
             {
                 moneys.Add(turns[i].Money / 10f);
@@ -640,14 +642,6 @@ namespace CT
                 populations.Add(turns[i].Population);
                 //Debug.Log($"Year {turns[i].turn} has {turns[i].Money} money, {turns[i].Science} science, {turns[i].Food} food, {turns[i].Population} population");
             }
-
-            // Force last year to be 0 to simulate big disaster
-            moneys.Add(0f);
-            sciences.Add(0f);
-            foods.Add(0f);
-            populations.Add(0f);
-
-            ComputerController.Instance.turns = turns;
 
             return new RAUtility.Vector4List(moneys, sciences, foods, populations);
         }

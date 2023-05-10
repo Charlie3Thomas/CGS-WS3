@@ -97,7 +97,7 @@ public class WindowGraph : MonoBehaviour
         foodLineGraphVisual.CleanUp();
         scienceLineGraphVisual.CleanUp();
 
-        List<float> biggestList = RAUtility.GetListWithMaxValue(moneyValues, scienceValues, foodValues, popValues);
+        List<float> biggestList = new List<float>(RAUtility.GetListWithMaxValue(moneyValues, scienceValues, foodValues, popValues));
         biggestList.Add(0);
 
         SetGraphVisual(moneyLineGraphVisual, moneyValues, biggestList);
