@@ -8,25 +8,12 @@ public class DisasterEffectManager : MonoBehaviour
     [SerializeField]
     private CameraShake cameraShake;
     [SerializeField]
-    private GameObject pineLeavesPrefab;
+    private GameObject tornado;
     [SerializeField]
-    private GameObject sea;
-    [SerializeField]
-    private TsunamiObjectsHolder tsunamiHolder;
+    private GameObject tsunamiWave;
 
-    private float seaAmp1, seaAmp2, seaAmp3;
-    private float seaHighAmp1 = 1.5f;
-    private float seaHighAmp2 = 0.8f;
-    private float seaHighAmp3 = 2f;
-
-    private Material seaMaterial;
-    
     void Start()
     {
-        seaMaterial = sea.GetComponent<Renderer>().sharedMaterial;
-        seaAmp1 = seaMaterial.GetFloat("_Amplitude1");
-        seaAmp2 = seaMaterial.GetFloat("_Amplitude2");
-        seaAmp3 = seaMaterial.GetFloat("_Amplitude3");
     }
 
     void Update()
@@ -38,7 +25,7 @@ public class DisasterEffectManager : MonoBehaviour
         }
     }
 
-    private void showDisasterEffect(Disaster disaster)
+    private void ShowDisasterEffect(Disaster disaster)
     {
         float duration;
         float intensity;
@@ -53,8 +40,6 @@ public class DisasterEffectManager : MonoBehaviour
                 duration = disaster.intensity > 4 ? 7 : 5;
                 intensity = disaster.intensity * 0.03f;
                 cameraShake.Shake(duration, intensity);
-                setSeaLevelHigh(disaster.intensity);
-                tsunamiHolder.PlayTsunamiVFX(disaster.intensity);
                 break;
             case CTDisasters.Volcano:
                 duration = disaster.intensity > 4 ? 7 : 5;
@@ -71,21 +56,5 @@ public class DisasterEffectManager : MonoBehaviour
             default:
                 break;
         }
-    }
-
-    private void setSeaLevelHigh(float intensity)
-    {
-        seaMaterial.SetFloat("_Amplitude1", Mathf.Lerp(seaAmp1, seaHighAmp1, intensity*0.1f));
-        seaMaterial.SetFloat("_Amplitude2", Mathf.Lerp(seaAmp2, seaHighAmp2, intensity * 0.1f));
-        seaMaterial.SetFloat("_Amplitude3", Mathf.Lerp(seaAmp3, seaHighAmp3, intensity * 0.1f));
-
-        Invoke(nameof(resetSeaLevel), 7f);
-    }
-
-    private void resetSeaLevel()
-    {
-        seaMaterial.SetFloat("_Amplitude1", seaAmp1);
-        seaMaterial.SetFloat("_Amplitude2", seaAmp2);
-        seaMaterial.SetFloat("_Amplitude3", seaAmp3);
     }
 }
