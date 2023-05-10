@@ -338,7 +338,7 @@ public class ComputerController : MonoBehaviour
         showGraph = !showGraph;
         canSwitch = false;
         staticScreenEffect.SetActive(true);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.8f);
         screen.SetActive(!showGraph);
         graphGO.SetActive(showGraph);
         staticScreenEffect.SetActive(false);

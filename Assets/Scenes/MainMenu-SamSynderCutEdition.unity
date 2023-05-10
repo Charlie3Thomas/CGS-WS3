@@ -5737,8 +5737,6 @@ GameObject:
   - component: {fileID: 427719652}
   - component: {fileID: 427719651}
   - component: {fileID: 427719650}
-  - component: {fileID: 427719649}
-  - component: {fileID: 427719648}
   m_Layer: 6
   m_Name: Button_Year_Confirmation
   m_TagString: Button
@@ -5761,33 +5759,6 @@ Transform:
   m_Father: {fileID: 1238285599}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &427719648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427719646}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c442911d612f3594f9e7df64c347014a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeToWait: 0.5
-  dataToShow: Checkout Selected Year
---- !u!114 &427719649
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 427719646}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71dd59f5db17a54439d6f8ad10b25e8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 3
 --- !u!95 &427719650
 Animator:
   serializedVersion: 4
@@ -9348,9 +9319,7 @@ GameObject:
   - component: {fileID: 719064856}
   - component: {fileID: 719064855}
   - component: {fileID: 719064854}
-  - component: {fileID: 719064853}
   - component: {fileID: 719064852}
-  - component: {fileID: 719064851}
   m_Layer: 6
   m_Name: Point_selector_FARMERS
   m_TagString: PointsSelector
@@ -9373,20 +9342,6 @@ Transform:
   m_Father: {fileID: 1775202268}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &719064851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 719064849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c442911d612f3594f9e7df64c347014a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeToWait: 0.5
-  dataToShow: Farmers
 --- !u!95 &719064852
 Animator:
   serializedVersion: 4
@@ -9407,21 +9362,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &719064853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 719064849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13d410595d4fd5b49a194971ae101e2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pip: {fileID: 1229545680}
-  pipMat: {fileID: 0}
-  pointValue: 0
 --- !u!64 &719064854
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -12203,9 +12143,7 @@ GameObject:
   - component: {fileID: 996245783}
   - component: {fileID: 996245782}
   - component: {fileID: 996245781}
-  - component: {fileID: 996245780}
   - component: {fileID: 996245779}
-  - component: {fileID: 996245778}
   m_Layer: 6
   m_Name: Point_selector_SCIENTIST
   m_TagString: PointsSelector
@@ -12228,20 +12166,6 @@ Transform:
   m_Father: {fileID: 4808948}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &996245778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 996245776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c442911d612f3594f9e7df64c347014a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeToWait: 0.5
-  dataToShow: Scientist
 --- !u!95 &996245779
 Animator:
   serializedVersion: 4
@@ -12262,21 +12186,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &996245780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 996245776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13d410595d4fd5b49a194971ae101e2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pip: {fileID: 1381279036}
-  pipMat: {fileID: 0}
-  pointValue: 0
 --- !u!64 &996245781
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -19825,7 +19734,6 @@ GameObject:
   - component: {fileID: 1642137540}
   - component: {fileID: 1642137539}
   - component: {fileID: 1642137538}
-  - component: {fileID: 1642137537}
   m_Layer: 6
   m_Name: Point_selector_WORKERS
   m_TagString: PointsSelector
@@ -19848,20 +19756,6 @@ Transform:
   m_Father: {fileID: 692228693}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1642137537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1642137535}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c442911d612f3594f9e7df64c347014a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeToWait: 0.5
-  dataToShow: Workers
 --- !u!95 &1642137538
 Animator:
   serializedVersion: 4
@@ -23826,9 +23720,7 @@ GameObject:
   - component: {fileID: 1913793677}
   - component: {fileID: 1913793676}
   - component: {fileID: 1913793675}
-  - component: {fileID: 1913793674}
   - component: {fileID: 1913793673}
-  - component: {fileID: 1913793672}
   m_Layer: 6
   m_Name: Point_selector_PLANNERS
   m_TagString: PointsSelector
@@ -23851,20 +23743,6 @@ Transform:
   m_Father: {fileID: 2034115343}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1913793672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1913793670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c442911d612f3594f9e7df64c347014a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeToWait: 0.5
-  dataToShow: Planners
 --- !u!95 &1913793673
 Animator:
   serializedVersion: 4
@@ -23885,21 +23763,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1913793674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1913793670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13d410595d4fd5b49a194971ae101e2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pip: {fileID: 832708754}
-  pipMat: {fileID: 0}
-  pointValue: 0
 --- !u!64 &1913793675
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -72,7 +72,11 @@ public class SceneChange : MonoBehaviour
     public void OnSelectAudioSetttings()
     {
         FadeInAnimation();
-        AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
+
+        if(MenuAudioManager.Instance != false)
+        {
+           AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
+        }
     }
 
     public void OnSelectExitAudioSettings()
