@@ -23,6 +23,7 @@ public class ComputerController : MonoBehaviour
 
     #region Member Variables
     public static ComputerController Instance;
+    private TutorialManager tutorialManager;
 
     private Transform lookAt;
     private Camera screenCam;
@@ -154,6 +155,7 @@ public class ComputerController : MonoBehaviour
     #endregion
     #endregion
 
+
     void Awake()
     {
         if (Instance == null)
@@ -174,6 +176,9 @@ public class ComputerController : MonoBehaviour
         if (!cam)
             return;
 
+        // if(tutorialManager.gameState != tutorialManager.gameState.InGame)
+        //     return;
+            
         Ray ray = cam.ScreenPointToRay(mousePos);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
@@ -577,6 +582,7 @@ public class ComputerController : MonoBehaviour
         screen.SetActive(true);
         graphGO.SetActive(false);
 
+        tutorialManager = FindObjectOfType<TutorialManager>();
         // Set Values
         //desiredYear = YearData._INSTANCE.current_year;
         showGraph = false;

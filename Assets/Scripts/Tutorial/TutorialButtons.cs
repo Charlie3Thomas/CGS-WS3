@@ -18,6 +18,10 @@ public class TutorialButtons : MonoBehaviour
     public void EnableTutorial()
     {
         Debug.Log("Tutorial Starting");
+        tutorialManager.InteractableUI.SetActive(true);
+        tutorialManager.TutorialUI.SetActive(false);
+        tutorialManager.gameState = TutorialManager.GameState.PlayTutorial;
+        
     }
 
     // When the user clicks skip, the normal game will just load
