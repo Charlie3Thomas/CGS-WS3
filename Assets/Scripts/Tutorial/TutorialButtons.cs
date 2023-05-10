@@ -20,7 +20,7 @@ public class TutorialButtons : MonoBehaviour
         Debug.Log("Tutorial Starting");
         tutorialManager.InteractableUI.SetActive(true);
         tutorialManager.TutorialUI.SetActive(false);
-        tutorialManager.gameState = TutorialManager.GameState.PlayTutorial;
+        tutorialManager.gameState = TutorialManager.GameState.Interactions;
         
     }
 
