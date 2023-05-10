@@ -23,6 +23,7 @@ public class InteractionButtons : MonoBehaviour
         TutorialManager.PipsUIText.SetActive(true);
 
         Debug.Log(this.gameObject.transform.name);
+        AudioPlayback.PlayOneShot(TutorialAudio.Instance.tutorialSFX, null);
        
     }
     public void policyinteraction()
@@ -40,6 +41,7 @@ public class InteractionButtons : MonoBehaviour
         TutorialManager.ConfirmChangeUIText.SetActive(false);
        // enable the UI elements
         TutorialManager.PolicyUIText.SetActive(true);
+        AudioPlayback.PlayOneShot(TutorialAudio.Instance.tutorialSFX, null);
     }
     public void awarnessInteraction()
     {
@@ -55,6 +57,7 @@ public class InteractionButtons : MonoBehaviour
         TutorialManager.ConfirmChangeUIText.SetActive(false);
        // enable the UI elements
         TutorialManager.AwarenessUIText.SetActive(true);
+        AudioPlayback.PlayOneShot(TutorialAudio.Instance.tutorialSFX, null);
     }
     public void graphinteraction()
     {
@@ -70,6 +73,7 @@ public class InteractionButtons : MonoBehaviour
         TutorialManager.ConfirmChangeUIText.SetActive(false);
        // enable the UI elements
         TutorialManager.GraphUIText.SetActive(true);
+        AudioPlayback.PlayOneShot(TutorialAudio.Instance.tutorialSFX,null);
     }
     public void timeSliderhinteraction()
     {
@@ -85,6 +89,7 @@ public class InteractionButtons : MonoBehaviour
         TutorialManager.ConfirmChangeUIText.SetActive(false);
        // enable the UI elements
        TutorialManager.TimeSliderUIText.SetActive(true);
+       AudioPlayback.PlayOneShot(TutorialAudio.Instance.tutorialSFX, null);
     }
     public void yearinteraction()
     {
@@ -100,6 +105,7 @@ public class InteractionButtons : MonoBehaviour
         TutorialManager.ConfirmChangeUIText.SetActive(false);
        // enable the UI elements
         TutorialManager.YearSliderUIText.SetActive(true);
+        AudioPlayback.PlayOneShot(TutorialAudio.Instance.tutorialSFX, null);
     }
     public void yearKnobinteraction()
     {
@@ -115,6 +121,7 @@ public class InteractionButtons : MonoBehaviour
         TutorialManager.ConfirmChangeUIText.SetActive(false);
        // enable the UI elements
         TutorialManager.TimePipUIText.SetActive(true);
+        AudioPlayback.PlayOneShot(TutorialAudio.Instance.tutorialSFX, null);
     }
     public void confirmChangesInteraction()
     {
@@ -130,5 +137,6 @@ public class InteractionButtons : MonoBehaviour
         TutorialManager.TimePipUIText.SetActive(false);
        // enable the UI elements
         TutorialManager.ConfirmChangeUIText.SetActive(true);
+        AudioPlayback.PlayOneShot(TutorialAudio.Instance.tutorialSFX, null);
     }
 }
