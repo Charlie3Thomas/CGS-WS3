@@ -11,6 +11,8 @@ public class DisasterEffectManager : MonoBehaviour
     private GameObject pineLeavesPrefab;
     [SerializeField]
     private GameObject sea;
+    [SerializeField]
+    private TsunamiObjectsHolder tsunamiHolder;
 
     private float seaAmp1, seaAmp2, seaAmp3;
     private float seaHighAmp1 = 1.5f;
@@ -52,6 +54,7 @@ public class DisasterEffectManager : MonoBehaviour
                 intensity = disaster.intensity * 0.03f;
                 cameraShake.Shake(duration, intensity);
                 setSeaLevelHigh(disaster.intensity);
+                tsunamiHolder.PlayTsunamiVFX(disaster.intensity);
                 break;
             case CTDisasters.Volcano:
                 duration = disaster.intensity > 4 ? 7 : 5;
