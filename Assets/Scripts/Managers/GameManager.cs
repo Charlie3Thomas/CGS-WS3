@@ -35,18 +35,17 @@ namespace CT
         public List<CTChange>[] GameChanges { get { return game_changes; } }
         public List<CTChange>[] AwarenessChanges { get { return awareness_changes; } }
 
+        // Prime timeline
         private static readonly CTTurnData initial_year = new CTTurnData();
 
+        // Current timeline
         public CTTurnData turn_data = new CTTurnData();
-        //private CTTimelineData prime_timeline;
 
+        // Current timeline local data
         private uint current_turn;
         public uint CurrentTurn { get { return current_turn; } }
-        //private int user_changes_in_turn;
-        private Vector3 empty_turn_resource_expenditure;
-
-        //private int[] user_changes_in_turn;
         private int stored_changes_in_turn;
+        private Vector3 empty_turn_resource_expenditure;
 
         #endregion
 
@@ -83,14 +82,11 @@ namespace CT
 
             // Setup UI
             UpdateResourceCounters();
-
             UpdateFactionDistributionPips();
-
             UpdatePipsWithCurrentTurnData();
 
             // Setup Tech Tree
             FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
-
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
 
             //Debug.Log($"{current_turn}: Workers: {turn_data.GetFactionDistribution().y}, Scientists: {turn_data.GetFactionDistribution().x}, Farmers: {turn_data.GetFactionDistribution().z}, Planners: {turn_data.GetFactionDistribution().w}");
@@ -115,11 +111,6 @@ namespace CT
             for (int i = 0; i < disaster_timeline.Length; i++)
             {
                 disaster_timeline[i] = null;
-                //ApplyDisaster init = new ApplyDisaster();
-                //init.disaster = CTDisasters.None;
-                //init.intensity = -1.0f;
-                //init.turn = i;
-                //disaster_timeline[i] = init;
             }
 
             Debug.Log("Disaster Timeline initialised");
@@ -371,9 +362,7 @@ namespace CT
 
         #region UI
         public void OnClickCheckoutYearButton(uint _requested_turn)
-        {
-            //Debug.Log("GameManager.OnClickCheckoutYearButton" + _year);
-            
+        {           
             // Don't allow user to checkout year if the requested turn is the current turn
             //if (_requested_turn == current_turn)
             //    return;
@@ -397,30 +386,25 @@ namespace CT
 
             CheckAllUserTechPurchasesValid();
 
-            //GetChangesAtTurn();
             turn_data = GetYearData(_requested_turn);
+
             AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn(), GetDisasterIntensityAtTurn(current_turn));
+
             PolicyManager.instance.LoadPoliciesAtCurrentScope(current_turn);
+
             empty_turn_resource_expenditure = new Vector3(0, 0, 0);
+
             UpdateResourceCounters();
+
             UpdateFactionDistributionPips();
+
             UpdatePipsWithCurrentTurnData();
-            //CheckForTimelineConflicts();
+
             SetAwarenessUI();
+
             FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
+
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
-
-            //Debug.Log($"{current_turn}: Workers: {turn_data.GetFactionDistribution().y}, Scientists: {turn_data.GetFactionDistribution().x}, Farmers: {turn_data.GetFactionDistribution().z}, Planners: {turn_data.GetFactionDistribution().w}");
-
-            //Debug.Log(turn_data.GetSafetyFactor());
-
-            //turn_data.Logs();
-
-            //LogChangesInCurrentTurn();
-
-            //Debug.Log($"{turn_data.turn} Planners ratio: {turn_data.GetFactionDistribution().w} SafetyFactor: {turn_data.GetSafetyFactor()}");
-
-            //Debug.Log("TechTotal:" + GetActiveTechnologyTotal(current_turn));
         }
 
         private void UpdateFactionDistributionPips()
@@ -566,18 +550,10 @@ namespace CT
 
         public void AddDisastersToGameChanges(List<Disaster> _disaster)
         {
-            //for (int i = 0; i < _disaster.Count; i++)
-            //{
-            //    disaster_timeline[i] = new ApplyDisaster(_disaster[i]);
-            //}
-
             foreach (Disaster d in _disaster)
             {
                 disaster_timeline[d.turn] = new ApplyDisaster(d);
             }
-
-            // Take generated disasters from the disaster manager and insert them into the game changes list
-            //game_changes[_disaster.turn].Add(new ApplyDisaster(_disaster));
         }
 
 
@@ -793,19 +769,6 @@ namespace CT
 
         public CTDisasters CheckDisasterInTurn()
         {
-            //foreach (CTChange change in game_changes[current_turn])
-            //{
-            //    if (change.GetType() == typeof(ApplyDisaster))
-            //    {
-            //        ApplyDisaster ret = (ApplyDisaster)change;
-
-            //        if (ret.disaster != CTDisasters.None)
-            //            return ret.disaster;
-            //    }
-            //}
-
-            //return CTDisasters.None;
-
             return disaster_timeline[current_turn]?.disaster ?? CTDisasters.None;
         }
 
@@ -815,20 +778,6 @@ namespace CT
         /// </summary>
         public ApplyDisaster GetDisasterDataAtTurn(uint _turn)
         {
-            //foreach (CTChange change in game_changes[_turn])
-            //{
-            //    if (change.GetType() == typeof(ApplyDisaster))
-            //    {
-            //        ApplyDisaster ret = (ApplyDisaster)change;
-
-            //        if (ret.disaster == CTDisasters.None)
-            //            return null;
-
-            //        return ret;
-            //    }
-            //}
-
-            //return null;
             return disaster_timeline[current_turn];
         }
 
