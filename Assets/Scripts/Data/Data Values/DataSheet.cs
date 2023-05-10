@@ -11,9 +11,9 @@ namespace CT.Lookup
         public static readonly uint     STARTING_YEAR                   = 1900;
         public static readonly uint     END_YEAR                        = 2100;
         public static readonly uint     TURNS_NUMBER                    = (END_YEAR - STARTING_YEAR) / TURN_STEPS;
-        public static readonly int      STARTING_MONEY                  = 100000;
-        public static readonly int      STARTING_SCIENCE                = 100000;
-        public static readonly int      STARTING_FOOD                   = 100000;
+        public static readonly int      STARTING_MONEY                  = 200000;
+        public static readonly int      STARTING_SCIENCE                = 200000;
+        public static readonly int      STARTING_FOOD                   = 200000;
         public static readonly float    YEAR_CHANGE_AWARENESS_RATE      = 0.05f;
         public static readonly float    YEAR_OVERRIDE_AWARENESS_RATE    = 0.15f;
 
@@ -24,8 +24,8 @@ namespace CT.Lookup
         public static readonly float    POLICY_CARD_MIN_SCALE           = 25.0f;
         public static readonly float    POLICY_CARD_MAX_SCALE           = 500.0f;
 
-        public static readonly float    PLANNER_SAFETY_FACTOR           = -0.001f;
-        public static readonly float    MAX_MODIFIER_REDUCTION          = -0.95f;
+        public static readonly float    PLANNER_SAFETY_FACTOR           = -0.0001f;
+        public static readonly float    MAX_MODIFIER_REDUCTION          = -0.6f;
         #endregion
 
 

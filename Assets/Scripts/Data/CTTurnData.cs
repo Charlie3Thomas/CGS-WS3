@@ -13,26 +13,26 @@ namespace CT.Data
 
         public CTTurnData() { }
 
-        public CTTurnData(CTTurnData _data) 
+        public CTTurnData(CTTurnData _data)
         {
-            turn                    = _data.turn;
-            Money                   = _data.Money;
-            Science                 = _data.Science;
-            Food                    = _data.Food;
-            Population              = _data.Population;
-            Awareness               = _data.Awareness;
+            turn = _data.turn;
+            Money = _data.Money;
+            Science = _data.Science;
+            Food = _data.Food;
+            Population = _data.Population;
+            Awareness = _data.Awareness;
 
-            applied_policies        =  new List<CTPolicyCard>(_data.applied_policies);
-            revoked_policies        =  new List<CTPolicyCard>(_data.revoked_policies);
+            applied_policies = new List<CTPolicyCard>(_data.applied_policies);
+            revoked_policies = new List<CTPolicyCard>(_data.revoked_policies);
 
-            technologies            =  new Dictionary<CTTechnologies, bool>(_data.technologies);
+            technologies = new Dictionary<CTTechnologies, bool>(_data.technologies);
 
-            faction_distribution    =  new Vector4( _data.faction_distribution.x, 
-                                                    _data.faction_distribution.y, 
-                                                    _data.faction_distribution.z, 
+            faction_distribution = new Vector4(_data.faction_distribution.x,
+                                                    _data.faction_distribution.y,
+                                                    _data.faction_distribution.z,
                                                     _data.faction_distribution.w);
         }
-        
+
         // Debugging
         public uint turn;
         public bool failed_turn { get { return (Population <= 0); } }
@@ -47,6 +47,8 @@ namespace CT.Data
         public List<CTPolicyCard> revoked_policies = new List<CTPolicyCard>();
 
         private Vector4 cost_modifier_totals = new Vector4(1, 1, 1, 1);
+
+        private int death_toll = -1;
 
         #region Resources
 
@@ -112,7 +114,7 @@ namespace CT.Data
             get { return (int)data_population; }
             set
             {
-                if (value == data_population) 
+                if (value == data_population)
                     return;
 
                 // If value is less than assigned population is it implicitly less than total population
@@ -121,7 +123,7 @@ namespace CT.Data
                 if (value <= 0)
                 {
                     data_population = 0;
-                    faction_distribution = new Vector4(0,0,0,0);
+                    faction_distribution = new Vector4(0, 0, 0, 0);
                     return;
                     //throw new ArgumentException("CTPopulation.resource_total.set: Total population cannot be negative!");
                 }
@@ -199,11 +201,11 @@ namespace CT.Data
         private float awareness;
         public float Awareness
         {
-            get 
+            get
             {
                 return awareness;
             }
-            set 
+            set
             {
                 if (value == awareness)
                     return;
@@ -246,30 +248,39 @@ namespace CT.Data
                 // Apply costs with modifiers x, y, z
 
                 case CTCostType.Upkeep:
-                    Money       -= (int)(_cost.money        * (GetFactionNetModifiers().x));
-                    Science     -= (int)(_cost.science      * (GetFactionNetModifiers().y));
-                    Food        -= (int)(_cost.food         * (GetFactionNetModifiers().z));
-                    Population  -= (int)_cost.population;
+                    Money -= (int)(_cost.money * (GetFactionNetModifiers().x));
+                    Science -= (int)(_cost.science * (GetFactionNetModifiers().y));
+                    Food -= (int)(_cost.food * (GetFactionNetModifiers().z));
+                    Population -= (int)_cost.population;
                     break;
 
                 // Purchase
                 // Apply costs with no modifiers
                 case CTCostType.Purchase:
-                    Money       -= (int)_cost.money;
-                    Science     -= (int)_cost.science;
-                    Food        -= (int)_cost.food;
-                    Population  -= (int)_cost.population;
+                    Money -= (int)_cost.money;
+                    Science -= (int)_cost.science;
+                    Food -= (int)_cost.food;
+                    Population -= (int)_cost.population;
                     break;
 
                 // Disaster
                 // Apply costs with all modifiers
                 case CTCostType.Disaster:
+                    int current_pop = Population;
+                    int new_pop = -1;
                     float sf = Mathf.Abs(GetSafetyFactor());
 
-                    Money       -= (int)((Money *        _cost.money)        * (sf));
-                    Science     -= (int)((Science *      _cost.science)      * (sf));
-                    Food        -= (int)((Food *         _cost.food)         * (sf));
-                    Population  -= (int)((Population *   _cost.population)   * (sf));
+                    Money -= (int)((Money * _cost.money) * (sf));
+                    Science -= (int)((Science * _cost.science) * (sf));
+                    Food -= (int)((Food * _cost.food) * (sf));
+                    Population -= (int)((Population * _cost.population) * (sf));
+
+                    new_pop = Population;
+
+                    int delta = current_pop - new_pop;
+
+                    death_toll = delta;
+
                     break;
 
                 default:
@@ -315,7 +326,7 @@ namespace CT.Data
                 foreach (CTPolicyCard pc_rev in revoked_policies)
                 {
                     // Check if IDs match, and if so don't apply buffs
-                    if (pc_app.ID ==  pc_rev.ID)
+                    if (pc_app.ID == pc_rev.ID)
                     {
                         pc_app_active = false;
                         break;
@@ -333,7 +344,7 @@ namespace CT.Data
                 if (pc_app_active)
                 {
                     // For each buff
-                    foreach (KeyValuePair<BuffsNerfsType, bool> kvp in  pc_app.buffs)
+                    foreach (KeyValuePair<BuffsNerfsType, bool> kvp in pc_app.buffs)
                     {
                         if (kvp.Value)
                             BuffNerf(kvp.Key, pc_app.buff_nerf_scale[kvp.Key], ref total_faction_mods);
@@ -365,31 +376,31 @@ namespace CT.Data
 
                 case BuffsNerfsType.SCIENCE_GAIN:
                     ApplyCTCostModifer(CTModifierType.Science, _degree, ref _total_mods);
-                    break;   
-                    
+                    break;
+
                 case BuffsNerfsType.MONEY_UPKEEP:
                     ApplyCTCostModifer(CTModifierType.Money, _degree, ref _total_mods);
-                    break;    
-                    
+                    break;
+
                 case BuffsNerfsType.FOOD_UPKEEP:
                     ApplyCTCostModifer(CTModifierType.Food, _degree, ref _total_mods);
-                    break;    
-                    
+                    break;
+
                 case BuffsNerfsType.SCIENCE_UPKEEP:
                     ApplyCTCostModifer(CTModifierType.Science, _degree, ref _total_mods);
-                    break;   
-                    
+                    break;
+
                 case BuffsNerfsType.SAFETY_FACTOR:
-                    break;  
-                    
+                    break;
+
                 case BuffsNerfsType.MONEY_BONUS:
                     ApplyFlatValue(CTModifierType.Money, _degree);
-                    break; 
-                    
+                    break;
+
                 case BuffsNerfsType.SCIENCE_BONUS:
                     ApplyFlatValue(CTModifierType.Science, _degree);
-                    break; 
-                    
+                    break;
+
                 case BuffsNerfsType.AWARENESS_FACTOR:
                     break;
             }
@@ -557,10 +568,10 @@ namespace CT.Data
             ret[lhs] = temps[rhs] * _rhs_ratio;
             ret[rhs] = temps[lhs] * _lhs_ratio;
 
-            Money       = (int)ret.x;
-            Science     = (int)ret.y;
-            Food        = (int)ret.z;
-            Population  = (int)ret.w;
+            Money = (int)ret.x;
+            Science = (int)ret.y;
+            Food = (int)ret.z;
+            Population = (int)ret.w;
         }
 
         public Vector4 GetFactionDistribution()
@@ -584,6 +595,15 @@ namespace CT.Data
         public Vector4 GetFactionNetModifiers()
         {
             return cost_modifier_totals;
+        }
+
+        public int GetDeathToll()
+        {
+            if (death_toll == -1)
+                Debug.LogError("CTTurnData.GetDeathToll: No disaster in requested turn");
+
+            return death_toll;
+
         }
 
         public void Logs()

@@ -34,6 +34,9 @@ public class ComputerButton : MonoBehaviour
                 {
                     // Reset
                     // Debug.Log("Reset");
+
+                    GameManager._INSTANCE.BigRedButton();
+
                     AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
 
                     break;

@@ -35,6 +35,7 @@ public class DisasterManager : MonoBehaviour
     }
     private void Update()
     {
+        WriteDisastersInJournal();
         //WriteSafetyInJournal();  // To implement - Display safety value in journal when show_safetyunlocked
     }
 
@@ -56,14 +57,15 @@ public class DisasterManager : MonoBehaviour
             ComputerController.Instance.disasterNameText.text += dis.type.ToString() + "\n";
             ComputerController.Instance.disasterYearText.text += dis.year + "\n";
 
-            //if (showMagnitude)
-            //    ComputerController.Instance.disasterMagnitudeText.text += dis.magnitude.ToString("F1") + "\n";
-            //else
-            //    ComputerController.Instance.disasterMagnitudeText.text += "???\n";
+            if (showMagnitude)
+                ComputerController.Instance.disasterMagnitudeText.text += dis.intensity.ToString("F1") + "\n";
+            else
+                ComputerController.Instance.disasterMagnitudeText.text += "???\n";
 
             // Random for now, change later when everything gets hooked up
+
             if (showDeathToll)
-                ComputerController.Instance.disasterDeathTollText.text += Random.Range(0, 1000) + "\n";
+                ComputerController.Instance.disasterDeathTollText.text += GameManager._INSTANCE.PGetYearData((uint)dis.turn).GetDeathToll() + "\n";
             else
                 ComputerController.Instance.disasterDeathTollText.text += "???\n";
         }

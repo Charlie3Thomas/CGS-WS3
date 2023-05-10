@@ -595,6 +595,48 @@ namespace CT
             }
         }
 
+        public void BigRedButton()
+        {
+            // Call a policy manager function to clear the lists of active policies
+
+            // Re-Initialise user changes list
+            user_changes = new List<CTChange>[DataSheet.TURNS_NUMBER + 1];
+            for (uint year = 0; year < user_changes.Length; year++)
+                user_changes[year] = new List<CTChange>();
+
+            // Re-Initialise awareness changes and set to 0.3f
+            awareness_changes = new List<CTChange>[DataSheet.TURNS_NUMBER + 1];
+            for (uint year = 0; year < awareness_changes.Length; year++)
+                awareness_changes[year] = new List<CTChange>();
+            awareness_changes[current_turn].Add(new TrackAwareness(0.3f));
+
+            // Recalculate AI turns
+            AIPlayFromTurn(current_turn);
+
+            // Re-CheckoutTurn
+            stored_changes_in_turn = 0;
+            CheckAllUserTechPurchasesValid();
+            turn_data = GetYearData(current_turn);
+            AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn(), GetDisasterIntensityAtTurn(current_turn));
+            PolicyManager.instance.LoadPoliciesAtCurrentScope(current_turn);
+            empty_turn_resource_expenditure = new Vector3(0, 0, 0);
+            UpdateResourceCounters();
+            UpdateFactionDistributionPips();
+            UpdatePipsWithCurrentTurnData();
+            SetAwarenessUI();
+            FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
+            FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
+
+            // Update graph
+            ComputerController.Instance.RefreshGraph();
+
+            // Update notepad
+            DisasterManager.instance.WriteDisastersInJournal();
+
+            // Policies
+            PolicyManager.instance.Initialise();
+        }
+
         #endregion
 
 
@@ -719,6 +761,11 @@ namespace CT
         public CTTurnData GetTurn()
         {
             return turn_data;
+        }
+
+        public CTTurnData PGetYearData(uint _turn)
+        {
+            return GetYearData(_turn); 
         }
 
         private CTResourceTotals GetResourceTotals()

@@ -316,7 +316,7 @@ public class PolicyManager : MonoBehaviour
 
 
     #region Utility
-    private void Initialise()
+    public void Initialise()
     {
         current_policy_container = new CTPolicyContainer();
         current_policies = new CTPolicyCard[3];
