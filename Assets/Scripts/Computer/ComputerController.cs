@@ -334,7 +334,7 @@ public class ComputerController : MonoBehaviour
     {
         // Plot graph with necessary values when showing graph
         RefreshGraph();
-
+        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.staticGraphShowEvent, null);
         showGraph = !showGraph;
         canSwitch = false;
         staticScreenEffect.SetActive(true);
@@ -780,7 +780,7 @@ public class ComputerController : MonoBehaviour
 
     private void ShiftInput(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && computerState == ComputerState.MAIN_COMPUTER)
         {
             vCam.m_Lens.FieldOfView = 20.0f;
             Cursor.lockState = CursorLockMode.Locked;
