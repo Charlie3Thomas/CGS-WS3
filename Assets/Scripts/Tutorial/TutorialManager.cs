@@ -36,6 +36,7 @@ public class TutorialManager : MonoBehaviour
     public static GameObject PanUpFromScreenObject;
     public static GameObject NextButtonObject;
     
+    public List<GameObject> InteractionButtons = new List<GameObject>();
 
     public void Start()
     {

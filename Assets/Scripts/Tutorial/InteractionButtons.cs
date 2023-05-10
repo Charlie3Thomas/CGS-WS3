@@ -21,6 +21,8 @@ public class InteractionButtons : MonoBehaviour
 
        // enable the UI elements
         TutorialManager.PipsUIText.SetActive(true);
+
+        Debug.Log(this.gameObject.transform.name);
        
     }
     public void policyinteraction()
