@@ -9,8 +9,11 @@ public class EscapeMenu : MonoBehaviour
     private PlayerControls playerControls;
     private InputAction escMenu;
 
+    
+
     [SerializeField] private GameObject escapeMenuUI;
     [SerializeField] private bool isVisible;
+    [SerializeField] private GameObject backgroundBlocker;
 
     private void Awake()
     {
@@ -20,7 +23,7 @@ public class EscapeMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        escMenu = playerControls.Game.Escape;
+        escMenu = playerControls.Game.Menu;
         escMenu.Enable();
 
         escMenu.performed += VisibilityCheck;
@@ -51,11 +54,15 @@ public class EscapeMenu : MonoBehaviour
         //AUdio Pause calls need to be implemented here
         escapeMenuUI.SetActive(true);
 
+        backgroundBlocker.SetActive(true);
+
+
     }
 
     public void DeactivateMenu()
     {
         Time.timeScale = 1;
+        backgroundBlocker.SetActive(false);
         //AUdio Pause calls need to be implemented here
         escapeMenuUI.SetActive(false);
         isVisible = false;

@@ -40,7 +40,8 @@ public class ScorecardUI : MonoBehaviour
     private void Awake()
     {
 
-       totalPoints = awarenessPoints + disasterPoints + nodePoints + turnsPoints;
+       
+        totalPoints = awarenessPoints + disasterPoints + nodePoints + turnsPoints;
 
         incrementRate1 = awarenessPoints / (50 * 4);
         incrementRate2 = disasterPoints / (50 * 4);

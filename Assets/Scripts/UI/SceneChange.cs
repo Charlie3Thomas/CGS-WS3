@@ -27,19 +27,20 @@ public class SceneChange : MonoBehaviour
 
     private void LoadMainGame()
     {
-        StartCoroutine(LoadGameTransition(1));
+        //StartCoroutine(LoadGameTransition(1));
+        SceneManager.LoadScene(1);
     }
 
-    IEnumerator LoadGameTransition(int sceneindex)
+    //IEnumerator LoadGameTransition(int sceneindex)
 
-    {
-        transition.SetTrigger("Start");
-        AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
-        MenuAudioManager.Instance.ReleaseMenuMusic();
-        yield return new WaitForSeconds(0);
+    //{
+    //    transition.SetTrigger("Start");
+    //    AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
+    //    MenuAudioManager.Instance.ReleaseMenuMusic();
+    //    yield return new WaitForSeconds(0);
 
-        SceneManager.LoadScene(sceneindex);
-    }
+    //    SceneManager.LoadScene(sceneindex);
+    //}
 
     // Load/Save game feature removed 
 
@@ -61,7 +62,8 @@ public class SceneChange : MonoBehaviour
     public void OnSelectBackToMainMenu()
     {
         FmodRouting.StopMasterBus(); //Sam on destory for audio stoppping not calling all stops before menu loads, just focefully stop master bus with fade 
-        StartCoroutine(LoadGameTransition(0));
+        //StartCoroutine(LoadGameTransition(0));
+        SceneManager.LoadScene(0);
 
     }
 
@@ -76,12 +78,23 @@ public class SceneChange : MonoBehaviour
         AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
     }
 
+    public void OnSelectAudioSettingsInGame()
+    {
+        FadeInAnimationInGame();
+       // AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
+    }
+
     public void OnSelectExitAudioSettings()
     {
         FadeOutAnimation();
         AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
     }
 
+    public void OnSelectExitAudioSettingsInGame()
+    {
+        FadeOutAnimationInGame();
+        //AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
+    }
 
     private void FadeInAnimation()
     {
@@ -92,12 +105,29 @@ public class SceneChange : MonoBehaviour
         audioSettingsCanvas.DOFade(1, fadetime);
 
     }
+    private void FadeInAnimationInGame()
+    {
+
+        audioSettingsCanvas.alpha = 0f;
+        audioSettingsRect.transform.localPosition = new Vector3(-1000f, 0f, 0f);
+        audioSettingsRect.DOAnchorPos(new Vector2(960, -540f), fadetime, false).SetEase(Ease.OutElastic);
+        audioSettingsCanvas.DOFade(1, fadetime);
+
+    }
 
     private void FadeOutAnimation()
     {
         audioSettingsCanvas.alpha = 1f;
         audioSettingsRect.transform.localPosition = new Vector3(0f, -0f, 0f);
         audioSettingsRect.DOAnchorPos(new Vector2(2200f  , -500f), 0.4f, false).SetEase(Ease.InFlash);
+        audioSettingsCanvas.DOFade(0, fadetime);
+    }
+
+    private void FadeOutAnimationInGame()
+    {
+        audioSettingsCanvas.alpha = 1f;
+        audioSettingsRect.transform.localPosition = new Vector3(0f, -0f, 0f);
+        audioSettingsRect.DOAnchorPos(new Vector2(2200f, -500f), 0.4f, false).SetEase(Ease.InFlash);
         audioSettingsCanvas.DOFade(0, fadetime);
     }
 }
