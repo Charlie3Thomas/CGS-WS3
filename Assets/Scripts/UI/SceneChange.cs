@@ -14,6 +14,7 @@ public class SceneChange : MonoBehaviour
 
     public RectTransform audioSettingsRect;
     public CanvasGroup audioSettingsCanvas;
+
     public float fadetime = 1f;
 
     #region MAIN MENU BUTTONS AND AUDIO EVENT TRIGGERS
