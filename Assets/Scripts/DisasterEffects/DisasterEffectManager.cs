@@ -2,11 +2,14 @@ using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class DisasterEffectManager : MonoBehaviour
 {
     [SerializeField]
-    private CameraShake cameraShake;
+    private CinemachineImpulseSource impulseSrouce;
+    [SerializeField]
+    private CinemachineVirtualCamera mapVCam;
     [SerializeField]
     private GameObject tornado;
     [SerializeField]
@@ -20,41 +23,39 @@ public class DisasterEffectManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.D))
         {
-            //cameraShake.Shake(5f, 0.5f);
-            //setSeaLevelHigh(1f);
         }
     }
 
     private void ShowDisasterEffect(Disaster disaster)
     {
-        float duration;
         float intensity;
         switch (disaster.type)
         {
             case CTDisasters.Earthquake:
-                duration = disaster.intensity > 4 ? 7 : 5;
-                intensity = disaster.intensity * 0.07f;
-                cameraShake.Shake(duration, intensity);
+                intensity = 2f * disaster.intensity;
+                Shake(intensity);
                 break;
             case CTDisasters.Tsunami:
-                duration = disaster.intensity > 4 ? 7 : 5;
-                intensity = disaster.intensity * 0.03f;
-                cameraShake.Shake(duration, intensity);
+                intensity = 1.2f * disaster.intensity;
+                Shake(intensity);
                 break;
             case CTDisasters.Volcano:
-                duration = disaster.intensity > 4 ? 7 : 5;
-                intensity = disaster.intensity * 0.07f;
-                cameraShake.Shake(duration, intensity);
+                intensity = 1.5f * disaster.intensity;
+                Shake(intensity);
                 break;
             case CTDisasters.Tornado:
-                duration = disaster.intensity > 4 ? 7 : 5;
-                intensity = disaster.intensity * 0.04f;
-                cameraShake.Shake(duration, intensity);
+                intensity = 1.2f * disaster.intensity;
+                Shake(intensity);
                 break;
             case CTDisasters.None:
                 break;
             default:
                 break;
         }
+    }
+
+    private void Shake(float intensity)
+    {
+        impulseSrouce.GenerateImpulse(intensity);
     }
 }
