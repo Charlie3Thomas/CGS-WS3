@@ -61,8 +61,8 @@ public class SceneChange : MonoBehaviour
     public void OnSelectBackToMainMenu()
     {
         FmodRouting.StopMasterBus(); //Sam on destory for audio stoppping not calling all stops before menu loads, just focefully stop master bus with fade 
-        SceneManager.LoadScene(0);
-       
+        StartCoroutine(LoadGameTransition(0));
+
     }
 
     public void OnSelectBack() 
@@ -88,7 +88,7 @@ public class SceneChange : MonoBehaviour
 
         audioSettingsCanvas.alpha = 0f;
         audioSettingsRect.transform.localPosition = new Vector3(-1000f, 0f, 0f);
-        audioSettingsRect.DOAnchorPos(new Vector2(1500f, -600f), fadetime, false).SetEase(Ease.OutElastic);
+        audioSettingsRect.DOAnchorPos(new Vector2(1000f, -500f), fadetime, false).SetEase(Ease.OutElastic);
         audioSettingsCanvas.DOFade(1, fadetime);
 
     }
@@ -96,8 +96,8 @@ public class SceneChange : MonoBehaviour
     private void FadeOutAnimation()
     {
         audioSettingsCanvas.alpha = 1f;
-        audioSettingsRect.transform.localPosition = new Vector3(500f, 0f, 0f);
-        audioSettingsRect.DOAnchorPos(new Vector2(2500f  , -600f), 1, false).SetEase(Ease.InFlash);
+        audioSettingsRect.transform.localPosition = new Vector3(0f, -0f, 0f);
+        audioSettingsRect.DOAnchorPos(new Vector2(2200f  , -500f), 0.4f, false).SetEase(Ease.InFlash);
         audioSettingsCanvas.DOFade(0, fadetime);
     }
 }

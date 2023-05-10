@@ -12,8 +12,8 @@ public class AudioUIManager : MonoBehaviour
     [SerializeField] private GameObject audioPanel;
 
     //Button references for showing / hiding audio settings
-    [SerializeField] private Button popExitButton;
-    [SerializeField] private Button popUpShowButton;
+    //[SerializeField] private Button popExitButton;
+    //[SerializeField] private Button popUpShowButton;
 
     //References to sliders
     [SerializeField] private Slider masterVolumeSlider;
