@@ -27769,6 +27769,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2512234386934288558, guid: 25a2914e407ade942a90c21dfc813343,
         type: 3}
+      propertyPath: m_text
+      value: THE GODD GAME
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512234386934288558, guid: 25a2914e407ade942a90c21dfc813343,
+        type: 3}
       propertyPath: m_margin.w
       value: 73.04431
       objectReference: {fileID: 0}
