@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DG.Tweening;
 
 public class EscapeMenu : MonoBehaviour
 {
@@ -10,9 +11,14 @@ public class EscapeMenu : MonoBehaviour
     private InputAction escMenu;
 
     
+    
+
+    public float fadetime = 1f;
 
     [SerializeField] private GameObject escapeMenuUI;
+    [SerializeField] private GameObject AudioSettingsUI;
     [SerializeField] private bool isVisible;
+    [SerializeField] private bool isAudioVisible=false;
     [SerializeField] private GameObject backgroundBlocker;
 
     private void Awake()
@@ -32,6 +38,7 @@ public class EscapeMenu : MonoBehaviour
     private void OnDisable()
     {
         escMenu.Disable();
+        
     }
 
     void VisibilityCheck(InputAction.CallbackContext context)
@@ -56,15 +63,47 @@ public class EscapeMenu : MonoBehaviour
 
         backgroundBlocker.SetActive(true);
 
-
+        
     }
 
     public void DeactivateMenu()
     {
         Time.timeScale = 1;
         backgroundBlocker.SetActive(false);
+
+        if(isAudioVisible)
+        {
+            AudioSettingsUI.gameObject.SetActive(false);
+        }
+
         //AUdio Pause calls need to be implemented here
         escapeMenuUI.SetActive(false);
         isVisible = false;
     }
+
+    public void ActivateAudioSettings()
+    {
+        escapeMenuUI.SetActive(false);
+        isVisible = true;
+        backgroundBlocker.SetActive(true);
+        Time.timeScale = 0;
+
+        AudioSettingsUI.gameObject.SetActive(true);
+        isAudioVisible = true;
+
+    }
+
+    public void DeactivateAudioSettings()
+    {
+        AudioSettingsUI.gameObject.SetActive(false);
+        backgroundBlocker.SetActive(true);
+        Time.timeScale = 1;
+        isAudioVisible = false;
+
+        escapeMenuUI.SetActive(true);
+        isVisible = true;
+
+    }
+
+
 }

@@ -78,11 +78,11 @@ public class SceneChange : MonoBehaviour
         AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
     }
 
-    public void OnSelectAudioSettingsInGame()
-    {
-        FadeInAnimationInGame();
-       // AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
-    }
+    //public void OnSelectAudioSettingsInGame()
+    //{
+    //    FadeInAnimationInGame();
+    //   // AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
+    //}
 
     public void OnSelectExitAudioSettings()
     {
@@ -90,11 +90,11 @@ public class SceneChange : MonoBehaviour
         AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
     }
 
-    public void OnSelectExitAudioSettingsInGame()
-    {
-        FadeOutAnimationInGame();
-        //AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
-    }
+    //public void OnSelectExitAudioSettingsInGame()
+    //{
+    //    FadeOutAnimationInGame();
+    //    //AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
+    //}
 
     private void FadeInAnimation()
     {
@@ -105,31 +105,33 @@ public class SceneChange : MonoBehaviour
         audioSettingsCanvas.DOFade(1, fadetime);
 
     }
-    private void FadeInAnimationInGame()
-    {
+    //private void FadeInAnimationInGame()
+    //{
 
-        audioSettingsCanvas.alpha = 0f;
-        audioSettingsRect.transform.localPosition = new Vector3(-1000f, 0f, 0f);
-        audioSettingsRect.DOAnchorPos(new Vector2(960, -540f), fadetime, false).SetEase(Ease.OutElastic);
-        audioSettingsCanvas.DOFade(1, fadetime);
+    //    audioSettingsCanvas.alpha = 0f;
+    //    audioSettingsRect.transform.localPosition = new Vector3(-1000f, 0f, 0f);
+    //    audioSettingsRect.DOAnchorPos(new Vector2(1000f, -500f), fadetime, false).SetEase(Ease.OutElastic);
+    //    audioSettingsCanvas.DOFade(1, fadetime);
 
-    }
+    //}
+
+    
 
     private void FadeOutAnimation()
     {
         audioSettingsCanvas.alpha = 1f;
         audioSettingsRect.transform.localPosition = new Vector3(0f, -0f, 0f);
-        audioSettingsRect.DOAnchorPos(new Vector2(2200f  , -500f), 0.4f, false).SetEase(Ease.InFlash);
+        audioSettingsRect.DOAnchorPos(new Vector2(2200f  , -500f), fadetime, false).SetEase(Ease.InFlash);
         audioSettingsCanvas.DOFade(0, fadetime);
     }
 
-    private void FadeOutAnimationInGame()
-    {
-        audioSettingsCanvas.alpha = 1f;
-        audioSettingsRect.transform.localPosition = new Vector3(0f, -0f, 0f);
-        audioSettingsRect.DOAnchorPos(new Vector2(2200f, -500f), 0.4f, false).SetEase(Ease.InFlash);
-        audioSettingsCanvas.DOFade(0, fadetime);
-    }
+    //private void FadeOutAnimationInGame()
+    //{
+    //    audioSettingsCanvas.alpha = 1f;
+    //    audioSettingsRect.transform.localPosition = new Vector3(0f, -0f, 0f);
+    //    audioSettingsRect.DOAnchorPos(new Vector2(2200f, -500f), fadetime, false).SetEase(Ease.OutElastic);
+    //    audioSettingsCanvas.DOFade(0, fadetime);
+    //}
 }
 
 #endregion
