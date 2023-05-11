@@ -399,6 +399,10 @@ namespace CT
 
             //GetChangesAtTurn();
             turn_data = GetYearData(_requested_turn);
+
+            if (DisasterEffectManager.instance != null && disaster_timeline[current_turn]?.disaster != null)
+                DisasterEffectManager.instance.ShowDisasterEffect(disaster_timeline[current_turn].disaster, disaster_timeline[current_turn].intensity);
+
             AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn(), GetDisasterIntensityAtTurn(current_turn));
             PolicyManager.instance.LoadPoliciesAtCurrentScope(current_turn);
             empty_turn_resource_expenditure = new Vector3(0, 0, 0);
