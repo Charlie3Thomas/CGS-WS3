@@ -28,6 +28,8 @@ public class SceneChange : MonoBehaviour
     private void LoadMainGame()
     {
         //StartCoroutine(LoadGameTransition(1));
+
+        DOTween.Clear(true);
         SceneManager.LoadScene(1);
     }
 
@@ -63,6 +65,7 @@ public class SceneChange : MonoBehaviour
     {
         FmodRouting.StopMasterBus(); //Sam on destory for audio stoppping not calling all stops before menu loads, just focefully stop master bus with fade 
         //StartCoroutine(LoadGameTransition(0));
+        DOTween.Clear(true);
         SceneManager.LoadScene(0);
 
     }
