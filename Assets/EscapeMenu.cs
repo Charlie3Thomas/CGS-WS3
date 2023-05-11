@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class EscapeMenu : MonoBehaviour
 {
@@ -105,5 +106,17 @@ public class EscapeMenu : MonoBehaviour
 
     }
 
+    public void OnSelectQuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void OnSelectBackToMainMenu()
+    {
+        FmodRouting.StopMasterBus(); //Sam on destory for audio stoppping not calling all stops before menu loads, just focefully stop master bus with fade 
+        //StartCoroutine(LoadGameTransition(0));
+        SceneManager.LoadScene(0);
+
+    }
 
 }
