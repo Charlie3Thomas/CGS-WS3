@@ -15,14 +15,15 @@ public class EscapeMenu : MonoBehaviour
     private void Awake()
     {
         playerControls = new PlayerControls();
+
     }
 
     private void OnEnable()
     {
         escMenu = playerControls.Game.Escape;
         escMenu.Enable();
+
         escMenu.performed += VisibilityCheck;
-        DataSaveLoadManager.OnSaveSuccess += DeactivateMenu;
     }
 
     private void OnDisable()
