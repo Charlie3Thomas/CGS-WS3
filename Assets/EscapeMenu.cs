@@ -119,4 +119,12 @@ public class EscapeMenu : MonoBehaviour
 
     }
 
+    public void OnSelectShowScoreCard()
+    {
+        Time.timeScale = 1;
+        DOTween.Clear(true);
+        
+        SceneManager.LoadScene(2);
+    }
+
 }
