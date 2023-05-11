@@ -18,6 +18,8 @@ public class DisasterEffectManager : MonoBehaviour
     // Tornado
     [SerializeField]
     private GameObject tornado;
+    [SerializeField]
+    private Transform tornadoTransform;
 
     // Tsunami
     [SerializeField]
@@ -121,9 +123,18 @@ public class DisasterEffectManager : MonoBehaviour
     {
         float intensity = 1.2f * _intensity;
         Shake(intensity);
-        // Play effect and destroy if necessary
 
+        GameObject tGO = Instantiate(tornado, tornadoTransform.position, tornadoTransform.rotation);
+        currentEffect = tGO;
+        tGO = currentEffect;
+        float size = RAUtility.Remap(_intensity, 1, 10, 0.5f, 1.0f);
+        tGO.transform.GetChild(0).localScale = new Vector3(tGO.transform.GetChild(0).localScale.x * size,
+            tGO.transform.GetChild(0).localScale.y * size, tGO.transform.GetChild(0).localScale.z * size);
         // Affect buildings (Sweep them up the screen)
+
+        yield return new WaitForSeconds(duration);
+        currentEffect = null;
+        Destroy(tGO);
         yield return null;
     }
 

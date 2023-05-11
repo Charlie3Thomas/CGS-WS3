@@ -61,6 +61,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1911596689}
+  - {fileID: 5444319786195900289}
   m_Father: {fileID: 0}
   m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -79,9 +80,42 @@ MonoBehaviour:
   currentEffect: {fileID: 0}
   impulseSrouce: {fileID: 0}
   mapVCam: {fileID: 0}
-  tornado: {fileID: 0}
+  tornado: {fileID: 4728841828928911422, guid: 654e2ce892d93ac47af0ea79b5cb0046, type: 3}
+  tornadoTransform: {fileID: 5444319786195900289}
   tsunamiWave: {fileID: 5331028345164344330, guid: 6248f67b3d8090f4b991151b5fe2e656,
     type: 3}
   tsunamiTransform: {fileID: 1911596689}
+  volcano: {fileID: 0}
   testIntensity: 1
   duration: 10
+--- !u!1 &4477978135272182870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5444319786195900289}
+  m_Layer: 0
+  m_Name: TornadoTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5444319786195900289
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4477978135272182870}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -63.10249, y: 10.59, z: -12.042603}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3496312370903822773}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
