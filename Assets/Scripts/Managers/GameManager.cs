@@ -378,6 +378,10 @@ namespace CT
             //if (_requested_turn == current_turn)
             //    return;
 
+            // Clear any disaster effects
+            if (DisasterEffectManager.instance != null)
+                DisasterEffectManager.instance.ClearDisasterEffects();
+
             // Lock in changes to faction distribution
             SetFactionDistribution();
 

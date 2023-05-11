@@ -31,7 +31,6 @@ public class DisasterEffectManager : MonoBehaviour
     [SerializeField]
     private ParticleSystem volcano;
 
-    public float testIntensity = 1f;
     public float duration = 10f;
 
     private void Awake()
@@ -51,6 +50,17 @@ public class DisasterEffectManager : MonoBehaviour
 
     void Update()
     {
+    }
+
+    public void ClearDisasterEffects()
+    {
+        if (currentEffect != null)
+            Destroy(currentEffect);
+
+        StopAllCoroutines();
+        volcano.Stop();
+        volcano.Clear();
+        CinemachineImpulseManager.Instance.Clear();
     }
 
     public void ShowDisasterEffect(CTDisasters type, float intensity)
