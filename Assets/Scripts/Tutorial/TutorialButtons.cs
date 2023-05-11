@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TutorialButtons : MonoBehaviour
 {
@@ -20,13 +21,13 @@ public class TutorialButtons : MonoBehaviour
         Debug.Log("Tutorial Starting");
         tutorialManager.InteractableUI.SetActive(true);
         tutorialManager.TutorialUI.SetActive(false);
-        tutorialManager.gameState = TutorialManager.GameState.Interactions;
+        TutorialManager.gameState = TutorialManager.GameState.Interactions;
         
     }
 
     // When the user clicks skip, the normal game will just load
-    public void DisableTutorial()
+    public void DisableTutorial(int Index)
     {
-        tutorialManager.gameState = TutorialManager.GameState.InGame;
+        SceneManager.LoadScene(Index);
     }
 }
