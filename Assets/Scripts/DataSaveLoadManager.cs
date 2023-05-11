@@ -32,6 +32,12 @@ public class DataSaveLoadManager : MonoBehaviour
         get { return _instance; }
     }
 
+    public static Action OnKeyNotFound;
+    public static Action<int,string> OnLoadError;
+    public static Action<int,string> OnSaveError;
+    public static Action OnSaveSuccess;
+    public static Action OnLoadSuccess;
+
     private void Awake()
     {
         if (_instance == null || _instance != this)
@@ -42,6 +48,7 @@ public class DataSaveLoadManager : MonoBehaviour
     {
         gameManager = GameManager._INSTANCE;
         settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        AuthManager.OnSigninSuccess += Load;
     }
 
     void Update()
@@ -59,6 +66,7 @@ public class DataSaveLoadManager : MonoBehaviour
 
     public void Load()
     {
+        Debug.Log("LOAD from Cloud");
         loadPlayerData();
     }
 
@@ -79,8 +87,16 @@ public class DataSaveLoadManager : MonoBehaviour
     private async void loadPlayerData()
     {
         playerData = await RetrieveSpecificData<PlayerData>(playerDataKey);
-        Debug.Log("DATA LOADED FROM CLOUD");
-        gameManager.LoadData(playerData.user_changes, playerData.game_changes, playerData.awareness_changes);
+        if(playerData != null)
+        {
+            gameManager.LoadData(playerData.user_changes, playerData.game_changes, playerData.awareness_changes);
+            OnLoadSuccess?.Invoke();
+        }
+        else
+        {
+            //load defaults
+            Debug.Log("Load Defaults");
+        }
     }
 
     private async Task ForceSaveSingleData(string key, string value)
@@ -91,18 +107,22 @@ public class DataSaveLoadManager : MonoBehaviour
             data.Add(key, value);
             await CloudSaveService.Instance.Data.ForceSaveAsync(data);
             Debug.Log($"Successfully saved {key}:{value}");
+            OnSaveSuccess?.Invoke();
         }
         catch (CloudSaveValidationException e)
         {
             Debug.LogError(e);
+            OnSaveError?.Invoke(e.ErrorCode, e.Message);
         }
         catch (CloudSaveRateLimitedException e)
         {
             Debug.LogError(e);
+            OnSaveError?.Invoke(e.ErrorCode, e.Message);
         }
         catch (CloudSaveException e)
         {
             Debug.LogError(e);
+            OnSaveError?.Invoke(e.ErrorCode, e.Message);
         }
     }
 
@@ -114,24 +134,29 @@ public class DataSaveLoadManager : MonoBehaviour
 
             if (results.TryGetValue(key, out string value))
             {
+                Debug.Log("DATA From Cloud : " + value);
                 return JsonConvert.DeserializeObject<T>(value,settings);
             }
             else
             {
                 Debug.Log($"Key not found : {key}!");
+                OnKeyNotFound?.Invoke();
             }
         }
         catch (CloudSaveValidationException e)
         {
             Debug.LogError(e);
+            OnLoadError?.Invoke(e.ErrorCode,e.Message);
         }
         catch (CloudSaveRateLimitedException e)
         {
             Debug.LogError(e);
+            OnLoadError?.Invoke(e.ErrorCode,e.Message);
         }
         catch (CloudSaveException e)
         {
             Debug.LogError(e);
+            OnLoadError?.Invoke(e.ErrorCode,e.Message);
         }
 
         return default;
