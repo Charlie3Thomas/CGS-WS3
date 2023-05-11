@@ -60,24 +60,28 @@ public class AudioManager : MonoBehaviour
             case (CTDisasters.Earthquake):
             AudioPlayback.PlayOneShot(ambienceEvents.earthquakeDisaster, null);
             AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            DisasterSeqenceManager.Instance.StartDisasterWarningSequence();
             StartCoroutine("TenseMusicTimer");
             break;
 
             case (CTDisasters.Tsunami):
             AudioPlayback.PlayOneShot(ambienceEvents.tsunamiDisaster, null);
             AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            DisasterSeqenceManager.Instance.StartDisasterWarningSequence();
             StartCoroutine("TenseMusicTimer");
             break;
 
             case (CTDisasters.Volcano):
             AudioPlayback.PlayOneShot(ambienceEvents.volcanoDisaster, null);
             AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            DisasterSeqenceManager.Instance.StartDisasterWarningSequence();
             StartCoroutine("TenseMusicTimer");
             break;
             
             case (CTDisasters.Tornado):
             AudioPlayback.PlayOneShot(ambienceEvents.tornadoDisaster, null);
             AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
+            DisasterSeqenceManager.Instance.StartDisasterWarningSequence();
             StartCoroutine("TenseMusicTimer");
             break;
 
@@ -89,18 +93,18 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator TenseMusicTimer()
     {
-        yield return new WaitForSeconds(20f);
-        FmodParameters.SetParamByLabelName(musicInstance, "Play", "Stop");
+        yield return new WaitForSeconds(15f);
+        FmodParameters.SetParamByLabelName(musicInstance, "Play", "Stop"); //Reslove disaster music
 
-        //yield return new WaitForSeconds(WaitTime);
+        
         yield return new WaitForSeconds(5f);
         musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         musicInstance.release();
         
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(2f); 
 
         FmodParameters.SetGlobalParamByName("Intensity", 0f);
-        StartMusic();
+        StartMusic(); //Return to ambient music
     }
 
     public void StartOceanAmbience(Transform transform)
