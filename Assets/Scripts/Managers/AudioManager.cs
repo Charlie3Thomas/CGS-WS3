@@ -87,7 +87,7 @@ public class AudioManager : MonoBehaviour
     {
         yield return new WaitForSeconds(12f);
         FmodParameters.SetParamByLabelName(musicInstance, "Play", "Stop"); //Reslove disaster music
-
+        DisasterSeqenceManager.Instance.StartDisasterEndSquence();
         
         yield return new WaitForSeconds(5f);
         musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);

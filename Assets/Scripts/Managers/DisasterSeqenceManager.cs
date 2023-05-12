@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CT;
 using CT.Lookup;
+using TMPro;
 
 
 public class DisasterSeqenceManager : MonoBehaviour
@@ -11,14 +12,14 @@ public class DisasterSeqenceManager : MonoBehaviour
     private static DisasterSeqenceManager m_instance;
     
     [SerializeField] private GameObject warningObject;
-
+    [SerializeField] private GameObject resolvedObject;
+    [SerializeField] private TMP_Text warningText;
     public bool isDisasterActive { get; private set; } = false;
    
     // Start is called before the first frame update
     void Start()
     {
         m_instance = this;
-
         warningObject.SetActive(false);
     }
 
@@ -45,7 +46,13 @@ public class DisasterSeqenceManager : MonoBehaviour
 
     public void StartDisasterEndSquence()
     {
+        
+        resolvedObject.SetActive(true);
 
+        ResolveTextFlashTrigger();
+        StartCoroutine("ResovleRoutine");
+
+        
     }
 
     ///////////// Warning Sequence ////////////////
@@ -65,21 +72,39 @@ public class DisasterSeqenceManager : MonoBehaviour
     IEnumerator StartSequenceTimer()
     {
           
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(7f);
 
         CancelInvoke("FlashTextTrigger");
-        warningObject.SetActive(false);
         StartCoroutine("DisasterSequenceTimer");
-       
+        warningObject.SetActive(false);
     }
 
     IEnumerator DisasterSequenceTimer()
     {
+        warningObject.SetActive(false);//Sometimes doesnt get set to false, just double checking it is set to false to avoid this
         DisasterEffectManager.instance.ShowDisasterEffect(GameManager._INSTANCE.CheckDisasterInTurn(), GameManager._INSTANCE.GetDisasterIntensityAtTurn(GameManager._INSTANCE.current_turn));
         AudioManager.Instance.StartDisasterAudio(GameManager._INSTANCE.CheckDisasterInTurn(), GameManager._INSTANCE.GetDisasterIntensityAtTurn(GameManager._INSTANCE.current_turn));
         
 
         yield return new WaitForSeconds(18f);
+        
+
+    }
+    void ResolveTextFlashTrigger()
+    {
+        InvokeRepeating("ResolveFlash", 0f, 0.3f);
+    }
+    IEnumerator ResolveFlash()
+    {
+        resolvedObject.SetActive(false);
+        yield return new WaitForSeconds(0.1f);
+        resolvedObject.SetActive(true);
+    }
+    IEnumerator ResovleRoutine()
+    {
+        yield return new WaitForSeconds(3f);
+        resolvedObject.SetActive(false);
+        CancelInvoke("ResolveFlash");
         ResetFlag();
 
     }
