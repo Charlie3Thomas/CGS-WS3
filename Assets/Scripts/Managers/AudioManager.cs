@@ -11,7 +11,7 @@ public class AudioManager : MonoBehaviour
 
    
     EventInstance ambienceInstance;
-    EventInstance musicInstance;
+    public EventInstance musicInstance { get; private set; }
     EventInstance chargeInstance;
 
     private EventInstance oceanAmbienceInstance;
@@ -48,11 +48,7 @@ public class AudioManager : MonoBehaviour
 
     public void StartDisasterAudio(CTDisasters disaster, float intensity)
     {
-        if(intensity != -1f && disaster != CTDisasters.None) //Check charlies no disaster -1 val to not set param 
-        {
-            FmodParameters.SetGlobalParamByName("Intensity", intensity);
-            FmodParameters.SetParamByLabelName(musicInstance, "Play", "Play");
-        }
+       
 
         Debug.Log("Audio disaster:" + disaster + " Intensity: " + intensity);
         switch(disaster)
@@ -60,28 +56,24 @@ public class AudioManager : MonoBehaviour
             case (CTDisasters.Earthquake):
             AudioPlayback.PlayOneShot(ambienceEvents.earthquakeDisaster, null);
             AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
-            DisasterSeqenceManager.Instance.StartDisasterWarningSequence();
             StartCoroutine("TenseMusicTimer");
             break;
 
             case (CTDisasters.Tsunami):
             AudioPlayback.PlayOneShot(ambienceEvents.tsunamiDisaster, null);
             AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
-            DisasterSeqenceManager.Instance.StartDisasterWarningSequence();
             StartCoroutine("TenseMusicTimer");
             break;
 
             case (CTDisasters.Volcano):
             AudioPlayback.PlayOneShot(ambienceEvents.volcanoDisaster, null);
             AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
-            DisasterSeqenceManager.Instance.StartDisasterWarningSequence();
             StartCoroutine("TenseMusicTimer");
             break;
             
             case (CTDisasters.Tornado):
             AudioPlayback.PlayOneShot(ambienceEvents.tornadoDisaster, null);
             AudioPlayback.PlayOneShot(ambienceEvents.screamingEvent, null);
-            DisasterSeqenceManager.Instance.StartDisasterWarningSequence();
             StartCoroutine("TenseMusicTimer");
             break;
 
@@ -93,7 +85,7 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator TenseMusicTimer()
     {
-        yield return new WaitForSeconds(15f);
+        yield return new WaitForSeconds(12f);
         FmodParameters.SetParamByLabelName(musicInstance, "Play", "Stop"); //Reslove disaster music
 
         
@@ -101,7 +93,7 @@ public class AudioManager : MonoBehaviour
         musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         musicInstance.release();
         
-        yield return new WaitForSeconds(2f); 
+        yield return new WaitForSeconds(0.8f); 
 
         FmodParameters.SetGlobalParamByName("Intensity", 0f);
         StartMusic(); //Return to ambient music

@@ -26,7 +26,7 @@ namespace CT
         public static GameManager _INSTANCE;
 
         // Changes
-        private ApplyDisaster [] disaster_timeline;
+        private ApplyDisaster[] disaster_timeline;//Sam: changed access modifier so i can read it out of this script (don't worry cant write to it outside of this script)
         private List<CTChange>[] game_changes;
         private List<CTChange>[] user_changes;
         private List<CTChange>[] awareness_changes;
@@ -40,7 +40,7 @@ namespace CT
         public CTTurnData turn_data = new CTTurnData();
         //private CTTimelineData prime_timeline;
 
-        private uint current_turn;
+        public uint current_turn { get; private set; }
         public uint CurrentTurn { get { return current_turn; } }
         //private int user_changes_in_turn;
         private Vector3 empty_turn_resource_expenditure;
@@ -405,9 +405,9 @@ namespace CT
             turn_data = GetYearData(_requested_turn);
 
             if (DisasterEffectManager.instance != null && disaster_timeline[current_turn]?.disaster != null)
-                DisasterEffectManager.instance.ShowDisasterEffect(disaster_timeline[current_turn].disaster, disaster_timeline[current_turn].intensity);
+                //DisasterEffectManager.instance.ShowDisasterEffect(disaster_timeline[current_turn].disaster, disaster_timeline[current_turn].intensity);
 
-            AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn(), GetDisasterIntensityAtTurn(current_turn)); 
+            DisasterSeqenceManager.Instance.StartDisasterWarningSequence(); //Sam: abstracted my sequence functionality
 
             PolicyManager.instance.LoadPoliciesAtCurrentScope(current_turn);
             empty_turn_resource_expenditure = new Vector3(0, 0, 0);
