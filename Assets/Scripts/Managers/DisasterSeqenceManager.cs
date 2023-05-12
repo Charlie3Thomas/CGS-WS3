@@ -22,6 +22,7 @@ public class DisasterSeqenceManager : MonoBehaviour
     {
         //Invoke repeating for text flash
         warningObject.SetActive(true);
+        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.warningSFXEvent, null);
         InvokeRepeating("FlashTextTrigger", 0f, 0.3f);
         StartCoroutine("StartSequenceTimer");
     }
