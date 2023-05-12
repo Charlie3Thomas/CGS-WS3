@@ -909,6 +909,63 @@ namespace CT
             return ret;
         }
 
+        /// <summary>
+        /// Can be called in any turn, and will return the total awareness 
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        // Scorecard element - Awareness bonus
+        public float GetAwareness()
+        {
+            float ret = 0.0f;
+
+            for (int i = 0; i < awareness_changes.Length; i++)
+            {
+                foreach (TrackAwareness blob in awareness_changes[i])
+                {
+                    ret += blob.value;
+                }
+            }
+
+            return ret;
+        }
+        // Scorecard element - Disasters survived
+        public int GetLastSurvivedTurn()
+        {
+            for (int i = 0; i < DataSheet.TURNS_NUMBER + 1; i++)
+            {
+                CTTurnData data = GetYearData((uint)i);
+
+                if (data.Population == 0)
+                {
+                    return i;
+                }
+            }
+
+            return (int)DataSheet.TURNS_NUMBER;
+        }
+        // Scorecard element - Technology Nodes unlocked
+        public int GetTechnologiesUnlockedTotal()
+        {
+            CTTurnData data = GetYearData((uint)DataSheet.TURNS_NUMBER);
+
+            int ret = 0;
+
+            foreach (KeyValuePair<CTTechnologies, bool> kvp in data.technologies)
+            {
+                if (kvp.Value == true)
+                    ret++;
+            }
+
+            return ret;
+        }
+        // Scorecard Element - Population Survived
+        public int GetLastTurnPopulation()
+        {
+            CTTurnData data = GetYearData((uint)DataSheet.TURNS_NUMBER);
+
+            return data.Population;
+        }
 
         private void LogChangesInCurrentTurn()
         {

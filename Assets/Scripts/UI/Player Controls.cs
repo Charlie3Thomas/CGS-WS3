@@ -91,9 +91,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Escape"",
+                    ""name"": ""Menu"",
                     ""type"": ""Button"",
-                    ""id"": ""0905a6f8-8cde-47db-aab9-c68434a3a95a"",
+                    ""id"": ""476e70f6-32be-45b5-9392-010578b96026"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -224,12 +224,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""39afc479-e9c9-44e4-9b8a-1e6e3088bb60"",
-                    ""path"": ""<Keyboard>/escape"",
+                    ""id"": ""cacfaf50-2fd7-445d-b06f-2928d29758b0"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Escape"",
+                    ""action"": ""Menu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -376,7 +376,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Game_Aim = m_Game.FindAction("Aim", throwIfNotFound: true);
         m_Game_CursorPosition = m_Game.FindAction("CursorPosition", throwIfNotFound: true);
         m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
-        m_Game_Escape = m_Game.FindAction("Escape", throwIfNotFound: true);
+        m_Game_Menu = m_Game.FindAction("Menu", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Interact = m_Menu.FindAction("Interact", throwIfNotFound: true);
@@ -451,7 +451,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Aim;
     private readonly InputAction m_Game_CursorPosition;
     private readonly InputAction m_Game_Pause;
-    private readonly InputAction m_Game_Escape;
+    private readonly InputAction m_Game_Menu;
     public struct GameActions
     {
         private @PlayerControls m_Wrapper;
@@ -463,7 +463,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Aim => m_Wrapper.m_Game_Aim;
         public InputAction @CursorPosition => m_Wrapper.m_Game_CursorPosition;
         public InputAction @Pause => m_Wrapper.m_Game_Pause;
-        public InputAction @Escape => m_Wrapper.m_Game_Escape;
+        public InputAction @Menu => m_Wrapper.m_Game_Menu;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -494,9 +494,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Pause.started -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
-                @Escape.started -= m_Wrapper.m_GameActionsCallbackInterface.OnEscape;
-                @Escape.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnEscape;
-                @Escape.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnEscape;
+                @Menu.started -= m_Wrapper.m_GameActionsCallbackInterface.OnMenu;
+                @Menu.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnMenu;
+                @Menu.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnMenu;
             }
             m_Wrapper.m_GameActionsCallbackInterface = instance;
             if (instance != null)
@@ -522,9 +522,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
-                @Escape.started += instance.OnEscape;
-                @Escape.performed += instance.OnEscape;
-                @Escape.canceled += instance.OnEscape;
+                @Menu.started += instance.OnMenu;
+                @Menu.performed += instance.OnMenu;
+                @Menu.canceled += instance.OnMenu;
             }
         }
     }
@@ -620,7 +620,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnAim(InputAction.CallbackContext context);
         void OnCursorPosition(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
-        void OnEscape(InputAction.CallbackContext context);
+        void OnMenu(InputAction.CallbackContext context);
     }
     public interface IMenuActions
     {
