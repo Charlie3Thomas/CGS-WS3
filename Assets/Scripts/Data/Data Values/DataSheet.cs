@@ -176,24 +176,24 @@ namespace CT.Lookup
             [CTTechnologies.RiskAssessment]         = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.CUSTOM },                                          new List<float>() { 0.0f }),
             [CTTechnologies.PopulationAssessment]   = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.CUSTOM },                                          new List<float>() { 0.0f }),
             [CTTechnologies.Digitization]           = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS, BuffsNerfsType.MONEY_BONUS },      new List<float>() { 3500.0f, 3500.0f }),
-            [CTTechnologies.CropRotation]           = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.RESOURCE_FACTOR },                                 new List<float>() { 0.01f }),
+            [CTTechnologies.CropRotation]           = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS },                                 new List<float>() { 3750f }),
             [CTTechnologies.Fertilization]          = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.FOOD_RESERVES },                                   new List<float>() { 500.0f }),
             [CTTechnologies.Alchemy]                = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.SCIENCE_BONUS, BuffsNerfsType.SCIENCE_BONUS },  new List<float>() { 750.0f, 750.0f }),
-            [CTTechnologies.Seismometer]            = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.RESOURCE_FACTOR },                                 new List<float>() { 0.01f }),
-            [CTTechnologies.Automation]             = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.RESOURCE_FACTOR },                                 new List<float>() { 0.02f }),
+            [CTTechnologies.Seismometer]            = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS },                                 new List<float>() { 4000f }),
+            [CTTechnologies.Automation]             = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS },                                 new List<float>() { 4250F }),
             [CTTechnologies.FoodTechnology]         = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.FOOD_RESERVES },                                   new List<float>() { 1000.0f }),
             [CTTechnologies.InterestBoost]          = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS },                                     new List<float>() { 5000.0f }),
-            [CTTechnologies.DigitalSeismometer]     = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.RESOURCE_FACTOR },                                 new List<float>() { 0.025f }),
-            [CTTechnologies.Seismography]           = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.RESOURCE_FACTOR },                                 new List<float>() { 0.025f }),
+            [CTTechnologies.DigitalSeismometer]     = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS },                                 new List<float>() { 4250f }),
+            [CTTechnologies.Seismography]           = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS },                                 new List<float>() { 3000f }),
             [CTTechnologies.DigitalCurrency]        = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS },                                  new List<float>() { 5000.0f }),
             [CTTechnologies.DigitalPayment]         = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS },                                     new List<float>() { 5000.0f }),
             [CTTechnologies.Blueprints]             = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.SAFETY_FACTOR },                                   new List<float>() { 5.0f }),
             [CTTechnologies.Greenprints]            = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.FOOD_RESERVES },                                   new List<float>() { 1250.0f }),
             [CTTechnologies.NetBanking]             = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS },                                  new List<float>() { 7500.0f }),
             [CTTechnologies.ResearchDome]           = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.SCIENCE_BONUS, BuffsNerfsType.SCIENCE_BONUS },  new List<float>() { 2000.0f, 1000.0f }),
-            [CTTechnologies.RapidRelief]            = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.RESOURCE_FACTOR },                                 new List<float>() { 0.03f }),
-            [CTTechnologies.SeismicInvisibility]    = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.RESOURCE_FACTOR },                                 new List<float>() { 0.03f }),
-            [CTTechnologies.FloodManagement]        = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.RESOURCE_FACTOR },                                 new List<float>() { 0.03f }),
+            [CTTechnologies.RapidRelief]            = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.SCIENCE_BONUS },                                 new List<float>() { 2500f }),
+            [CTTechnologies.SeismicInvisibility]    = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.SCIENCE_BONUS },                                 new List<float>() { 2500f }),
+            [CTTechnologies.FloodManagement]        = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.SCIENCE_BONUS },                                 new List<float>() { 2500f }),
             [CTTechnologies.Robotics]               = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.SCIENCE_UPKEEP },                                  new List<float>() { -1.0f }),
             [CTTechnologies.Bluffing]               = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.AWARENESS_FACTOR },                                new List<float>() { 0.05f }),
             [CTTechnologies.Marketplace1]           = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.CUSTOM },                                          new List<float>() { 0.0f }),
@@ -207,7 +207,7 @@ namespace CT.Lookup
             [CTTechnologies.SupremeStealth]         = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.AWARENESS_FACTOR },                                new List<float>() {0.075f }),
             [CTTechnologies.SuperCivilization]      = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.SCIENCE_GAIN },                                    new List<float>() { 1.0f }),
             [CTTechnologies.ArtificialIntelligence] = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.SCIENCE_UPKEEP },                                  new List<float>() { -2.0f }),
-            [CTTechnologies.InhumanForesight]       = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.RESOURCE_FACTOR },                                 new List<float>() { 0.07f }),
+            [CTTechnologies.InhumanForesight]       = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS },                                 new List<float>() { 10000f }),
             [CTTechnologies.RobotWorkers]           = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_GAIN },                                      new List<float>() {1.0f }),
             [CTTechnologies.AlienMastery]           = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.MONEY_BONUS },                                  new List<float>() { float.MaxValue }),
             [CTTechnologies.AlienSuperiority]       = new BuffsNerfs(new List<BuffsNerfsType>() { BuffsNerfsType.SCIENCE_BONUS },                                new List<float>() { float.MaxValue }),
@@ -241,10 +241,10 @@ namespace CT.Lookup
             [BuffsNerfsType.SCIENCE_BONUS]      = "Research",
             [BuffsNerfsType.AWARENESS_FACTOR]   = "Stealth",
 
-            [BuffsNerfsType.RESOURCE_FACTOR]    = "INVALID BUFF/NERF TYPE",
+            [BuffsNerfsType.RESOURCE_FACTOR]    = "INVALID BUFF/NERF TYPE", // Removed from tech tree nodes
             [BuffsNerfsType.FOOD_RESERVES]      = "INVALID BUFF/NERF TYPE",
             [BuffsNerfsType.MONEY_CAPACITY]     = "INVALID BUFF/NERF TYPE", // Removed from tech tree nodes
-            [BuffsNerfsType.SCIENCE_CAPACITY]   = "INVALID BUFF/NERF TYPE", // Removed from tech tree nodees
+            [BuffsNerfsType.SCIENCE_CAPACITY]   = "INVALID BUFF/NERF TYPE", // Removed from tech tree nodes
             [BuffsNerfsType.CUSTOM]             = "INVALID BUFF/NERF TYPE"
         };
 
