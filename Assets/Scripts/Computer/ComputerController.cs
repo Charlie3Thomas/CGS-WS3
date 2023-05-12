@@ -622,6 +622,7 @@ public class ComputerController : MonoBehaviour
 
         // Updates counters & pips depending on the desired year in graph mode
         ChangeCountersToGraphMode();
+        
     }
 
     private void ChangeCountersToGraphMode()
@@ -634,7 +635,7 @@ public class ComputerController : MonoBehaviour
         rpText.text = turns[lookupTurn].Science.ToString();
         foodText.text = turns[lookupTurn].Food.ToString();
         populationText.text = turns[lookupTurn].Population.ToString();
-
+        CityBuildingManager.Instance.UpdatePopulation(turns[lookupTurn].Population);
         //populationText.color = Color.white;
 
         //Debug.Log(turns[lookupTurn].turn);
