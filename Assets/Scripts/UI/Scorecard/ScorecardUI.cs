@@ -82,7 +82,7 @@ public class ScorecardUI : MonoBehaviour
         SceneManager.LoadScene(0);
 
         
-        // RESET GAME SETTINGS HERE 
+        
     }
 
     public void FadeInAnimation()
