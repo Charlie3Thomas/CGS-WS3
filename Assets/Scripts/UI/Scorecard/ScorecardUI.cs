@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 using TMPro;
 using CT;
@@ -55,8 +56,6 @@ public class ScorecardUI : MonoBehaviour
         incrementRate4 = populationPoints / (50 * 4);
         incrementRate5 = totalPoints / (50 * 4);
 
-        
-        
 
 
     }
@@ -73,6 +72,17 @@ public class ScorecardUI : MonoBehaviour
     {
 
         IncrementPoints();
+    }
+
+
+    public void BackToMainMenuAndReset()
+    {
+        DOTween.Clear(true); // Clear animation cache
+       
+        SceneManager.LoadScene(0);
+
+        
+        
     }
 
     public void FadeInAnimation()

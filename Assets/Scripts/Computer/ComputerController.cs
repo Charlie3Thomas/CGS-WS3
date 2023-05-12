@@ -622,6 +622,7 @@ public class ComputerController : MonoBehaviour
 
         // Updates counters & pips depending on the desired year in graph mode
         ChangeCountersToGraphMode();
+        
     }
 
     private void ChangeCountersToGraphMode()
@@ -634,7 +635,7 @@ public class ComputerController : MonoBehaviour
         rpText.text = turns[lookupTurn].Science.ToString();
         foodText.text = turns[lookupTurn].Food.ToString();
         populationText.text = turns[lookupTurn].Population.ToString();
-
+        CityBuildingManager.Instance.UpdatePopulation(turns[lookupTurn].Population);
         //populationText.color = Color.white;
 
         //Debug.Log(turns[lookupTurn].turn);
@@ -711,7 +712,8 @@ public class ComputerController : MonoBehaviour
         panDownButton.SetActive(false);
         computerState = ComputerState.TECH_TREE_SCREEN;
         lookAt.localPosition = lookUp;
-        SnapshotHandler.instance.StartCameraPanSnapShot();
+        if (SnapshotHandler.instance != null)
+            SnapshotHandler.instance.StartCameraPanSnapShot();
         yield return new WaitForSeconds(1.0f);
         panning = false;
         panBackFromUpButton.SetActive(true);
@@ -725,7 +727,8 @@ public class ComputerController : MonoBehaviour
         panDownButton.SetActive(false);
         computerState = ComputerState.JOURNAL;
         lookAt.localPosition = lookDown;
-        SnapshotHandler.instance.StartCameraPanSnapShot();
+        if (SnapshotHandler.instance != null)
+            SnapshotHandler.instance.StartCameraPanSnapShot();
         yield return new WaitForSeconds(1.0f);
         panning = false;
         panBackFromDownButton.SetActive(true);
@@ -739,7 +742,8 @@ public class ComputerController : MonoBehaviour
         panBackFromUpButton.SetActive(false);
         computerState = ComputerState.MAIN_COMPUTER;
         lookAt.localPosition = defaultLook;
-        SnapshotHandler.instance.StopSnapShot(SnapshotHandler.instance.panSnapShotinstance);
+        if(SnapshotHandler.instance != null)
+            SnapshotHandler.instance.StopSnapShot(SnapshotHandler.instance.panSnapShotinstance);
         yield return new WaitForSeconds(1.0f);
         panning = false;
         panUpButton.SetActive(true);
