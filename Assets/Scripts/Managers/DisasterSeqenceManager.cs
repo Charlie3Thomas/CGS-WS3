@@ -92,7 +92,7 @@ public class DisasterSeqenceManager : MonoBehaviour
     }
     void ResolveTextFlashTrigger()
     {
-        InvokeRepeating("ResolveFlash", 0f, 0.3f);
+        InvokeRepeating("ResolveFlash", 0f, 0.5f);
     }
     IEnumerator ResolveFlash()
     {
@@ -102,11 +102,11 @@ public class DisasterSeqenceManager : MonoBehaviour
     }
     IEnumerator ResovleRoutine()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(11f);
         resolvedObject.SetActive(false);
         CancelInvoke("ResolveFlash");
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(0.5f);
         ResetFlag();
 
     }
