@@ -23,6 +23,7 @@ public class ComputerController : MonoBehaviour
 
     #region Member Variables
     public static ComputerController Instance;
+    private TutorialManager tutorialManager;
 
     private Transform lookAt;
     private Camera screenCam;
@@ -154,6 +155,7 @@ public class ComputerController : MonoBehaviour
     #endregion
     #endregion
 
+
     void Awake()
     {
         if (Instance == null)
@@ -174,6 +176,9 @@ public class ComputerController : MonoBehaviour
         if (!cam)
             return;
 
+        // if(tutorialManager.gameState != tutorialManager.gameState.InGame)
+        //     return;
+            
         Ray ray = cam.ScreenPointToRay(mousePos);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
@@ -334,11 +339,11 @@ public class ComputerController : MonoBehaviour
     {
         // Plot graph with necessary values when showing graph
         RefreshGraph();
-
+        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.staticGraphShowEvent, null);
         showGraph = !showGraph;
         canSwitch = false;
         staticScreenEffect.SetActive(true);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.8f);
         screen.SetActive(!showGraph);
         graphGO.SetActive(showGraph);
         staticScreenEffect.SetActive(false);
@@ -577,6 +582,7 @@ public class ComputerController : MonoBehaviour
         screen.SetActive(true);
         graphGO.SetActive(false);
 
+        tutorialManager = FindObjectOfType<TutorialManager>();
         // Set Values
         //desiredYear = YearData._INSTANCE.current_year;
         showGraph = false;
@@ -780,7 +786,7 @@ public class ComputerController : MonoBehaviour
 
     private void ShiftInput(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && computerState == ComputerState.MAIN_COMPUTER)
         {
             vCam.m_Lens.FieldOfView = 20.0f;
             Cursor.lockState = CursorLockMode.Locked;

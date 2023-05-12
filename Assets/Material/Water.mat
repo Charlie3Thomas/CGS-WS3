@@ -94,9 +94,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Vector1_3DA5F8E: 1.95
+    - Vector1_3DA5F8E: 2.42
     - Vector1_7D3A5C9B: 0.76
-    - Vector1_9B063977: -1
+    - Vector1_9B063977: 3.38
     - Vector1_B75CD54C: 0.68
     - Vector1_F8BF2348: 1
     - _AlphaClip: 0
@@ -141,7 +141,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_CD5C02EC: {r: 1, g: 1, b: 1, a: 1}
+    - Color_CD5C02EC: {r: 0.630785, g: 0.95861626, b: 0.990566, a: 1}
     - Vector2_59E5833F: {r: 0.01, g: 0.01, b: 0, a: 0}
     - Vector2_76ABD41D: {r: 0.03, g: 0.03, b: 0, a: 0}
     - Vector2_A8B16FA0: {r: 0.05, g: 0.05, b: 0, a: 0}
@@ -150,16 +150,16 @@ Material:
     - Vector2_E0F9899C: {r: 0.05, g: 0.05, b: 0, a: 0}
     - _BaseColor: {r: 0, g: 0.6729269, b: 1, a: 1}
     - _Color: {r: 0, g: 0.6729269, b: 1, a: 1}
-    - _DeepColor1: {r: 0.15718365, g: 1, b: 0, a: 0.6666667}
-    - _DeepColor2: {r: 0.27058828, g: 0.65683085, b: 0.85882354, a: 0.7372549}
+    - _DeepColor1: {r: 0.09618939, g: 0.6132076, b: 0, a: 1}
+    - _DeepColor2: {r: 0, g: 0.40679246, b: 0.62264144, a: 1}
     - _Direction1: {r: -0.14, g: 0, b: 0.2, a: 0}
     - _Direction2: {r: 0.18, g: 0, b: 0.12, a: 0}
-    - _Direction3: {r: 0.08, g: 0, b: -0.16, a: 0}
+    - _Direction3: {r: -0.18, g: 0, b: -0.22, a: 0}
     - _Direction4: {r: -0.4, g: 0, b: 0.24, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _ShallowColor: {r: 0.4705881, g: 0.98039216, b: 1, a: 0.79607844}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _Timescales: {r: 0.61, g: 1.56, b: 0.5, a: 1.5}
+    - _Timescales: {r: 0.3, g: 0.75, b: 0.25, a: 0.75}
   m_BuildTextureStacks: []
 --- !u!114 &6667052987522368531
 MonoBehaviour:

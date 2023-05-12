@@ -36,6 +36,8 @@ public class PointSelector : MonoBehaviour
             pipMat.SetFloat("_FillAmount", pointValue);
 
         ComputerController.Instance.CheckPoints(this);
+
+        PolicyManager.instance.ShowPoliciesMetReq();
     }
 
     public void RemovePoints(float points)
@@ -51,6 +53,8 @@ public class PointSelector : MonoBehaviour
             pipMat.SetFloat("_FillAmount", pointValue);
 
         ComputerController.Instance.CheckPoints(this);
+
+        PolicyManager.instance.ShowPoliciesMetReq();
     }
 
     public void SetPoints(float _points)
@@ -69,6 +73,8 @@ public class PointSelector : MonoBehaviour
         }
         else
             Debug.LogError("pipMat is null");
+
+        PolicyManager.instance.ShowPoliciesMetReq();
     }
     void OnMouseOver()
     {
