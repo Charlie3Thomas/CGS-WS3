@@ -15,7 +15,6 @@ public class CityManager : MonoBehaviour
 
     private List<Building> buildings = new List<Building>();
 
-
     private void Start()
     {
         lastPopulation = population;
@@ -98,54 +97,6 @@ public class CityManager : MonoBehaviour
 
         DistributePopulation();
     }
-
-
-    // private void CreateInitialBuildings()
-    // {
-    //     int buildingCount = Mathf.Min(population / populationPerFloor, maxBuildingCount);
-
-    //     for (int i = 0; i < buildingCount; i++)
-    //     {
-    //         GameObject newBuilding = Instantiate(buildingPrefab, new Vector3(i * 2, 0, 0), Quaternion.identity);
-    //         newBuilding.transform.SetParent(CityParent);
-    //         newBuilding.AddComponent<Building>();
-    //         newBuilding.GetComponent<Building>().Initialise(newBuilding, populationPerFloor);
-    //         buildings.Add(newBuilding.GetComponent<Building>());
-    //     }
-    // }
-
-    // private void UpdateCity()
-    // {
-    //     int targetBuildingCount = Mathf.Min(population / populationPerFloor, maxBuildingCount);
-    //     int currentBuildingCount = buildings.Count;
-
-    //     if (targetBuildingCount > currentBuildingCount)
-    //     {
-    //         int buildingsToAdd = targetBuildingCount - currentBuildingCount;
-
-    //         for (int i = 0; i < buildingsToAdd; i++)
-    //         {
-    //             GameObject newBuilding = Instantiate(buildingPrefab, new Vector3((currentBuildingCount + i) * 2, 0, 0), Quaternion.identity);
-    //             newBuilding.transform.SetParent(CityParent);
-    //             newBuilding.AddComponent<Building>();
-    //             newBuilding.GetComponent<Building>().Initialise(newBuilding, populationPerFloor);
-    //             buildings.Add(newBuilding.GetComponent<Building>());
-    //         }
-    //     }
-    //     else if (targetBuildingCount < currentBuildingCount)
-    //     {
-    //         int buildingsToRemove = currentBuildingCount - targetBuildingCount;
-
-    //         for (int i = 0; i < buildingsToRemove; i++)
-    //         {
-    //             Building buildingToRemove = buildings[buildings.Count - 1];
-    //             buildingToRemove.DestroyBuilding();
-    //             buildings.RemoveAt(buildings.Count - 1);
-    //         }
-    //     }
-
-    //     DistributePopulation();
-    // }
 
     private void DistributePopulation()
     {
