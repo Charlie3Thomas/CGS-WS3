@@ -123,7 +123,7 @@ public class EscapeMenu : MonoBehaviour
         Time.timeScale = 1;
         DOTween.Clear(true);
         
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(3);
     }
 
 }
