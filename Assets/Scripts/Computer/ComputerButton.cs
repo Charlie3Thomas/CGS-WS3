@@ -75,7 +75,7 @@ public class ComputerButton : MonoBehaviour
                         // Ensures colour of counter is correct on check out
                         ComputerController.Instance.UpdateSlider();
 
-                        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+                        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressREvent, null);
 
                         ComputerController.Instance.journal.GetComponent<Journal>().UpdateFactionProductionText();
                     }

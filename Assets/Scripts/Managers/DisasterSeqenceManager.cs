@@ -105,6 +105,8 @@ public class DisasterSeqenceManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         resolvedObject.SetActive(false);
         CancelInvoke("ResolveFlash");
+
+        yield return new WaitForSeconds(3f);
         ResetFlag();
 
     }
