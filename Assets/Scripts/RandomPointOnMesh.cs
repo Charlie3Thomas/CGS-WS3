@@ -25,6 +25,15 @@ public class RandomPointOnMesh : MonoBehaviour
     [Header("BuildingPrefabs")]
     public List<GameObject> BuildingPrefabs;
 
+    public List<Vector3> BuildingPoints;
+    public List<GameObject> EmptyPoints;
+
+    public static RandomPointOnMesh Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
     public void GenerateRandomPositions()
     {
         // Check if we have a Unity terrain
@@ -67,32 +76,38 @@ public class RandomPointOnMesh : MonoBehaviour
             if (pointFound)
             {
                 points.Add(pointRandom);
+                BuildingPoints.Add(pointOnSurface);
                 indexPoints++;
 
                 int indexO = Random.Range(0, BuildingPrefabs.Count - 1);
 
-                GameObject building = Instantiate(BuildingPrefabs[indexO]);
+                GameObject building = new GameObject();
                 building.transform.position = pointOnSurface;
-                if (building.name.ToLower().Contains("small"))
-                {
-                    building.transform.localScale = new Vector3(scaleFactor.x + 0.25f,
-                        scaleFactor.y + 0.25f,
-                        scaleFactor.z + 0.25f);
-                }
-                else
-                {
-                    building.transform.localScale = scaleFactor;
-                }
-                
-                //building.GetComponent<Renderer>().sharedMaterial.color = colorPrimitives;
                 building.transform.SetParent(ObjectsParent);
-                float randomYRotation = Random.Range(0f, 360f);
-                building.transform.Rotate(0, 0, randomYRotation);
+                building.name = indexPoints.ToString();
+                EmptyPoints.Add(building);
+                //GameObject building = Instantiate(BuildingPrefabs[indexO]);
+                //building.transform.position = pointOnSurface;
+                //if (building.name.ToLower().Contains("small"))
+                //{
+                //    building.transform.localScale = new Vector3(scaleFactor.x + 0.25f,
+                //        scaleFactor.y + 0.25f,
+                //        scaleFactor.z + 0.25f);
+                //}
+                //else
+                //{
+                //    building.transform.localScale = scaleFactor;
+                //}
 
-                Material material = building.GetComponent<Renderer>().material;
-                material.color = new Color(Random.value, Random.value, Random.value);
-                building.SetActive(true);
-                building.name = building.name + "_" + indexPoints.ToString();
+                ////building.GetComponent<Renderer>().sharedMaterial.color = colorPrimitives;
+                //building.transform.SetParent(ObjectsParent);
+                //float randomYRotation = Random.Range(0f, 360f);
+                //building.transform.Rotate(0, 0, randomYRotation);
+
+                //Material material = building.GetComponent<Renderer>().material;
+                //material.color = new Color(Random.value, Random.value, Random.value);
+                //building.SetActive(true);
+                //building.name = building.name + "_" + indexPoints.ToString();
             }
         } while ((indexPoints < numPoints) && (indexLoops < maxIterations));
     }

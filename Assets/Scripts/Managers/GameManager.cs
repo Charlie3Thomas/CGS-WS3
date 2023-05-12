@@ -453,8 +453,13 @@ namespace CT
             ComputerController.Instance.foodText.text = (turn_data.Food - (int)empty_turn_resource_expenditure.z).ToString();
 
             ComputerController.Instance.populationText.text = turn_data.Population.ToString();
-
             SetAwarenessUI();
+            UpdateCity();
+        }
+
+        private void UpdateCity()
+        {
+            CityBuildingManager.Instance.UpdatePopulation(turn_data.Population);
         }
 
         private void UpdatePipsWithCurrentTurnData()
