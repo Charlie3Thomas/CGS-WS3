@@ -4,8 +4,8 @@ using UnityEngine;
 
 public static class CTSeed
 {
-    private static long gameSeed = System.DateTime.Now.Ticks;
-    //public static long gameSeed = 42069;
+    //private static long gameSeed = System.DateTime.Now.Ticks;
+    public static long gameSeed = 42069;
 
     /// <summary>
     /// .Next/.NextDouble(RANGE)
@@ -15,5 +15,10 @@ public static class CTSeed
         int local_seed = ($"{gameSeed}{_turn}{_label}").GetHashCode();
 
         return new System.Random(local_seed);
+    }
+
+    public static void ChangeSeed()
+    {
+        gameSeed = System.DateTime.Now.Ticks;
     }
 }

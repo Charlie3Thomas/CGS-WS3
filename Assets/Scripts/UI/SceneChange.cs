@@ -20,15 +20,19 @@ public class SceneChange : MonoBehaviour
     #region MAIN MENU BUTTONS AND AUDIO EVENT TRIGGERS
     public void OnSelectStartGame()
     {
-        LoadMainGame();  
+        LoadMainGame();
+        
     }
 
 
 
     private void LoadMainGame()
     {
+        Debug.Log("game seed :" + CTSeed.gameSeed);
         //StartCoroutine(LoadGameTransition(1));
+        CTSeed.ChangeSeed();
 
+        Debug.Log("game seed after change :" + CTSeed.gameSeed);
         DOTween.Clear(true);
         SceneManager.LoadScene(1);
     }
