@@ -58,8 +58,8 @@ public class CityBuildingManager : MonoBehaviour
             float randomYRotation = Random.Range(0f, 360f);
             building.transform.Rotate(0, 0, randomYRotation);
 
-            Material material = building.GetComponent<Renderer>().material;
-            material.color = new Color(Random.value, Random.value, Random.value);
+            //Material material = building.GetComponent<Renderer>().material;
+            //material.color = new Color(Random.value, Random.value, Random.value);
             building.SetActive(true);
             building.name = building.name + "_" + i.ToString();
             BuildingObjects.Add(building);
@@ -71,7 +71,8 @@ public class CityBuildingManager : MonoBehaviour
     {
         //Debug.Log("POPULATION UPDATE : " + population);
         buildingCounts = (int)(population * 0.25f);
-        if (buildingCounts <= 0) { buildingCounts = 10; }
+        
+        buildingCounts = Mathf.Clamp(buildingCounts, 10, BuildingObjects.Count);
 
         for (int i = 0; i < BuildingObjects.Count; i++)
         {
