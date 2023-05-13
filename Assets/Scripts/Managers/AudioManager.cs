@@ -36,12 +36,13 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        
     }
 
     private void Start()
     {
         FmodRouting.SetUpBuses();
+        FmodParameters.SetGlobalParamByName("Intensity", 0f);
         StartAmbience();
         StartMusic();
     }
