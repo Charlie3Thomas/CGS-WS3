@@ -71,7 +71,8 @@ public class CityBuildingManager : MonoBehaviour
     {
         //Debug.Log("POPULATION UPDATE : " + population);
         buildingCounts = (int)(population * 0.25f);
-        if (buildingCounts <= 0) { buildingCounts = 10; }
+        
+        buildingCounts = Mathf.Clamp(buildingCounts, 10, BuildingObjects.Count);
 
         for (int i = 0; i < BuildingObjects.Count; i++)
         {
