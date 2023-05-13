@@ -63,6 +63,13 @@ public class EscapeMenu : MonoBehaviour
 
         backgroundBlocker.SetActive(true);
 
+        //Sam: quick testing fix at end... warning text would be over screen if opening menu, so j check the sigleton is not null then set the text to false. Quick fix
+        if (DisasterSeqenceManager.Instance != null) 
+        {
+            DisasterSeqenceManager.Instance.warningObject.SetActive(false);
+            DisasterSeqenceManager.Instance.resolvedObject.SetActive(false);
+        }
+
 
     }
 

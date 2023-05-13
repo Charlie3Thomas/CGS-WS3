@@ -11,8 +11,8 @@ public class DisasterSeqenceManager : MonoBehaviour
     public static DisasterSeqenceManager Instance => m_instance;
     private static DisasterSeqenceManager m_instance;
     
-    [SerializeField] private GameObject warningObject;
-    [SerializeField] private GameObject resolvedObject;
+    public GameObject warningObject;
+    public GameObject resolvedObject;
     [SerializeField] private TMP_Text warningText;
     public bool isDisasterActive { get; private set; } = false;
    
