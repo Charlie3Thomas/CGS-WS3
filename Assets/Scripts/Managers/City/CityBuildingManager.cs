@@ -58,8 +58,8 @@ public class CityBuildingManager : MonoBehaviour
             float randomYRotation = Random.Range(0f, 360f);
             building.transform.Rotate(0, 0, randomYRotation);
 
-            Material material = building.GetComponent<Renderer>().material;
-            material.color = new Color(Random.value, Random.value, Random.value);
+            //Material material = building.GetComponent<Renderer>().material;
+            //material.color = new Color(Random.value, Random.value, Random.value);
             building.SetActive(true);
             building.name = building.name + "_" + i.ToString();
             BuildingObjects.Add(building);
