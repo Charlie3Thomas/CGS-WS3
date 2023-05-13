@@ -20,6 +20,7 @@ public class SceneChange : MonoBehaviour
     #region MAIN MENU BUTTONS AND AUDIO EVENT TRIGGERS
     public void OnSelectStartGame()
     {
+        AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
         LoadMainGame();
         
     }
@@ -62,6 +63,7 @@ public class SceneChange : MonoBehaviour
     //}
     public void OnSelectQuitGame()
     {
+        FmodRouting.StopMasterBus(); //Sam on destory for audio stoppping not calling all stops before menu loads, just focefully stop master bus with fade 
         Application.Quit();
     }
 

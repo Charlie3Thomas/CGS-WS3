@@ -11,15 +11,15 @@ public class EscapeMenu : MonoBehaviour
     private PlayerControls playerControls;
     private InputAction escMenu;
 
-    
-    
+
+
 
     public float fadetime = 1f;
 
     [SerializeField] private GameObject escapeMenuUI;
     [SerializeField] private GameObject AudioSettingsUI;
     [SerializeField] private bool isVisible;
-    [SerializeField] private bool isAudioVisible=false;
+    [SerializeField] private bool isAudioVisible = false;
     [SerializeField] private GameObject backgroundBlocker;
 
     private void Awake()
@@ -38,14 +38,14 @@ public class EscapeMenu : MonoBehaviour
     private void OnDisable()
     {
         escMenu.Disable();
-        
+
     }
 
     void VisibilityCheck(InputAction.CallbackContext context)
     {
         isVisible = !isVisible;
 
-        if(isVisible)
+        if (isVisible)
         {
             ActivateMenu();
         }
@@ -63,7 +63,7 @@ public class EscapeMenu : MonoBehaviour
 
         backgroundBlocker.SetActive(true);
 
-        
+
     }
 
     public void DeactivateMenu()
@@ -71,7 +71,7 @@ public class EscapeMenu : MonoBehaviour
         Time.timeScale = 1;
         backgroundBlocker.SetActive(false);
 
-        if(isAudioVisible)
+        if (isAudioVisible)
         {
             AudioSettingsUI.gameObject.SetActive(false);
         }
@@ -119,7 +119,9 @@ public class EscapeMenu : MonoBehaviour
     }
 
     public void OnSelectShowScoreCard()
-    {
+    { 
+
+        FmodRouting.StopMasterBus();
         Time.timeScale = 1;
         DOTween.Clear(true);
         

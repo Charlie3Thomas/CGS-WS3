@@ -83,7 +83,7 @@ public class DisasterSeqenceManager : MonoBehaviour
         AudioManager.Instance.StartDisasterAudio(GameManager._INSTANCE.CheckDisasterInTurn(), GameManager._INSTANCE.GetDisasterIntensityAtTurn(GameManager._INSTANCE.current_turn));
         
 
-        yield return new WaitForSeconds(18f);
+        yield return new WaitForSeconds(0.1f);
         
 
     }
