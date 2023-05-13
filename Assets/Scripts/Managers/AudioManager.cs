@@ -85,7 +85,7 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator TenseMusicTimer()
     {
-        yield return new WaitForSeconds(20f);
+        yield return new WaitForSeconds(15f);
         FmodParameters.SetParamByLabelName(musicInstance, "Play", "Stop"); //Reslove disaster music
         DisasterSeqenceManager.Instance.StartDisasterEndSquence();
         
