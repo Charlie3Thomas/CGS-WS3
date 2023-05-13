@@ -99,14 +99,14 @@ public class DisasterSeqenceManager : MonoBehaviour
     }
     IEnumerator ResovleRoutine()
     {
-        yield return new WaitForSeconds(2f); //Let text flash for few seconds
+        yield return new WaitForSeconds(3f); //Let text flash for few seconds
         CancelInvoke("ResolveTextFlashTrigger");
         resolvedObject.SetActive(true);
 
         yield return new WaitForSeconds(5f); //Make text solid for remaineder of flag time
         resolvedObject.SetActive(false);
 
-        yield return new WaitForSeconds(0.3f); //Reset flag small time after whole sequence has finished 
+        yield return new WaitForSeconds(0.5f); //Reset flag small time after whole sequence has finished 
         ResetFlag();
 
     }
