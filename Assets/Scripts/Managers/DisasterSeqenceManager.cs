@@ -5,7 +5,7 @@ using CT;
 using CT.Lookup;
 using TMPro;
 
-
+//Sam: last min implementation: diasters can trigger if spamming, so added this as a form of sequence, to also help with audio transitioning. Bit of a rushed implementation, so sorry...
 public class DisasterSeqenceManager : MonoBehaviour
 {
     public static DisasterSeqenceManager Instance => m_instance;
@@ -39,17 +39,12 @@ public class DisasterSeqenceManager : MonoBehaviour
         StartCoroutine("StartSequenceTimer");
     }
 
-    public void StartDisasterSequence()
-    {
-
-    }
-
     public void StartDisasterEndSquence()
     {
         
         resolvedObject.SetActive(true);
 
-        ResolveTextFlashTrigger();
+        InvokeRepeating("ResolveTextFlashTrigger", 0f, 0.5f);
         StartCoroutine("ResovleRoutine");
 
         
@@ -71,17 +66,19 @@ public class DisasterSeqenceManager : MonoBehaviour
 
     IEnumerator StartSequenceTimer()
     {
-          
-        yield return new WaitForSeconds(7f);
-
+        yield return new WaitForSeconds(3f);
         CancelInvoke("FlashTextTrigger");
-        StartCoroutine("DisasterSequenceTimer");
+        warningObject.SetActive(true);
+        yield return new WaitForSeconds(3f);
+
         warningObject.SetActive(false);
+        StartCoroutine("DisasterSequenceTimer");
+      
     }
 
     IEnumerator DisasterSequenceTimer()
     {
-        warningObject.SetActive(false);//Sometimes doesnt get set to false, just double checking it is set to false to avoid this
+        //warningObject.SetActive(false);//Sometimes doesnt get set to false, just double checking it is set to false to avoid this
         DisasterEffectManager.instance.ShowDisasterEffect(GameManager._INSTANCE.CheckDisasterInTurn(), GameManager._INSTANCE.GetDisasterIntensityAtTurn(GameManager._INSTANCE.current_turn));
         AudioManager.Instance.StartDisasterAudio(GameManager._INSTANCE.CheckDisasterInTurn(), GameManager._INSTANCE.GetDisasterIntensityAtTurn(GameManager._INSTANCE.current_turn));
         
@@ -92,7 +89,7 @@ public class DisasterSeqenceManager : MonoBehaviour
     }
     void ResolveTextFlashTrigger()
     {
-        InvokeRepeating("ResolveFlash", 0f, 0.5f);
+        StartCoroutine("ResolveFlash");
     }
     IEnumerator ResolveFlash()
     {
@@ -102,11 +99,14 @@ public class DisasterSeqenceManager : MonoBehaviour
     }
     IEnumerator ResovleRoutine()
     {
-        yield return new WaitForSeconds(7f);
-        resolvedObject.SetActive(false);
-        CancelInvoke("ResolveFlash");
+        yield return new WaitForSeconds(2f); //Let text flash for few seconds
+        CancelInvoke("ResolveTextFlashTrigger");
+        resolvedObject.SetActive(true);
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(5f); //Make text solid for remaineder of flag time
+        resolvedObject.SetActive(false);
+
+        yield return new WaitForSeconds(0.3f); //Reset flag small time after whole sequence has finished 
         ResetFlag();
 
     }
