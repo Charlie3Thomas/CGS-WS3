@@ -27,7 +27,7 @@ public class DisasterSeqenceManager : MonoBehaviour
     {
         isDisasterActive = true;
         //Invoke repeating for text flash
-        warningObject.SetActive(true);
+       // warningObject.SetActive(true);
 
         AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.warningSFXEvent, null);
         if (GameManager._INSTANCE.GetDisasterIntensityAtTurn(GameManager._INSTANCE.current_turn) != -1f && GameManager._INSTANCE.CheckDisasterInTurn() != CTDisasters.None) //Check charlies no disaster -1 val to not set param 
