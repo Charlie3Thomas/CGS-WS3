@@ -102,11 +102,11 @@ public class DisasterSeqenceManager : MonoBehaviour
     }
     IEnumerator ResovleRoutine()
     {
-        yield return new WaitForSeconds(11f);
+        yield return new WaitForSeconds(7f);
         resolvedObject.SetActive(false);
         CancelInvoke("ResolveFlash");
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         ResetFlag();
 
     }
