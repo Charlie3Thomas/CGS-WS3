@@ -55,19 +55,34 @@ namespace CT
         #region UnityFunctions
         private void Awake()
         {
-            if (_INSTANCE != null)
+            if (_INSTANCE == null)
             {
-                Destroy(this.gameObject);
-                Debug.LogError("Multiple GameManager Instances!");
+                _INSTANCE = this;
             }
             else
-                _INSTANCE = this;
+            {
+                Destroy(gameObject);
+                return;
+            }
 
             DontDestroyOnLoad(gameObject);
         }
 
 
         private void Start()
+        {
+        }
+
+        private void FixedUpdate()
+        {
+            //UpdateResourceCounters();
+        }
+        #endregion
+
+
+        #region Setup
+
+        public void Setup()
         {
             // Setup data containers
             Initialise();
@@ -94,16 +109,9 @@ namespace CT
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
 
             //Debug.Log($"{current_turn}: Workers: {turn_data.GetFactionDistribution().y}, Scientists: {turn_data.GetFactionDistribution().x}, Farmers: {turn_data.GetFactionDistribution().z}, Planners: {turn_data.GetFactionDistribution().w}");
+
         }
 
-        private void FixedUpdate()
-        {
-            //UpdateResourceCounters();
-        }
-        #endregion
-
-
-        #region Setup
         private void Initialise()
         {
             current_turn = 0;

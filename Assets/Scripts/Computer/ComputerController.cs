@@ -168,7 +168,13 @@ public class ComputerController : MonoBehaviour
             return;
         }
 
-        Setup();
+        panUpButton = GameObject.Find("PanUpButton");
+        panDownButton = GameObject.Find("PanDownButton");
+        panBackFromUpButton = GameObject.Find("PanBackButtonFromUp");
+        panBackFromDownButton = GameObject.Find("PanBackButtonFromDown");
+        vCam = GameObject.Find("ComputerVirtualCamera").GetComponent<CinemachineVirtualCamera>();
+        lookAt = GameObject.FindGameObjectWithTag("LookTarget").transform;
+        lookAt.localPosition = defaultLook;
     }
 
     void Update()
@@ -591,8 +597,14 @@ public class ComputerController : MonoBehaviour
         pointSelectors = new List<PointSelector>(FindObjectsOfType<PointSelector>());
         newPos = Vector3.zero;
 
-        UpdateSlider();
+        Invoke("GameSetup", 0.1f);
+    }
 
+    void GameSetup()
+    {
+        GameManager._INSTANCE.Setup();
+
+        UpdateSlider();
     }
 
     public void RefreshGraph()
@@ -850,6 +862,7 @@ public class ComputerController : MonoBehaviour
 
     private void OnEnable()
     {
+        Setup();
         SubscribeInputs();
     }
 
