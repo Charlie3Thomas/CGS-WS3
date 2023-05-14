@@ -5,7 +5,7 @@ using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public enum buttonType
 {
     GENERIC,
@@ -78,6 +78,19 @@ public class ComputerButton : MonoBehaviour
                         AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressREvent, null);
 
                         ComputerController.Instance.journal.GetComponent<Journal>().UpdateFactionProductionText();
+                        Debug.Log("Year : "+ ComputerController.Instance.desiredYear);
+
+                        // To finish the game loop when awareness reaches 1 or more
+                        if (GameManager._INSTANCE.GetAwareness() >= 1)
+                        {
+                            // SceneManager.LoadScene(3);
+                            ShowScoreMenu.INSTANCE.DisplayScoreMenuOption();
+                        }
+
+                        if(ComputerController.Instance.desiredYear == 2100)
+                        {
+                            ShowScoreMenu.INSTANCE.DisplayScoreAndContinueOption();
+                        }
                     }
                     break;
                 }
