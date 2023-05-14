@@ -16458,7 +16458,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0051727, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1100, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1579034937
@@ -16481,14 +16481,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'GAME CREDITS
-
-    TEAM - BIGSTACK
-
-    <full names too be added>
-
-
-'
+  m_text: "GAME CREDITS\nTEAM - BIGSTACK\nRamy Abousaif\nCharlie Thomas\nSam Scott\nShreyas
+    Tembhekar\t\nPaxton Blaise\nHiren Kacha\nMohit Pundir"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bd7de7983f70db04c8b3c3c7db8dc285, type: 2}
   m_sharedMaterial: {fileID: 4461847764946356756, guid: bd7de7983f70db04c8b3c3c7db8dc285,
@@ -24202,31 +24196,36 @@ PrefabInstance:
     - target: {fileID: 3206048153616227666, guid: d64059a8ff2bf754eb8b10d5b1caddc6,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3206048153616227666, guid: d64059a8ff2bf754eb8b10d5b1caddc6,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3206048153616227666, guid: d64059a8ff2bf754eb8b10d5b1caddc6,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 650
       objectReference: {fileID: 0}
     - target: {fileID: 3206048153616227666, guid: d64059a8ff2bf754eb8b10d5b1caddc6,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 137.5
       objectReference: {fileID: 0}
     - target: {fileID: 3206048153616227666, guid: d64059a8ff2bf754eb8b10d5b1caddc6,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 375
       objectReference: {fileID: 0}
     - target: {fileID: 3206048153616227666, guid: d64059a8ff2bf754eb8b10d5b1caddc6,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: -306.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3992614838113653886, guid: d64059a8ff2bf754eb8b10d5b1caddc6,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4076460802135564466, guid: d64059a8ff2bf754eb8b10d5b1caddc6,
