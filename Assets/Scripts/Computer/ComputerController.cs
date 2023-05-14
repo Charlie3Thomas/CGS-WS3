@@ -485,7 +485,7 @@ public class ComputerController : MonoBehaviour
             var localPoint = hit.textureCoord;
             Ray camRay = cam.ScreenPointToRay(new Vector2(localPoint.x * cam.pixelWidth, localPoint.y * cam.pixelHeight));
             RaycastHit camHit;
-            if (Physics.Raycast(camRay, out camHit))
+            if (Physics.Raycast(camRay, out camHit, Mathf.Infinity, (1 << LayerMask.NameToLayer("MapPoints") | 1 << LayerMask.NameToLayer("TechTree")), QueryTriggerInteraction.Ignore))
             {
                 if(cam == techCam)
                 {

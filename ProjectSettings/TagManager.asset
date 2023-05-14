@@ -25,6 +25,7 @@ TagManager:
   - PopCounter
   - Screen
   - Graph
+  - MyPolicyCard
   layers:
   - Default
   - TransparentFX
@@ -34,7 +35,7 @@ TagManager:
   - UI
   - Computer
   - TechTree
-  - 
+  - MapPoints
   - 
   - 
   - 
