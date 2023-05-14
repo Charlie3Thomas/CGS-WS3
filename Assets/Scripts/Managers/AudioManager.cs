@@ -11,7 +11,7 @@ public class AudioManager : MonoBehaviour
 
    
     EventInstance ambienceInstance;
-    EventInstance musicInstance;
+    public EventInstance musicInstance { get; private set; }
     EventInstance chargeInstance;
 
     private EventInstance oceanAmbienceInstance;
@@ -36,23 +36,20 @@ public class AudioManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        
     }
 
     private void Start()
     {
         FmodRouting.SetUpBuses();
+        FmodParameters.SetGlobalParamByName("Intensity", 0f);
         StartAmbience();
         StartMusic();
     }
 
     public void StartDisasterAudio(CTDisasters disaster, float intensity)
     {
-        if(intensity != -1f && disaster != CTDisasters.None) //Check charlies no disaster -1 val to not set param 
-        {
-            FmodParameters.SetGlobalParamByName("Intensity", intensity);
-            FmodParameters.SetParamByLabelName(musicInstance, "Play", "Play");
-        }
+       
 
         Debug.Log("Audio disaster:" + disaster + " Intensity: " + intensity);
         switch(disaster)
@@ -89,18 +86,18 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator TenseMusicTimer()
     {
-        yield return new WaitForSeconds(20f);
-        FmodParameters.SetParamByLabelName(musicInstance, "Play", "Stop");
-
-        //yield return new WaitForSeconds(WaitTime);
-
+        yield return new WaitForSeconds(15f);
+        FmodParameters.SetParamByLabelName(musicInstance, "Play", "Stop"); //Reslove disaster music
+        DisasterSeqenceManager.Instance.StartDisasterEndSquence();
+        
+        yield return new WaitForSeconds(5f);
         musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         musicInstance.release();
         
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(0.8f); 
 
         FmodParameters.SetGlobalParamByName("Intensity", 0f);
-        StartMusic();
+        StartMusic(); //Return to ambient music
     }
 
     public void StartOceanAmbience(Transform transform)

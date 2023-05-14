@@ -23,6 +23,7 @@ public class ComputerController : MonoBehaviour
 
     #region Member Variables
     public static ComputerController Instance;
+    private TutorialManager tutorialManager;
 
     private Transform lookAt;
     private Camera screenCam;
@@ -154,6 +155,7 @@ public class ComputerController : MonoBehaviour
     #endregion
     #endregion
 
+
     void Awake()
     {
         if (Instance == null)
@@ -166,7 +168,13 @@ public class ComputerController : MonoBehaviour
             return;
         }
 
-        Setup();
+        panUpButton = GameObject.Find("PanUpButton");
+        panDownButton = GameObject.Find("PanDownButton");
+        panBackFromUpButton = GameObject.Find("PanBackButtonFromUp");
+        panBackFromDownButton = GameObject.Find("PanBackButtonFromDown");
+        vCam = GameObject.Find("ComputerVirtualCamera").GetComponent<CinemachineVirtualCamera>();
+        lookAt = GameObject.FindGameObjectWithTag("LookTarget").transform;
+        lookAt.localPosition = defaultLook;
     }
 
     void Update()
@@ -174,6 +182,9 @@ public class ComputerController : MonoBehaviour
         if (!cam)
             return;
 
+        // if(tutorialManager.gameState != tutorialManager.gameState.InGame)
+        //     return;
+            
         Ray ray = cam.ScreenPointToRay(mousePos);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
@@ -338,7 +349,7 @@ public class ComputerController : MonoBehaviour
         showGraph = !showGraph;
         canSwitch = false;
         staticScreenEffect.SetActive(true);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.8f);
         screen.SetActive(!showGraph);
         graphGO.SetActive(showGraph);
         staticScreenEffect.SetActive(false);
@@ -577,6 +588,7 @@ public class ComputerController : MonoBehaviour
         screen.SetActive(true);
         graphGO.SetActive(false);
 
+        tutorialManager = FindObjectOfType<TutorialManager>();
         // Set Values
         //desiredYear = YearData._INSTANCE.current_year;
         showGraph = false;
@@ -585,8 +597,14 @@ public class ComputerController : MonoBehaviour
         pointSelectors = new List<PointSelector>(FindObjectsOfType<PointSelector>());
         newPos = Vector3.zero;
 
-        UpdateSlider();
+        Invoke("GameSetup", 0.1f);
+    }
 
+    void GameSetup()
+    {
+        GameManager._INSTANCE.Setup();
+
+        UpdateSlider();
     }
 
     public void RefreshGraph()
@@ -616,6 +634,7 @@ public class ComputerController : MonoBehaviour
 
         // Updates counters & pips depending on the desired year in graph mode
         ChangeCountersToGraphMode();
+        
     }
 
     private void ChangeCountersToGraphMode()
@@ -628,7 +647,7 @@ public class ComputerController : MonoBehaviour
         rpText.text = turns[lookupTurn].Science.ToString();
         foodText.text = turns[lookupTurn].Food.ToString();
         populationText.text = turns[lookupTurn].Population.ToString();
-
+        CityBuildingManager.Instance.UpdatePopulation(turns[lookupTurn].Population);
         //populationText.color = Color.white;
 
         //Debug.Log(turns[lookupTurn].turn);
@@ -705,7 +724,8 @@ public class ComputerController : MonoBehaviour
         panDownButton.SetActive(false);
         computerState = ComputerState.TECH_TREE_SCREEN;
         lookAt.localPosition = lookUp;
-        SnapshotHandler.instance.StartCameraPanSnapShot();
+        if (SnapshotHandler.instance != null)
+            SnapshotHandler.instance.StartCameraPanSnapShot();
         yield return new WaitForSeconds(1.0f);
         panning = false;
         panBackFromUpButton.SetActive(true);
@@ -719,7 +739,8 @@ public class ComputerController : MonoBehaviour
         panDownButton.SetActive(false);
         computerState = ComputerState.JOURNAL;
         lookAt.localPosition = lookDown;
-        SnapshotHandler.instance.StartCameraPanSnapShot();
+        if (SnapshotHandler.instance != null)
+            SnapshotHandler.instance.StartCameraPanSnapShot();
         yield return new WaitForSeconds(1.0f);
         panning = false;
         panBackFromDownButton.SetActive(true);
@@ -733,7 +754,8 @@ public class ComputerController : MonoBehaviour
         panBackFromUpButton.SetActive(false);
         computerState = ComputerState.MAIN_COMPUTER;
         lookAt.localPosition = defaultLook;
-        SnapshotHandler.instance.StopSnapShot(SnapshotHandler.instance.panSnapShotinstance);
+        if(SnapshotHandler.instance != null)
+            SnapshotHandler.instance.StopSnapShot(SnapshotHandler.instance.panSnapShotinstance);
         yield return new WaitForSeconds(1.0f);
         panning = false;
         panUpButton.SetActive(true);
@@ -840,6 +862,7 @@ public class ComputerController : MonoBehaviour
 
     private void OnEnable()
     {
+        Setup();
         SubscribeInputs();
     }
 

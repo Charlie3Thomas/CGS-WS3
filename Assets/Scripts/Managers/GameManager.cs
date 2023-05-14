@@ -26,7 +26,7 @@ namespace CT
         public static GameManager _INSTANCE;
 
         // Changes
-        private ApplyDisaster [] disaster_timeline;
+        private ApplyDisaster[] disaster_timeline;//Sam: changed access modifier so i can read it out of this script (don't worry cant write to it outside of this script)
         private List<CTChange>[] game_changes;
         private List<CTChange>[] user_changes;
         private List<CTChange>[] awareness_changes;
@@ -41,8 +41,7 @@ namespace CT
         // Current timeline
         public CTTurnData turn_data = new CTTurnData();
 
-        // Current timeline local data
-        private uint current_turn;
+        public uint current_turn { get; private set; }
         public uint CurrentTurn { get { return current_turn; } }
         private int stored_changes_in_turn;
         private Vector3 empty_turn_resource_expenditure;
@@ -54,19 +53,34 @@ namespace CT
         #region UnityFunctions
         private void Awake()
         {
-            if (_INSTANCE != null)
+            if (_INSTANCE == null)
             {
-                Destroy(this.gameObject);
-                Debug.LogError("Multiple GameManager Instances!");
+                _INSTANCE = this;
             }
             else
-                _INSTANCE = this;
+            {
+                Destroy(gameObject);
+                return;
+            }
 
             DontDestroyOnLoad(gameObject);
         }
 
 
         private void Start()
+        {
+        }
+
+        private void FixedUpdate()
+        {
+            //UpdateResourceCounters();
+        }
+        #endregion
+
+
+        #region Setup
+
+        public void Setup()
         {
             // Setup data containers
             Initialise();
@@ -90,16 +104,9 @@ namespace CT
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
 
             //Debug.Log($"{current_turn}: Workers: {turn_data.GetFactionDistribution().y}, Scientists: {turn_data.GetFactionDistribution().x}, Farmers: {turn_data.GetFactionDistribution().z}, Planners: {turn_data.GetFactionDistribution().w}");
+
         }
 
-        private void FixedUpdate()
-        {
-            //UpdateResourceCounters();
-        }
-        #endregion
-
-
-        #region Setup
         private void Initialise()
         {
             current_turn = 0;
@@ -367,6 +374,10 @@ namespace CT
             //if (_requested_turn == current_turn)
             //    return;
 
+            // Clear any disaster effects
+            if (DisasterEffectManager.instance != null)
+                DisasterEffectManager.instance.ClearDisasterEffects();
+
             // Lock in changes to faction distribution
             SetFactionDistribution();
 
@@ -388,7 +399,10 @@ namespace CT
 
             turn_data = GetYearData(_requested_turn);
 
-            AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn(), GetDisasterIntensityAtTurn(current_turn));
+            if (DisasterEffectManager.instance != null && disaster_timeline[current_turn]?.disaster != null)
+                //DisasterEffectManager.instance.ShowDisasterEffect(disaster_timeline[current_turn].disaster, disaster_timeline[current_turn].intensity);
+
+            DisasterSeqenceManager.Instance.StartDisasterWarningSequence(); //Sam: abstracted my sequence functionality
 
             PolicyManager.instance.LoadPoliciesAtCurrentScope(current_turn);
 
@@ -428,8 +442,13 @@ namespace CT
             ComputerController.Instance.foodText.text = (turn_data.Food - (int)empty_turn_resource_expenditure.z).ToString();
 
             ComputerController.Instance.populationText.text = turn_data.Population.ToString();
-
             SetAwarenessUI();
+            UpdateCity();
+        }
+
+        private void UpdateCity()
+        {
+            CityBuildingManager.Instance.UpdatePopulation(turn_data.Population);
         }
 
         private void UpdatePipsWithCurrentTurnData()
@@ -650,6 +669,8 @@ namespace CT
             List<float> foods = new List<float>();
             List<float> populations = new List<float>();
 
+            ComputerController.Instance.turns = turns;
+
             for (int i = 0; i < DataSheet.TURNS_NUMBER; i++)
             {
                 moneys.Add(turns[i].Money / 10f);
@@ -658,8 +679,6 @@ namespace CT
                 populations.Add(turns[i].Population);
                 //Debug.Log($"Year {turns[i].turn} has {turns[i].Money} money, {turns[i].Science} science, {turns[i].Food} food, {turns[i].Population} population");
             }
-
-            ComputerController.Instance.turns = turns;
 
             return new RAUtility.Vector4List(moneys, sciences, foods, populations);
         }
@@ -896,6 +915,63 @@ namespace CT
             return ret;
         }
 
+        /// <summary>
+        /// Can be called in any turn, and will return the total awareness 
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        // Scorecard element - Awareness bonus
+        public float GetAwareness()
+        {
+            float ret = 0.0f;
+
+            for (int i = 0; i < awareness_changes.Length; i++)
+            {
+                foreach (TrackAwareness blob in awareness_changes[i])
+                {
+                    ret += blob.value;
+                }
+            }
+
+            return ret;
+        }
+        // Scorecard element - Disasters survived
+        public int GetLastSurvivedTurn()
+        {
+            for (int i = 0; i < DataSheet.TURNS_NUMBER + 1; i++)
+            {
+                CTTurnData data = GetYearData((uint)i);
+
+                if (data.Population == 0)
+                {
+                    return i;
+                }
+            }
+
+            return (int)DataSheet.TURNS_NUMBER;
+        }
+        // Scorecard element - Technology Nodes unlocked
+        public int GetTechnologiesUnlockedTotal()
+        {
+            CTTurnData data = GetYearData((uint)DataSheet.TURNS_NUMBER);
+
+            int ret = 0;
+
+            foreach (KeyValuePair<CTTechnologies, bool> kvp in data.technologies)
+            {
+                if (kvp.Value == true)
+                    ret++;
+            }
+
+            return ret;
+        }
+        // Scorecard Element - Population Survived
+        public int GetLastTurnPopulation()
+        {
+            CTTurnData data = GetYearData((uint)DataSheet.TURNS_NUMBER);
+
+            return data.Population;
+        }
 
         private void LogChangesInCurrentTurn()
         {

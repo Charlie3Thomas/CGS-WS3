@@ -16,4 +16,9 @@ public static class CTSeed
 
         return new System.Random(local_seed);
     }
+
+    public static void ChangeSeed()
+    {
+        gameSeed = System.DateTime.Now.Ticks;
+    }
 }

@@ -15,14 +15,14 @@ public class HoverTipObject : MonoBehaviour
 
     public void OnMouseEnter()
     {
-        StopAllCoroutines();
+       // StopAllCoroutines();
         StartCoroutine(StartTimer());
         
     }
 
     public void OnMouseExit()
     {
-        StopAllCoroutines();
+        //StopAllCoroutines();
         UIHoverManager.OnLoseFocus();
     }
 

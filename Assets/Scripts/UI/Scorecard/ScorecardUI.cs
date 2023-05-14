@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 using TMPro;
+using CT;
 
 
 public class ScorecardUI : MonoBehaviour
@@ -23,13 +25,13 @@ public class ScorecardUI : MonoBehaviour
     private float counter4 = 0.0f;
     private float counter5 = 0.0f;
 
-    private float awarenessPoints=1000.0f;
-    private float disasterPoints=25000.0f;
-    private float nodePoints=20000f;
-    private float turnsPoints=22000f;
-    private float totalPoints =100f;
+    private float awarenessPoints = 0.0f;
+    private float disasterPoints  = 0.0f;
+    private float nodePoints      = 0.0f;
+    private float populationPoints= 0.0f;
+    private float totalPoints     = 0.0f;
 
-    private float incrementRate1 =10f;
+    private float incrementRate1 = 10f;
     private float incrementRate2 = 10f;
     private float incrementRate3 = 10f;
     private float incrementRate4 = 10f;
@@ -40,12 +42,18 @@ public class ScorecardUI : MonoBehaviour
     private void Awake()
     {
 
-       totalPoints = awarenessPoints + disasterPoints + nodePoints + turnsPoints;
+        awarenessPoints  = (10000 * (1- GameManager._INSTANCE.GetAwareness()));
+        disasterPoints = GameManager._INSTANCE.GetLastSurvivedTurn();
+        nodePoints = 1000 * GameManager._INSTANCE.GetTechnologiesUnlockedTotal();
+        populationPoints = 10 * GameManager._INSTANCE.GetLastTurnPopulation();
+        Debug.Log("awarenessPoints : " + GameManager._INSTANCE.GetAwareness() + "disasterPoints : " + GameManager._INSTANCE.GetLastSurvivedTurn() + "nodePoints : " + GameManager._INSTANCE.GetTechnologiesUnlockedTotal() + "populationPoints : " + GameManager._INSTANCE.GetLastTurnPopulation());
+
+        totalPoints = awarenessPoints + disasterPoints + nodePoints + populationPoints;
 
         incrementRate1 = awarenessPoints / (50 * 4);
         incrementRate2 = disasterPoints / (50 * 4);
         incrementRate3 = nodePoints / (50 * 4);
-        incrementRate4 = turnsPoints / (50 * 4);
+        incrementRate4 = populationPoints / (50 * 4);
         incrementRate5 = totalPoints / (50 * 4);
 
 
@@ -64,6 +72,17 @@ public class ScorecardUI : MonoBehaviour
     {
 
         IncrementPoints();
+    }
+
+
+    public void BackToMainMenuAndReset()
+    {
+        DOTween.Clear(true); // Clear animation cache
+       
+        SceneManager.LoadScene(0);
+
+        
+        
     }
 
     public void FadeInAnimation()
@@ -102,6 +121,7 @@ public class ScorecardUI : MonoBehaviour
             counter1 += incrementRate1;
             pointsUI[0].text = counter1.ToString();
            
+           
         }
        
 
@@ -119,7 +139,7 @@ public class ScorecardUI : MonoBehaviour
         }
         
 
-        if (counter4 < turnsPoints)
+        if (counter4 < populationPoints)
         {
             counter4 += incrementRate4;
             pointsUI[3].text = counter4.ToString();

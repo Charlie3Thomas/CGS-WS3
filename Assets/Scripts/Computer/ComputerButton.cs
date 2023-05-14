@@ -5,7 +5,7 @@ using CT.Lookup;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public enum buttonType
 {
     GENERIC,
@@ -62,23 +62,39 @@ public class ComputerButton : MonoBehaviour
                     //YearData._INSTANCE.current_year = ComputerController.Instance.desiredYear;
                     //Debug.Log("Year confirmed! The year is now: " + YearData._INSTANCE.current_year);
 
-                    uint turn = (uint)((ComputerController.Instance.desiredYear - DataSheet.STARTING_YEAR) / 5);
 
-                    GameManager._INSTANCE.OnClickCheckoutYearButton(turn);
+                    if (!DisasterSeqenceManager.Instance.GetDisasterFlag()) //Sam: flag check if disaster is not happening
+                    {
+                        uint turn = (uint)((ComputerController.Instance.desiredYear - DataSheet.STARTING_YEAR) / 5);
 
-                    // Plot graph with necessary values when year changes in case graph is already showing and we need to update it
-                    ComputerController.Instance.RefreshGraph();
+                        GameManager._INSTANCE.OnClickCheckoutYearButton(turn);
 
-                    // Refresh Policies
-                    PolicyManager.instance.LoadPoliciesForTurn();
+                        // Plot graph with necessary values when year changes in case graph is already showing and we need to update it
+                        ComputerController.Instance.RefreshGraph();
 
-                    // Ensures colour of counter is correct on check out
-                    ComputerController.Instance.UpdateSlider();
+                        // Refresh Policies
+                        PolicyManager.instance.LoadPoliciesForTurn();
 
-                    AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
+                        // Ensures colour of counter is correct on check out
+                        ComputerController.Instance.UpdateSlider();
 
-                    ComputerController.Instance.journal.GetComponent<Journal>().UpdateFactionProductionText();
+                        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressREvent, null);
 
+                        ComputerController.Instance.journal.GetComponent<Journal>().UpdateFactionProductionText();
+                        Debug.Log("Year : "+ ComputerController.Instance.desiredYear);
+
+                        // To finish the game loop when awareness reaches 1 or more
+                        if (GameManager._INSTANCE.GetAwareness() >= 1)
+                        {
+                            // SceneManager.LoadScene(3);
+                            ShowScoreMenu.INSTANCE.DisplayScoreMenuOption();
+                        }
+
+                        if(ComputerController.Instance.desiredYear == 2100)
+                        {
+                            ShowScoreMenu.INSTANCE.DisplayScoreAndContinueOption();
+                        }
+                    }
                     break;
                 }
 
