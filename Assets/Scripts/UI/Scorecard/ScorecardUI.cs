@@ -121,6 +121,7 @@ public class ScorecardUI : MonoBehaviour
             counter1 += incrementRate1;
             pointsUI[0].text = counter1.ToString();
            
+           
         }
        
 
