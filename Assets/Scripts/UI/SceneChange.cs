@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 public class SceneChange : MonoBehaviour
 {
     public Animator transition;
+ 
 
     // This script consists of button press events for changing scenes, enabling disabling canvas objects and to trigger Audio events based on it
 
@@ -17,6 +18,8 @@ public class SceneChange : MonoBehaviour
     public CanvasGroup audioSettingsCanvas;
 
     public float fadetime = 1f;
+    public bool fadeIn = false;
+    public bool fadeOut = false;
 
     private PlayerControls playerControls;
     private InputAction escMenu;
@@ -158,12 +161,9 @@ public class SceneChange : MonoBehaviour
             escapeMenuUI.SetActive(false);
             isVisible = !isVisible;
         }
+        AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
 
-
-        if (MenuAudioManager.Instance != false)
-        {
-            AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
-        }
+        
      
         
 
