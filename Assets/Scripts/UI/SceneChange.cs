@@ -158,7 +158,7 @@ public class SceneChange : MonoBehaviour
     {
         AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
         LoadMainGame();
-        
+        DOTween.Clear();
     }
 
     private void LoadMainGame()
@@ -180,6 +180,10 @@ public class SceneChange : MonoBehaviour
         if(MenuAudioManager.Instance != false)
         {
            AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
+        }
+        if(isVisible)
+        {
+            DeactivateMenu();
         }
         backgroundBlocker.SetActive(true);
         isAudioVisible = true;
@@ -236,6 +240,10 @@ public class SceneChange : MonoBehaviour
             backgroundBlocker.SetActive(false);
         }
         FadeOutAnimation();
+        if(isVisible==false)
+        {
+            ActivateMenu();
+        }
         
         AudioPlayback.PlayOneShot(MenuAudioManager.Instance.mainMenuRefs.menuButtonSelectEvent, null);
     }
