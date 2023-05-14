@@ -419,6 +419,8 @@ namespace CT
             FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
 
             FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
+
+            DisasterManager.instance.WriteDisastersInJournal();
         }
 
         private void UpdateFactionDistributionPips()

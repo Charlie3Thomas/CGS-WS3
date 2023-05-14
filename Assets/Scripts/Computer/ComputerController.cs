@@ -416,6 +416,7 @@ public class ComputerController : MonoBehaviour
             PolicyManager.instance.current_policy_container.SetPolicyContainer(_hit.transform.GetComponent<CTPolicyContainer>());
             PolicyManager.instance.PolicySelect(test.GetCurrentPolicy());
             journal.GetComponent<Journal>().UpdateFactionProductionText();
+            DisasterManager.instance.WriteDisastersInJournal();
             //PolicyManager.instance.SelectPolicy(test.GetCurrentPolicy().ID);
             //PolicyManager.instance.ShowAllCurrentPoliciesAtTurn();
         }

@@ -101,13 +101,9 @@ public class PolicyManager : MonoBehaviour
             {
                 if (current_policies[i].ID != null)
                 {
-                    string req = "Scientists: " + (current_policies[i].fdist.scientist_percentage * 100).ToString() + "%"
-                        + " Workers: " + (current_policies[i].fdist.worker_percentage * 100).ToString() + "%"
-                        + " Farmers: " + (current_policies[i].fdist.farmer_percentage * 100).ToString() + "%"
-                        + " Planners: " + (current_policies[i].fdist.planner_percentage * 100).ToString() + "%";
                     current_policies_go[i].SetActive(true);
                     current_policies_go[i].transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>().text = 
-                        current_policies[i].info_text + current_policies[i].cost.GetString() + "\n\nReq:\n" + req;
+                        current_policies[i].info_text + current_policies[i].cost.GetString() + "\n\nReq:\n" + "    " + PolicyRequirementText(current_policies[i]);
                 }
             }
         }
@@ -179,14 +175,14 @@ public class PolicyManager : MonoBehaviour
     public void ShowPolicyViewScreen(CTPolicyCard pc)
     {
         policySelectScreen.SetActive(true);
-        policyTextZoomed.text = pc.info_text + pc.cost.GetString();
+        policyTextZoomed.text = pc.info_text + pc.cost.GetString() + "\n\nReq:\n" + "    " + PolicyRequirementText(pc);
         policyViewBackButton.SetActive(true);
     }
 
     public void ShowPolicyPurchaseScreen(CTPolicyCard pc)
     {
         policySelectScreen.SetActive(true);
-        policyTextZoomed.text = pc.info_text + pc.cost.GetString();
+        policyTextZoomed.text = pc.info_text + pc.cost.GetString() + "\n\nReq:\n" + "    " + PolicyRequirementText(pc);
         policySelectButtons.SetActive(true);
     }
 
@@ -318,7 +314,8 @@ public class PolicyManager : MonoBehaviour
 
         ComputerController.Instance.pCardTexts[_index].text =
                 $"{ComputerController.Instance.pCardTexts[_index].text}" +
-                $"    {_pc.cost.GetString()}";
+                $"    {_pc.cost.GetString()}" + 
+                $"    \n\nReq:\n    {PolicyRequirementText(_pc)}";
     }
 
     #endregion
@@ -349,6 +346,16 @@ public class PolicyManager : MonoBehaviour
         }
 
         LoadPoliciesForTurn();
+    }
+
+    public String PolicyRequirementText(CTPolicyCard _pc)
+    {
+        string req = "Scientists: " + (_pc.fdist.scientist_percentage * 100).ToString() + "%"
+            + " Workers: " + (_pc.fdist.worker_percentage * 100).ToString() + "%"
+            + " Farmers: " + (_pc.fdist.farmer_percentage * 100).ToString() + "%"
+            + " Planners: " + (_pc.fdist.planner_percentage * 100).ToString() + "%";
+
+        return req;
     }
 
     private bool AlreadyHavePolicy(string _ID)

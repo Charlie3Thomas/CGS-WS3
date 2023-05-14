@@ -100,7 +100,7 @@ public class TechNode : MonoBehaviour
                 unlocked = true;
                 //mat.SetVector("_Color", Lit * 8);
                 //tree.UpdateBuffs(buffs);
-                SpecialCase();
+                SpecialCase(tech);
                 // Refresh graph every time player purchases a node?
                 ComputerController.Instance.RefreshGraph();
                 AudioPlayback.PlayOneShotWithParameters<string>(AudioManager.Instance.uiEvents.nodeSelectorEvent, null, ("NodeState", "Unlocked"));
@@ -164,19 +164,19 @@ public class TechNode : MonoBehaviour
         return text;
     }
 
-    void SpecialCase()
+    void SpecialCase(CTTechnologies t)
     {
-        switch(tech)
+        switch(t)
         {
             case CTTechnologies.RiskAssessment:
                 {
-                    DisasterManager.instance.showMagnitude = true;
+                    DisasterManager.instance.showMagnitude = unlocked;
                     DisasterManager.instance.WriteDisastersInJournal();
                 }
                 break;
             case CTTechnologies.PopulationAssessment:
                 {
-                    DisasterManager.instance.showDeathToll = true;
+                    DisasterManager.instance.showDeathToll = unlocked;
                     DisasterManager.instance.WriteDisastersInJournal();
                 }
                 break;
@@ -202,7 +202,8 @@ public class TechNode : MonoBehaviour
                 break;
             case CTTechnologies.SafetyRating:
                 {
-                    DisasterManager.instance.showSafety = true;
+                    DisasterManager.instance.showSafety = unlocked;
+                    DisasterManager.instance.WriteDisastersInJournal();
                 }
                 break;
             case CTTechnologies.MemoryFlash:
@@ -215,6 +216,7 @@ public class TechNode : MonoBehaviour
     public void UpdateTechNodes()
     {
         this.unlocked = false;
+        SpecialCase(tech);
         List<CTTechnologies> techs = GameManager._INSTANCE.GetUnlockedTechnologiesInTurn();
 
         //Debug.Log($"TechNode:UpdateTechNodes:active_techs = {active_techs.Count}");
@@ -225,6 +227,7 @@ public class TechNode : MonoBehaviour
             {
                 this.unlocked = true;
                 tree.LookupBuffs(t);
+                SpecialCase(t);
                 break;
             }
         }

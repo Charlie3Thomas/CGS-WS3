@@ -38,6 +38,8 @@ public class PointSelector : MonoBehaviour
         ComputerController.Instance.CheckPoints(this);
 
         PolicyManager.instance.ShowPoliciesMetReq();
+
+        DisasterManager.instance.UpdateSafetyText();
     }
 
     public void RemovePoints(float points)
@@ -55,6 +57,8 @@ public class PointSelector : MonoBehaviour
         ComputerController.Instance.CheckPoints(this);
 
         PolicyManager.instance.ShowPoliciesMetReq();
+
+        DisasterManager.instance.UpdateSafetyText();
     }
 
     public void SetPoints(float _points)
@@ -75,6 +79,8 @@ public class PointSelector : MonoBehaviour
             Debug.LogError("pipMat is null");
 
         PolicyManager.instance.ShowPoliciesMetReq();
+
+        DisasterManager.instance.UpdateSafetyText();
     }
     void OnMouseOver()
     {

@@ -18,6 +18,8 @@ public class TechTree : MonoBehaviour
         {
             node.UpdateTechNodes();
         }
+
+        DisasterManager.instance.WriteDisastersInJournal();
     }
 
     public BuffsNerfs GetBuffs(CTTechnologies _t)

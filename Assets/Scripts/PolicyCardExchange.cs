@@ -43,7 +43,7 @@ public class PolicyCardExchange : MonoBehaviour
         else
             ctp = PolicyManager.instance.current_policies[(int)cs];
 
-        text.text = ctp.info_text + ctp.cost.GetString();
+        text.text = ctp.info_text + ctp.cost.GetString() + "\n\nReq:\n" + "    " + PolicyManager.instance.PolicyRequirementText(ctp);
     }
 
     private void OnDisable()
