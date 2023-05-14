@@ -1044,6 +1044,15 @@ namespace CT
             user_changes = _userChanges;
             game_changes = _gameChanges;
             awareness_changes = _awarenessChanges;
+
+            DisasterManager.instance.Generate();
+            AIPlayFromTurn(0);
+            turn_data = GetYearData(0);
+            UpdateResourceCounters();
+            UpdateFactionDistributionPips();
+            UpdatePipsWithCurrentTurnData();
+            FindObjectOfType<TechTree>().GetComponent<TechTree>().ClearBuffs();
+            FindObjectOfType<TechTree>().GetComponent<TechTree>().UpdateNodes();
         }
         #endregion
     }
