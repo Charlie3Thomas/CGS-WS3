@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class TutorialButtons : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class TutorialButtons : MonoBehaviour
     // When the user clicks skip, the normal game will just load
     public void DisableTutorial(int Index)
     {
+        DOTween.Clear();
         SceneManager.LoadScene(Index);
     }
 }
