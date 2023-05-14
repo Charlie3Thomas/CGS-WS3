@@ -121,6 +121,7 @@ public class EscapeMenu : MonoBehaviour
     {
         FmodRouting.StopMasterBus(); //Sam on destory for audio stoppping not calling all stops before menu loads, just focefully stop master bus with fade 
         //StartCoroutine(LoadGameTransition(0));
+        DOTween.Clear(true);
         SceneManager.LoadScene(0);
 
     }
