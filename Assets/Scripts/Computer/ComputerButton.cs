@@ -89,14 +89,14 @@ public class ComputerButton : MonoBehaviour
                             // Ensures colour of counter is correct on check out
                             ComputerController.Instance.UpdateSlider();
 
-                            AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressREvent, null);
-
                             ComputerController.Instance.journal.GetComponent<Journal>().UpdateFactionProductionText();
                             Debug.Log("Year : " + ComputerController.Instance.desiredYear);
 
                             // To finish the game loop when awareness reaches 1 or more
                         }
                     }
+
+                    AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressREvent, null);
                     break;
                 }
 
