@@ -106,7 +106,7 @@ public class DisasterSeqenceManager : MonoBehaviour
         yield return new WaitForSeconds(5f); //Make text solid for remaineder of flag time
         resolvedObject.SetActive(false);
 
-        yield return new WaitForSeconds(0.5f); //Reset flag small time after whole sequence has finished 
+        yield return new WaitForSeconds(1f); //Reset flag small time after whole sequence has finished 
         ResetFlag();
 
     }
