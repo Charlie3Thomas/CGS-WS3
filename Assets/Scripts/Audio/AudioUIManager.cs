@@ -108,16 +108,16 @@ public class AudioUIManager : MonoBehaviour
     private void LoadPlayerPrefAudioSettings()
     {
         //Load slider values from player prefs and set fmod bus values after they are set
-        masterVolumeSlider.value = PlayerPrefs.GetFloat("MasterBusVol");
+        masterVolumeSlider.value = PlayerPrefs.GetFloat("MasterBusVol", 0.5f);
         FmodRouting.ChangeBusVolume(FmodRouting.masterBus, masterVolumeSlider.value);
 
-        musicVolumeSlider.value = PlayerPrefs.GetFloat("MusicBusVol");
+        musicVolumeSlider.value = PlayerPrefs.GetFloat("MusicBusVol", 0.5f);
         FmodRouting.ChangeBusVolume(FmodRouting.musicBus, musicVolumeSlider.value);
 
-        sfxVolumeSlider.value = PlayerPrefs.GetFloat("SFXBusVol");
+        sfxVolumeSlider.value = PlayerPrefs.GetFloat("SFXBusVol", 0.5f);
         FmodRouting.ChangeBusVolume(FmodRouting.sfxBus, sfxVolumeSlider.value);
 
-        uiVolumeSlider.value = PlayerPrefs.GetFloat("UIBusVol");
+        uiVolumeSlider.value = PlayerPrefs.GetFloat("UIBusVol", 0.5f);
         FmodRouting.ChangeBusVolume(FmodRouting.uiBus, uiVolumeSlider.value);
 
 
