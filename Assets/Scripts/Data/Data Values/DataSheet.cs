@@ -84,10 +84,10 @@ namespace CT.Lookup
         public static readonly Dictionary<CTTechnologies, CTCost> technology_price = new Dictionary<CTTechnologies, CTCost>()
         {
             //                                           Cost : Money | Science | Food | Population
-            [CTTechnologies.Banking]                = new CTCost( 5000,   500,      0,      0 ),
-            [CTTechnologies.Laboratory]             = new CTCost( 5000,  1000,      0,      0 ),
-            [CTTechnologies.TownPlanning]           = new CTCost(10000,  1000,      0,      0 ),
-            [CTTechnologies.Granary]                = new CTCost( 1000,   500,      0,      0 ),
+            [CTTechnologies.Banking]                = new CTCost(    0,     0,      0,      0 ),
+            [CTTechnologies.Laboratory]             = new CTCost(    0,     0,      0,      0 ),
+            [CTTechnologies.TownPlanning]           = new CTCost(    0,     0,      0,      0 ),
+            [CTTechnologies.Granary]                = new CTCost(    0,     0,      0,      0 ),
             [CTTechnologies.Lockers]                = new CTCost( 1000,   200,      0,      0 ),
             [CTTechnologies.DamageMitigation1]      = new CTCost( 1000,   250,      0,      0 ),
             [CTTechnologies.DamageMitigation2]      = new CTCost( 1000,   250,      0,      0 ),

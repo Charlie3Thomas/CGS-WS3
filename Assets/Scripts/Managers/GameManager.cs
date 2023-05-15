@@ -92,7 +92,7 @@ namespace CT
             AIPlayFromTurn(0);
 
             // Set current turn data to year zero
-            turn_data = GetYearData(0);
+            turn_data = new CTTurnData(GetYearData(0));
 
             // Setup UI
             UpdateResourceCounters();
@@ -126,6 +126,11 @@ namespace CT
             user_changes = new List<CTChange>[DataSheet.TURNS_NUMBER + 1];
             for (uint year = 0; year < user_changes.Length; year++)
                 user_changes[year] = new List<CTChange>();
+
+            user_changes[0].Add(new PurchaseTechnology(CTTechnologies.Banking));
+            user_changes[0].Add(new PurchaseTechnology(CTTechnologies.Laboratory));
+            user_changes[0].Add(new PurchaseTechnology(CTTechnologies.TownPlanning));
+            user_changes[0].Add(new PurchaseTechnology(CTTechnologies.Granary));
 
             // Initialise game changes list
             game_changes = new List<CTChange>[DataSheet.TURNS_NUMBER + 1];
@@ -350,7 +355,7 @@ namespace CT
                     }
                 }
 
-                CheckAllUserTechPurchasesValid();
+                //CheckAllUserTechPurchasesValid();
 
                 data = new CTTurnData(GetYearData(data.turn + 1));
 
@@ -397,7 +402,7 @@ namespace CT
 
             CheckAllUserTechPurchasesValid();
 
-            turn_data = GetYearData(_requested_turn);
+            turn_data = new CTTurnData(GetYearData(_requested_turn));
 
             if (DisasterEffectManager.instance != null && disaster_timeline[current_turn]?.disaster != null)
                 //DisasterEffectManager.instance.ShowDisasterEffect(disaster_timeline[current_turn].disaster, disaster_timeline[current_turn].intensity);
@@ -580,10 +585,11 @@ namespace CT
 
         private void CheckAllUserTechPurchasesValid()
         {
+
             TechTree tt = FindObjectOfType<TechTree>().GetComponent<TechTree>();
             List<TechNode> nodes = new List<TechNode>();
             // Loop through all turns
-            for (uint t = 0; t < user_changes.Length; t++)
+            for (uint t = current_turn; t < user_changes.Length; t++)
             {
                 CTTurnData data = GetYearData(t);
 
@@ -637,7 +643,7 @@ namespace CT
             // Re-CheckoutTurn
             stored_changes_in_turn = 0;
             CheckAllUserTechPurchasesValid();
-            turn_data = GetYearData(current_turn);
+            turn_data = new CTTurnData(GetYearData(current_turn));
             AudioManager.Instance.StartDisasterAudio(CheckDisasterInTurn(), GetDisasterIntensityAtTurn(current_turn));
             PolicyManager.instance.LoadPoliciesAtCurrentScope(current_turn);
             empty_turn_resource_expenditure = new Vector3(0, 0, 0);
