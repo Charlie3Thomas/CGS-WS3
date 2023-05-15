@@ -24018,6 +24018,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -150
       objectReference: {fileID: 0}
+    - target: {fileID: 2185742061887150945, guid: d64059a8ff2bf754eb8b10d5b1caddc6,
+        type: 3}
+      propertyPath: m_text
+      value: THE GOD GAME
+      objectReference: {fileID: 0}
     - target: {fileID: 2185742063410426720, guid: d64059a8ff2bf754eb8b10d5b1caddc6,
         type: 3}
       propertyPath: m_Pivot.x
