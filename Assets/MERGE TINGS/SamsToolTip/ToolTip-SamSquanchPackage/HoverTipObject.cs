@@ -9,15 +9,14 @@ using UnityEngine.EventSystems;
 public class HoverTipObject : MonoBehaviour
 {
     
-    [SerializeField] protected float timeToWait = 0.1f;
     [SerializeField] private string dataToShow;
 
 
     public void OnMouseEnter()
     {
-       // StopAllCoroutines();
-        StartCoroutine(StartTimer());
-        
+        // StopAllCoroutines();
+        ShowMessage(dataToShow);
+
     }
 
     public void OnMouseExit()
@@ -32,11 +31,11 @@ public class HoverTipObject : MonoBehaviour
         UIHoverManager.OnMouseHover(_dataToShow, Input.mousePosition);
     }
 
-    protected IEnumerator StartTimer()
-    {
-        yield return new WaitForSeconds(timeToWait);
-
-        ShowMessage(dataToShow);
-    }
+    //protected IEnumerator StartTimer()
+    //{
+    //    yield return new WaitForSeconds(timeToWait);
+    //
+    //    ShowMessage(dataToShow);
+    //}
 
 }
