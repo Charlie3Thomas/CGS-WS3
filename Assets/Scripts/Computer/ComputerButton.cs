@@ -48,7 +48,7 @@ public class ComputerButton : MonoBehaviour
                     Debug.Log("Show Graph");
                     // Allocates the populations/factions and registers turn in a list as well as sorts the list in resource manager
                     // Get index by name instead in future, im just super tired right now
-                    if(ComputerController.Instance.canSwitch)
+                    if (ComputerController.Instance.canSwitch)
                         StartCoroutine(ComputerController.Instance.SwitchMainScreen());
 
                     AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressLEvent, null);
@@ -62,37 +62,39 @@ public class ComputerButton : MonoBehaviour
                     //YearData._INSTANCE.current_year = ComputerController.Instance.desiredYear;
                     //Debug.Log("Year confirmed! The year is now: " + YearData._INSTANCE.current_year);
 
-
-                    if (!DisasterSeqenceManager.Instance.GetDisasterFlag()) //Sam: flag check if disaster is not happening
+                    if (GameManager._INSTANCE.GetAwareness() >= 1)
                     {
-                        uint turn = (uint)((ComputerController.Instance.desiredYear - DataSheet.STARTING_YEAR) / 5);
+                        // SceneManager.LoadScene(3);
+                        ShowScoreMenu.INSTANCE.DisplayScoreMenuOption();
+                    }
 
-                        GameManager._INSTANCE.OnClickCheckoutYearButton(turn);
-
-                        // Plot graph with necessary values when year changes in case graph is already showing and we need to update it
-                        ComputerController.Instance.RefreshGraph();
-
-                        // Refresh Policies
-                        PolicyManager.instance.LoadPoliciesForTurn();
-
-                        // Ensures colour of counter is correct on check out
-                        ComputerController.Instance.UpdateSlider();
-
-                        AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressREvent, null);
-
-                        ComputerController.Instance.journal.GetComponent<Journal>().UpdateFactionProductionText();
-                        Debug.Log("Year : "+ ComputerController.Instance.desiredYear);
-
-                        // To finish the game loop when awareness reaches 1 or more
-                        if (GameManager._INSTANCE.GetAwareness() >= 1)
+                    if (ComputerController.Instance.desiredYear == 2100)
+                    {
+                        ShowScoreMenu.INSTANCE.DisplayScoreAndContinueOption();
+                    }
+                    else
+                    {
+                        if (!DisasterSeqenceManager.Instance.GetDisasterFlag()) //Sam: flag check if disaster is not happening
                         {
-                            // SceneManager.LoadScene(3);
-                            ShowScoreMenu.INSTANCE.DisplayScoreMenuOption();
-                        }
+                            uint turn = (uint)((ComputerController.Instance.desiredYear - DataSheet.STARTING_YEAR) / 5);
 
-                        if(ComputerController.Instance.desiredYear == 2100)
-                        {
-                            ShowScoreMenu.INSTANCE.DisplayScoreAndContinueOption();
+                            GameManager._INSTANCE.OnClickCheckoutYearButton(turn);
+
+                            // Plot graph with necessary values when year changes in case graph is already showing and we need to update it
+                            ComputerController.Instance.RefreshGraph();
+
+                            // Refresh Policies
+                            PolicyManager.instance.LoadPoliciesForTurn();
+
+                            // Ensures colour of counter is correct on check out
+                            ComputerController.Instance.UpdateSlider();
+
+                            AudioPlayback.PlayOneShot(AudioManager.Instance.uiEvents.buttonPressREvent, null);
+
+                            ComputerController.Instance.journal.GetComponent<Journal>().UpdateFactionProductionText();
+                            Debug.Log("Year : " + ComputerController.Instance.desiredYear);
+
+                            // To finish the game loop when awareness reaches 1 or more
                         }
                     }
                     break;

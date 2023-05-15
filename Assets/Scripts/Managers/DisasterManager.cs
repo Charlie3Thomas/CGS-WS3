@@ -72,8 +72,11 @@ public class DisasterManager : MonoBehaviour
 
     public void UpdateSafetyText()
     {
+        float safety = (GameManager._INSTANCE.GetTurn().Science >= (GameManager._INSTANCE.GetTurn().Population * GameManager._INSTANCE.GetFactionDistribution().w) * DataSheet.PLANNERS_NET.science) ?
+            GameManager._INSTANCE.GetFactionDistribution().w : GameManager._INSTANCE.GetFactionDistribution().w * 0.5f;
+
         if (showSafety)
-            ComputerController.Instance.safetyText.text = "Safety: " + (GameManager._INSTANCE.GetTurn().GetModifiers().w * GameManager._INSTANCE.GetFactionDistribution().w).ToString();
+            ComputerController.Instance.safetyText.text = "Safety: " + ((safety) * 100).ToString() + "%";
         else
             ComputerController.Instance.safetyText.text = "Safety: ???";
     }
