@@ -43,9 +43,9 @@ public class ScorecardUI : MonoBehaviour
     {
 
         awarenessPoints  = (10000 * (1- GameManager._INSTANCE.GetAwareness()));
-        disasterPoints = GameManager._INSTANCE.GetLastSurvivedTurn();
+        disasterPoints = GameManager._INSTANCE.GetLastSurvivedTurn() * 100;
         nodePoints = 1000 * GameManager._INSTANCE.GetTechnologiesUnlockedTotal();
-        populationPoints = 10 * GameManager._INSTANCE.GetLastTurnPopulation();
+        populationPoints = (int)(10 * GameManager._INSTANCE.GetLastTurnPopulation());
         Debug.Log("awarenessPoints : " + GameManager._INSTANCE.GetAwareness() + "disasterPoints : " + GameManager._INSTANCE.GetLastSurvivedTurn() + "nodePoints : " + GameManager._INSTANCE.GetTechnologiesUnlockedTotal() + "populationPoints : " + GameManager._INSTANCE.GetLastTurnPopulation());
 
         totalPoints = awarenessPoints + disasterPoints + nodePoints + populationPoints;

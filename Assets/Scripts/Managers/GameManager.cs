@@ -1042,9 +1042,9 @@ namespace CT
         #region Load
         public void LoadData(List<CTChange>[] _userChanges, List<CTChange>[] _gameChanges, List<CTChange>[] _awarenessChanges)
         {
-            user_changes = _userChanges;
-            game_changes = _gameChanges;
-            awareness_changes = _awarenessChanges;
+            //user_changes = _userChanges;
+            //game_changes = _gameChanges;
+            //awareness_changes = _awarenessChanges;
         }
         #endregion
     }

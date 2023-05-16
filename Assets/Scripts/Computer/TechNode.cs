@@ -208,7 +208,8 @@ public class TechNode : MonoBehaviour
                 break;
             case CTTechnologies.MemoryFlash:
                 // Reset awareness
-                GameManager._INSTANCE.ResetAwareness();
+                if (unlocked)
+                    GameManager._INSTANCE.ResetAwareness();
                 break;
         }
     }

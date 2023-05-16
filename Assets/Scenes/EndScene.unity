@@ -549,6 +549,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4478474065070925891, guid: cb5a3de4acaa91040a3b7efdd0844a85,
+        type: 3}
+      propertyPath: m_text
+      value: Turns Survived Bonus
+      objectReference: {fileID: 0}
     - target: {fileID: 4478474065331242272, guid: cb5a3de4acaa91040a3b7efdd0844a85,
         type: 3}
       propertyPath: m_Pivot.x
@@ -688,6 +693,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4478474065560417775, guid: cb5a3de4acaa91040a3b7efdd0844a85,
+        type: 3}
+      propertyPath: m_text
+      value: Population Survival Bonus
       objectReference: {fileID: 0}
     - target: {fileID: 4478474065566209641, guid: cb5a3de4acaa91040a3b7efdd0844a85,
         type: 3}
@@ -887,6 +897,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4478474066165887494, guid: cb5a3de4acaa91040a3b7efdd0844a85,
+        type: 3}
+      propertyPath: m_text
+      value: Awareness Bonus
       objectReference: {fileID: 0}
     - target: {fileID: 4478474066538153365, guid: cb5a3de4acaa91040a3b7efdd0844a85,
         type: 3}
